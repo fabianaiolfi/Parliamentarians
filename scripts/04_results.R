@@ -1,0 +1,1 @@
+# Merge ChatGPT summaries with voting records of parliamentarians
