@@ -49,8 +49,3 @@ business_legislative_period_51 <- business_legislative_period_51 %>%
 business_legislative_period_51$chatgpt_prompt_n_tokens <- nchar(business_legislative_period_51$chatgpt_prompt) / 2.6
 all(business_legislative_period_51$InitialSituation_clean_n_tokens < 4096) # Returns TRUE: No prompts exceed the maximum number of tokens
 
-
-
-
-
-
