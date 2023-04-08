@@ -1,4 +1,7 @@
-# Get Parliamentary data through swissparl 
+# Get Parliamentary data through swissparl
+
+# Run this script to download parliamentary through the swissparl wrapper
+# Warning: Takes around 15-30 minutes
 
 # Final votes from 51st legislative period ------------------------------------------------------------------------
 voting_legislative_period_51 <- swissparl::get_data("Voting",
