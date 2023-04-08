@@ -48,3 +48,6 @@ business_legislative_period_51 <- business_legislative_period_51 %>%
 # German: 1 token ~ 2.6 characters
 business_legislative_period_51$chatgpt_query_n_tokens <- nchar(business_legislative_period_51$chatgpt_query) / 2.6
 max(business_legislative_period_51$chatgpt_query_n_tokens) # The longest query has 3357 tokens, leaving 738 tokens for a response
+
+# Wrapper requires `prompt_role_var` to be a column in the dataframe
+business_legislative_period_51$role <- "user"
