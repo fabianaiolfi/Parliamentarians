@@ -30,22 +30,21 @@ business_legislative_period_51$InitialSituation_clean <- gsub(" {2,}", " ", busi
 
 
 
-# Create ChatGPT Prompt ---------------------------------------------------------------
-summary_prompt <- "Zusammenfassung in 3 nummerierten Stichpunkten, jeweils maximal 10 Wörter, mit Verweis auf die wichtigsten Akteure in jedem Stichpunkt: "
+# Create ChatGPT Query ---------------------------------------------------------------
+summary_query <- "Zusammenfassung in 3 nummerierten Stichpunkten, jeweils maximal 10 Wörter, mit Verweis auf die wichtigsten Akteure in jedem Stichpunkt: "
 
 business_legislative_period_51 <- business_legislative_period_51 %>% 
-  mutate(chatgpt_prompt = paste(summary_prompt, InitialSituation_clean, sep = " "))
+  mutate(chatgpt_query = paste(summary_query, InitialSituation_clean, sep = " "))
 
 
-# Truncate Long Prompts ---------------------------------------------------------------
-# The model gpt-3.5-turbo-0301 sets 4096 as the maximum number of tokens (https://platform.openai.com/docs/guides/chat/introduction)
+# Truncate Long Query ---------------------------------------------------------------
+# The model gpt-3.5-turbo-0301 sets 4096 as the maximum number of tokens for one query (https://platform.openai.com/docs/guides/chat/introduction)
 
-# Calculate number of tokens per prompt
+# Calculate number of tokens per query
 # https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them
 # English: 1 token ~ 4 characters
 
 # Own calculations based on https://platform.openai.com/tokenizer
 # German: 1 token ~ 2.6 characters
-business_legislative_period_51$chatgpt_prompt_n_tokens <- nchar(business_legislative_period_51$chatgpt_prompt) / 2.6
-all(business_legislative_period_51$InitialSituation_clean_n_tokens < 4096) # Returns TRUE: No prompts exceed the maximum number of tokens
-
+business_legislative_period_51$chatgpt_query_n_tokens <- nchar(business_legislative_period_51$chatgpt_query) / 2.6
+max(business_legislative_period_51$chatgpt_query_n_tokens) # The longest query has 3357 tokens, leaving 738 tokens for a response
