@@ -31,4 +31,4 @@ vignettes/*.pdf
 data/
 archive/
 ChatGPT_API_Key.txt
-data_backup/
+data_backup
