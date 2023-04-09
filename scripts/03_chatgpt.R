@@ -55,7 +55,3 @@ sample_business <- business_legislative_period_51 %>%
 # Merge ChatGPT output dataframe together with Business dataframe
 sample_business <- sample_business %>% 
   left_join(chatgpt_output, by = "BusinessShortNumber")
-
-
-
-
