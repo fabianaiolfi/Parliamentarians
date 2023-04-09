@@ -11,14 +11,16 @@ token_sum <- round(sum(business_legislative_period_51$chatgpt_query_n_tokens)) +
 round(token_sum / 1000 * 0.002, 2) # Queries will cost about $0.33 in total
 
 
-# Query Summary from ChatGPT -----------------------------------------------------
+# Connect to ChatGPT -----------------------------------------------------
 gpt3_authenticate("ChatGPT_API_Key.txt")
 
 # Check if API is working. Should return "test successful".
-gpt3_test_completion()
+# gpt3_test_completion()
 
+
+# Query Sample Summary from ChatGPT -----------------------------------------------------
 # Create sample file
-sample_business <- sample_n(business_legislative_period_51, 5)
+# sample_business <- sample_n(business_legislative_period_51, 5)
 
 # Query ChatGPT
 # sample_chatgpt_query <- chatgpt(prompt_role_var = sample_business$role,
@@ -44,6 +46,16 @@ chatgpt_output <- chatgpt_output %>%
            sep = "\\s+(?=(1|2|3)\\.\\s)",
            remove = TRUE, convert = TRUE, extra = "merge", fill = "right")
 
+# Recreate sample file that matches with sample ChatGPT
+sample_sbn <- chatgpt_output$BusinessShortNumber
+
+sample_business <- business_legislative_period_51 %>% 
+  filter(BusinessShortNumber %in% sample_sbn)
+
 # Merge ChatGPT output dataframe together with Business dataframe
 sample_business <- sample_business %>% 
   left_join(chatgpt_output, by = "BusinessShortNumber")
+
+
+
+
