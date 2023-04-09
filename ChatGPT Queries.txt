@@ -1,0 +1,11 @@
+# Build Web App with Shiny
+
+Please help me build a Shiny web app with R.
+
+The final web app has a dropdown with every parliamentarian from the column “PersonNumber” in the dataframe “member_council_legislative_period_51”.
+
+When the user selects a person from the dropdown, the web app displays the selected parliamentarian’s vote history as a list of items of business. The dataframe “voting_legislative_period_51” contains every parliamentarian’s vote history. The column “PersonNumber” links this dataframe to “member_council_legislative_period_51”. The column “DecisionText” shows how the parliamentarian voted. The column “BusinessShortNumber” shows which item of business was voted on.
+
+The web app displays a three point summary for each item of business. The summaries are provided by the dataframe “sample_business” and its three columns “Point_1”, “Point_2”, and “Point_3”.
+
+The web app groups the voting history by “DecisionText”.
