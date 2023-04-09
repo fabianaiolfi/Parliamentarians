@@ -28,7 +28,7 @@ server <- function(input, output) {
       person_vote_history <- voting_legislative_period_51 %>%
         filter(PersonNumber == input$selected_person) %>%
         left_join(member_council_legislative_period_51, by = "PersonNumber") %>%
-        left_join(sample_business, by = "BusinessShortNumber") %>%
+        inner_join(sample_business, by = "BusinessShortNumber") %>%
         group_by(DecisionText) %>%
         arrange(BusinessShortNumber)
       
