@@ -30,6 +30,7 @@ server <- function(input, output) {
         inner_join(sample_business, by = "BusinessShortNumber") %>%
         left_join(member_council_legislative_period_51, by = "PersonNumber") %>%
         select(BusinessShortNumber, Point_1, Point_2, Point_3, DecisionText) %>%
+        distinct(BusinessShortNumber, .keep_all = TRUE) %>%
         arrange(BusinessShortNumber)
     } else {
       return(NULL)
@@ -50,8 +51,5 @@ server <- function(input, output) {
     }
   })
 }
-
-
-
 
 shinyApp(ui = ui, server = server)
