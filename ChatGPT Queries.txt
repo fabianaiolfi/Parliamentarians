@@ -1,5 +1,6 @@
-# Build Web App with Shiny
+# 230409: Build Web App with Shiny
 
+Fabian Aiolfi
 Please help me build a Shiny web app with R.
 
 The final web app has a dropdown with every parliamentarian from the column “PersonNumber” in the dataframe “member_council_legislative_period_51”.
@@ -9,3 +10,343 @@ When the user selects a person from the dropdown, the web app displays the selec
 The web app displays a three point summary for each item of business. The summaries are provided by the dataframe “sample_business” and its three columns “Point_1”, “Point_2”, and “Point_3”.
 
 The web app groups the voting history by “DecisionText”.
+
+ChatGPT
+To build this Shiny web app, follow these steps:
+
+Install and load the required packages.
+R
+Copy code
+install.packages("shiny")
+install.packages("dplyr")
+
+library(shiny)
+library(dplyr)
+Create a ui object with a dropdown input and an output for the voting history.
+R
+Copy code
+ui <- fluidPage(
+  titlePanel("Parliamentarian Voting History"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        "selected_person",
+        "Choose a parliamentarian:",
+        choices = unique(member_council_legislative_period_51$PersonNumber),
+        selected = NULL
+      )
+    ),
+    
+    mainPanel(
+      uiOutput("vote_history")
+    )
+  )
+)
+Create a server function that takes input from the dropdown and displays the voting history.
+R
+Copy code
+server <- function(input, output) {
+  output$vote_history <- renderUI({
+    if (!is.null(input$selected_person)) {
+      person_vote_history <- voting_legislative_period_51 %>%
+        filter(PersonNumber == input$selected_person) %>%
+        left_join(member_council_legislative_period_51, by = "PersonNumber") %>%
+        left_join(sample_business, by = "BusinessShortNumber") %>%
+        group_by(DecisionText) %>%
+        arrange(BusinessShortNumber)
+      
+      output_list <- list()
+      
+      for (group in unique(person_vote_history$DecisionText)) {
+        output_list[[group]] <- renderDataTable({
+          votes <- person_vote_history %>%
+            filter(DecisionText == group) %>%
+            select(BusinessShortNumber, Point_1, Point_2, Point_3, DecisionText)
+          
+          datatable(votes)
+        })
+      }
+      
+      return(output_list)
+    } else {
+      return(NULL)
+    }
+  })
+}
+Create the Shiny app using the ui and server objects.
+R
+Copy code
+shinyApp(ui = ui, server = server)
+This code will create a Shiny web app with a dropdown menu for selecting a parliamentarian. After selecting a parliamentarian, the app will display their voting history as a list of items of business with a three-point summary for each item. The voting history will be grouped by the "DecisionText" column.
+
+
+
+
+Fabian Aiolfi
+Looking good. But the web app doesn't display the vote history. Instead it shows "Error: could not find function "datatable"". Any suggestions?
+
+ChatGPT
+Apologies for the oversight. It looks like we forgot to load the DT package, which provides the datatable() function. Follow these steps to fix the issue:
+
+Install and load the DT package:
+R
+Copy code
+install.packages("DT")
+
+library(DT)
+Update the server function to use DTOutput and renderDT instead of renderDataTable. This will ensure compatibility with the DT package:
+R
+Copy code
+server <- function(input, output) {
+  output$vote_history <- renderUI({
+    if (!is.null(input$selected_person)) {
+      person_vote_history <- voting_legislative_period_51 %>%
+        filter(PersonNumber == input$selected_person) %>%
+        left_join(member_council_legislative_period_51, by = "PersonNumber") %>%
+        left_join(sample_business, by = "BusinessShortNumber") %>%
+        group_by(DecisionText) %>%
+        arrange(BusinessShortNumber)
+      
+      output_list <- list()
+      
+      for (group in unique(person_vote_history$DecisionText)) {
+        output_list[[group]] <- DTOutput(group)
+        output[[group]] <- renderDT({
+          votes <- person_vote_history %>%
+            filter(DecisionText == group) %>%
+            select(BusinessShortNumber, Point_1, Point_2, Point_3, DecisionText)
+          
+          datatable(votes)
+        })
+      }
+      
+      return(output_list)
+    } else {
+      return(NULL)
+    }
+  })
+}
+With these changes, the web app should now display the vote history without any errors.
+
+
+
+
+Fabian Aiolfi
+Great, no errors!
+I would like to make a change. Please only display the items of business that are in the "sample_business" dataframe. Their unique IDs are provided by the column "BusinessShortNumber".
+
+ChatGPT
+To display only the items of business that are in the "sample_business" dataframe, you can add an additional filter to the person_vote_history pipeline. Update the server function as follows:
+
+R
+Copy code
+server <- function(input, output) {
+  output$vote_history <- renderUI({
+    if (!is.null(input$selected_person)) {
+      person_vote_history <- voting_legislative_period_51 %>%
+        filter(PersonNumber == input$selected_person) %>%
+        left_join(member_council_legislative_period_51, by = "PersonNumber") %>%
+        inner_join(sample_business, by = "BusinessShortNumber") %>%
+        group_by(DecisionText) %>%
+        arrange(BusinessShortNumber)
+      
+      output_list <- list()
+      
+      for (group in unique(person_vote_history$DecisionText)) {
+        output_list[[group]] <- DTOutput(group)
+        output[[group]] <- renderDT({
+          votes <- person_vote_history %>%
+            filter(DecisionText == group) %>%
+            select(BusinessShortNumber, Point_1, Point_2, Point_3, DecisionText)
+          
+          datatable(votes)
+        })
+      }
+      
+      return(output_list)
+    } else {
+      return(NULL)
+    }
+  })
+}
+The only change is using inner_join(sample_business, by = "BusinessShortNumber") instead of left_join(sample_business, by = "BusinessShortNumber"). The inner_join() function will only include rows from both dataframes that have a matching "BusinessShortNumber". This will ensure that only items of business in the "sample_business" dataframe are displayed.
+
+
+
+
+Fabian Aiolfi
+This works, excellent.
+The web app sometimes displays some items of business twice and sometimes shows two duplicate tables. Every items of business should only appear once and there should only be one table.
+
+ChatGPT
+To ensure that each item of business appears only once and there's only one table, you can remove the loop that iterates through the unique values of "DecisionText". Instead, you can simply create a single table with all the voting history.
+
+Here's the updated server function:
+
+R
+Copy code
+server <- function(input, output) {
+  output$vote_history <- renderUI({
+    if (!is.null(input$selected_person)) {
+      person_vote_history <- voting_legislative_period_51 %>%
+        filter(PersonNumber == input$selected_person) %>%
+        left_join(member_council_legislative_period_51, by = "PersonNumber") %>%
+        inner_join(sample_business, by = "BusinessShortNumber") %>%
+        group_by(DecisionText) %>%
+        arrange(BusinessShortNumber) %>%
+        ungroup()
+
+      DTOutput("vote_history_table")
+    } else {
+      return(NULL)
+    }
+  })
+
+  output$vote_history_table <- renderDT({
+    if (!is.null(input$selected_person)) {
+      datatable(person_vote_history)
+    }
+  })
+}
+This version of the server function creates a single output named "vote_history_table" and populates it with the person_vote_history datatable. The loop that iterated through the unique values of "DecisionText" has been removed, ensuring only one table is displayed.
+
+With these changes, the web app should display a single table with each item of business appearing only once.
+
+
+
+
+Fabian Aiolfi
+This gives me the error: "object 'person_vote_history' not found".
+
+ChatGPT
+Apologies for the oversight. You'll need to use a reactive expression to store the person_vote_history so that it can be accessed in multiple places within the server function. Here's the corrected version of the server function:
+
+R
+Copy code
+server <- function(input, output) {
+  person_vote_history <- reactive({
+    if (!is.null(input$selected_person)) {
+      voting_legislative_period_51 %>%
+        filter(PersonNumber == input$selected_person) %>%
+        left_join(member_council_legislative_period_51, by = "PersonNumber") %>%
+        inner_join(sample_business, by = "BusinessShortNumber") %>%
+        group_by(DecisionText) %>%
+        arrange(BusinessShortNumber) %>%
+        ungroup()
+    } else {
+      return(NULL)
+    }
+  })
+
+  output$vote_history <- renderUI({
+    if (!is.null(input$selected_person)) {
+      DTOutput("vote_history_table")
+    } else {
+      return(NULL)
+    }
+  })
+
+  output$vote_history_table <- renderDT({
+    if (!is.null(input$selected_person)) {
+      datatable(person_vote_history())
+    }
+  })
+}
+Now the person_vote_history is defined as a reactive expression using reactive({...}). This allows you to access the updated value of person_vote_history by calling it as a function, like person_vote_history(), in both the renderUI and renderDT functions.
+
+With these changes, the error should be resolved, and the web app should display a single table with each item of business appearing only once.
+
+
+
+
+Fabian Aiolfi
+No errors, but the displayed output is wrong. It now shows all items of business from the dataframe "business_legislative_period_51" and all its columns. I only want the items of business from the "sample_business" dataframe, and only the columns BusinessShortNumber, Point_1, Point_2, Point_3 and DecisionText.
+
+ChatGPT
+I apologize for the confusion. I misunderstood your requirements. Here's the corrected version of the server function that only displays the items of business from the "sample_business" dataframe and includes only the columns "BusinessShortNumber", "Point_1", "Point_2", "Point_3", and "DecisionText":
+
+R
+Copy code
+server <- function(input, output) {
+  person_vote_history <- reactive({
+    if (!is.null(input$selected_person)) {
+      voting_legislative_period_51 %>%
+        filter(PersonNumber == input$selected_person) %>%
+        inner_join(sample_business, by = "BusinessShortNumber") %>%
+        left_join(member_council_legislative_period_51, by = "PersonNumber") %>%
+        select(BusinessShortNumber, Point_1, Point_2, Point_3, DecisionText) %>%
+        arrange(BusinessShortNumber)
+    } else {
+      return(NULL)
+    }
+  })
+
+  output$vote_history <- renderUI({
+    if (!is.null(input$selected_person)) {
+      DTOutput("vote_history_table")
+    } else {
+      return(NULL)
+    }
+  })
+
+  output$vote_history_table <- renderDT({
+    if (!is.null(input$selected_person)) {
+      datatable(person_vote_history())
+    }
+  })
+}
+In this version of the server function, I've changed the order of the joins and placed the select() function after the joins, specifying only the columns you want to display. This should give you the correct output with only the desired columns from the "sample_business" dataframe.
+
+With these changes, the web app should display a single table with each item of business appearing only once, showing only the specified columns.
+
+
+
+
+Fabian Aiolfi
+Thanks, this is working very well.
+Please make the following change: An item of business should only ever appear once in a parliamentarian's vote history. In other words: Prevent duplicate items of business in the table.
+
+ChatGPT
+To prevent duplicate items of business in the table, you can use the distinct() function from the dplyr package to remove duplicates based on the "BusinessShortNumber" column. Update the server function as follows:
+
+R
+Copy code
+server <- function(input, output) {
+  person_vote_history <- reactive({
+    if (!is.null(input$selected_person)) {
+      voting_legislative_period_51 %>%
+        filter(PersonNumber == input$selected_person) %>%
+        inner_join(sample_business, by = "BusinessShortNumber") %>%
+        left_join(member_council_legislative_period_51, by = "PersonNumber") %>%
+        select(BusinessShortNumber, Point_1, Point_2, Point_3, DecisionText) %>%
+        distinct(BusinessShortNumber, .keep_all = TRUE) %>%
+        arrange(BusinessShortNumber)
+    } else {
+      return(NULL)
+    }
+  })
+
+  output$vote_history <- renderUI({
+    if (!is.null(input$selected_person)) {
+      DTOutput("vote_history_table")
+    } else {
+      return(NULL)
+    }
+  })
+
+  output$vote_history_table <- renderDT({
+    if (!is.null(input$selected_person)) {
+      datatable(person_vote_history())
+    }
+  })
+}
+The only change is the addition of the distinct(BusinessShortNumber, .keep_all = TRUE) function after the select() function. This will remove duplicate rows based on the "BusinessShortNumber" column while keeping all other column data for the first occurrence of each unique item of business.
+
+With this change, the web app should display a single table with each item of business appearing only once, without any duplicates.
+
+
+
+
+Fabian Aiolfi
+Excellent, this is exactly what I wanted. Thanks!
