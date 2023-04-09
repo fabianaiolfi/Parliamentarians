@@ -19,8 +19,13 @@ gpt3_authenticate("ChatGPT_API_Key.txt")
 
 
 # Query Sample Summary from ChatGPT -----------------------------------------------------
-# Create sample file
-# sample_business <- sample_n(business_legislative_period_51, 5)
+
+# Always sample the same business items
+sample_sbn <- c("22.028", "22.030", "20.063", "20.064", "22.033")
+
+# Create sample dataframe
+sample_business <- business_legislative_period_51 %>% 
+  filter(BusinessShortNumber %in% sample_sbn)
 
 # Query ChatGPT
 # sample_chatgpt_query <- chatgpt(prompt_role_var = sample_business$role,
@@ -32,7 +37,7 @@ gpt3_authenticate("ChatGPT_API_Key.txt")
 # save(sample_chatgpt_query, file = "data/sample_chatgpt_query.RData")
 load("data/sample_chatgpt_query.RData")
 
-# Convert ChatGPT output to dataframe (Source: https://stackoverflow.com/a/28630369)
+# Convert ChatGPT output to dataframe (Source: https://stackoverflow.com/a/28630369 )
 chatgpt_output <- do.call(
   rbind,
   Map(data.frame,
@@ -47,10 +52,7 @@ chatgpt_output <- chatgpt_output %>%
            remove = TRUE, convert = TRUE, extra = "merge", fill = "right")
 
 # Recreate sample file that matches with sample ChatGPT
-sample_sbn <- chatgpt_output$BusinessShortNumber
-
-sample_business <- business_legislative_period_51 %>% 
-  filter(BusinessShortNumber %in% sample_sbn)
+#sample_sbn <- chatgpt_output$BusinessShortNumber
 
 # Merge ChatGPT output dataframe together with Business dataframe
 sample_business <- sample_business %>% 
