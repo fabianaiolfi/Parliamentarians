@@ -8,3 +8,12 @@ library("swissparl")
 
 #devtools::install_github("ben-aaron188/rgpt3")
 library(rgpt3)
+
+#install.packages("shiny")
+library(shiny)
+
+#install.packages("dplyr")
+library(dplyr)
+
+#install.packages("DT")
+library(DT)
