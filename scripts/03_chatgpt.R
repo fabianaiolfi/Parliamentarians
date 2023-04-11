@@ -25,35 +25,11 @@ timestamp <- Sys.time()
 formatted_timestamp <- format(timestamp, "%Y%m%d_%H%M%S")
 
 # Query
-chatgpt_output <- chatgpt(prompt_role_var = sample_business_long$role,
-                          prompt_content_var = sample_business_long$query,
-                          id_var = sample_business_long$id,
-                          param_max_tokens = 100,
-                          param_n = 1,
-                          param_temperature = 0)
+# chatgpt_output <- chatgpt(prompt_role_var = sample_business_long$role,
+#                           prompt_content_var = sample_business_long$query,
+#                           id_var = sample_business_long$id,
+#                           param_max_tokens = 100,
+#                           param_n = 1,
+#                           param_temperature = 0)
 
-save(chatgpt_output, file = paste0("data/chatgpt_output_", formatted_timestamp, ".RData"))
-#load("data/sample_chatgpt_query.RData")
-
-# Convert ChatGPT output to dataframe (Source: https://stackoverflow.com/a/28630369 )
-chatgpt_output_df <- do.call(
-  rbind,
-  Map(data.frame,
-      BusinessShortNumber = chatgpt_output[[1]][["id"]],
-      content = chatgpt_output[[1]][["chatgpt_content"]]))
-
-# to do: split business short number and query type
-chatgpt_output_df <- chatgpt_output_df %>% 
-  separate_wider_delim(BusinessShortNumber, delim = "-", names = c("BusinessShortNumber", "query_type"))
-
-
-# Separate numbered bullet points and spread them over separate columns (Source: ChatGPT)
-# chatgpt_output <- chatgpt_output %>%
-#   separate(content,
-#            into = c("Point_1", "Point_2", "Point_3"),
-#            sep = "\\s+(?=(1|2|3)\\.\\s)",
-#            remove = TRUE, convert = TRUE, extra = "merge", fill = "right")
-
-# Merge ChatGPT output dataframe together with Business dataframe
-# sample_business <- sample_business %>% 
-#   left_join(chatgpt_output, by = "BusinessShortNumber")
+#save(chatgpt_output, file = paste0("data/chatgpt_output_", formatted_timestamp, ".RData"))
