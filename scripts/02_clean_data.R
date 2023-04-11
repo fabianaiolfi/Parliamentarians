@@ -39,6 +39,7 @@ sample_business$InitialSituation_clean <- gsub(" {2,}", " ", sample_business$Ini
 
 
 # Create ChatGPT Queries ---------------------------------------------------------------
+# Sent on 20230411_232430
 query_3_pts <- "Zusammenfassung in 3 nummerierten Stichpunkten, jeweils maximal 10 Wörter, mit Verweis auf die wichtigsten Akteure in jedem Stichpunkt: "
 query_1_sent <- "Erstelle eine Zusammenfassung, maximal 1 Satz, maximal 15 Wörter, in einfacher Sprache: "
 query_central_stmnt <- "Welche zentrale Aussage soll ein:e Wähler:in von diesem Text mitnehmen? Verwende  einfache Sprache, maximal 15 Wörter und maximal 1 Satz.\n"
