@@ -1,0 +1,28 @@
+---
+title: "ChatGPT Output"
+author: "Fabian Aiolfi"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library("tidyverse")
+
+library("here")
+setwd(here())
+
+source("sc01-2_load_parl_data")
+source("02_clean_data.R")
+source("04_post_processing.R")
+```
+
+# Display output
+```{r}
+query_3_pts
+chatgpt_output_df %>%
+  filter(query_type == "query_3_pts") %>% 
+  select(-query_type)
+```
+
