@@ -9,20 +9,46 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 
 library("tidyverse")
-
+library("stargazer")
+library("knitr")
 library("here")
-setwd(here())
+opts_chunk$set(root.dir = here())
 
-source("sc01-2_load_parl_data")
+source("01-2_load_parl_data.R")
 source("02_clean_data.R")
 source("04_post_processing.R")
 ```
 
 # Display output
-```{r}
+```{r echo=FALSE, results = 'asis'}
 query_3_pts
-chatgpt_output_df %>%
+view_1 <- chatgpt_output_df %>%
   filter(query_type == "query_3_pts") %>% 
   select(-query_type)
+kable(view_1, format = "html", row.names = FALSE)
+```
+
+```{r echo=FALSE, results = 'asis'}
+query_1_sent
+view_2 <- chatgpt_output_df %>%
+  filter(query_type == "query_1_sent") %>% 
+  select(-query_type)
+kable(view_2, format = "html", row.names = FALSE)
+```
+
+```{r echo=FALSE, results = 'asis'}
+query_central_stmnt
+view_3 <- chatgpt_output_df %>%
+  filter(query_type == "query_central_stmnt") %>% 
+  select(-query_type)
+kable(view_3, format = "html", row.names = FALSE)
+```
+
+```{r echo=FALSE, results = 'asis'}
+query_3_keywords
+view_4 <- chatgpt_output_df %>%
+  filter(query_type == "query_3_keywords") %>% 
+  select(-query_type)
+kable(view_4, format = "html", row.names = FALSE)
 ```
 
