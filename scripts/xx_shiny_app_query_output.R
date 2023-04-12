@@ -1,26 +1,27 @@
 # Shiny app displaying ChatGPT query output
 
 ui <- fluidPage(
-  titlePanel("Business Short Number App"),
+  titlePanel("ChatGPT Output"),
   sidebarLayout(
     sidebarPanel(
       selectInput("business_short_number", "Select BusinessShortNumber:",
                   choices = sample_business$BusinessShortNumber)
     ),
     mainPanel(
-      h3("Initial Situation:"),
-      textOutput("initial_situation_text"),
+      h3("Ausgangslage"),
+      uiOutput("initial_situation_text"),
       br(),
-      h3("Corresponding Content:"),
+      h3("Zusammenfassungen"),
       uiOutput("chatgpt_content")
     )
   )
 )
 
 server <- function(input, output) {
-  output$initial_situation_text <- renderText({
+  output$initial_situation_text <- renderUI({
     req(input$business_short_number)
-    as.character(sample_business[sample_business$BusinessShortNumber == input$business_short_number, "InitialSituation"])
+    initial_situation_html <- as.character(sample_business[sample_business$BusinessShortNumber == input$business_short_number, "InitialSituation"])
+    HTML(initial_situation_html)
   })
   
   output$chatgpt_content <- renderUI({
@@ -30,7 +31,7 @@ server <- function(input, output) {
       arrange(query_type)
     
     content_blocks <- lapply(unique(chatgpt_content_filtered$query_type), function(query_type) {
-      content_header <- textOutput(paste0("header_", query_type))
+      content_header <- tags$strong(textOutput(paste0("header_", query_type)))
       content_text <- textOutput(paste0("content_", query_type))
       
       output[[paste0("header_", query_type)]] <- renderText(get(query_type))
