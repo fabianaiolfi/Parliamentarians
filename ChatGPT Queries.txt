@@ -350,3 +350,185 @@ With this change, the web app should display a single table with each item of bu
 
 Fabian Aiolfi
 Excellent, this is exactly what I wanted. Thanks!
+
+
+# 230412: Build Web App with Shiny to display and help evaluate ChatGPT output
+
+Please help me build a Shiny web app in R.
+The user can select a “BusinessShortNumber” in a dropdown. This is provided by the column “BusinessShortNumber” in the dataframe “sample_business”.
+Once the user has picked a “BusinessShortNumber”, the text from the column “InitialSituation” is displayed.
+Below that text we see the corresponding text from the “content” column in the dataframe “chatgpt_output_df”. The dataframes “sample_business” and “chatgpt_output_df” both have the column “BusinessShortNumber”. The content from “chatgpt_output_df” is sorted by “query_type”.
+Directly above each block of content is displayed the string from the object which has the same name as the “query_type”.
+
+To create a Shiny web app in R that meets your requirements, follow the steps below. I assume you have R and RStudio installed, as well as the necessary packages (shiny and dplyr). If not, you can install the required packages using install.packages(c("shiny", "dplyr")).
+
+Create a new R script, and save it as app.R in a new directory.
+In app.R, load the required libraries and prepare the sample data:
+R
+Copy code
+library(shiny)
+library(dplyr)
+
+# Sample data
+sample_business <- data.frame(
+  BusinessShortNumber = c("A001", "A002", "A003"),
+  InitialSituation = c("Initial situation 1", "Initial situation 2", "Initial situation 3")
+)
+
+chatgpt_output_df <- data.frame(
+  BusinessShortNumber = c("A001", "A001", "A002", "A002", "A003", "A003"),
+  content = c("Content 1A", "Content 1B", "Content 2A", "Content 2B", "Content 3A", "Content 3B"),
+  query_type = c("TypeA", "TypeB", "TypeA", "TypeB", "TypeA", "TypeB")
+)
+
+# Query type strings
+TypeA <- "Type A Header"
+TypeB <- "Type B Header"
+Define the UI and server components of your Shiny app:
+R
+Copy code
+ui <- fluidPage(
+  titlePanel("Business Short Number App"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("business_short_number", "Select BusinessShortNumber:",
+                  choices = sample_business$BusinessShortNumber)
+    ),
+    mainPanel(
+      h3("Initial Situation:"),
+      textOutput("initial_situation_text"),
+      br(),
+      h3("Corresponding Content:"),
+      uiOutput("chatgpt_content")
+    )
+  )
+)
+
+server <- function(input, output) {
+  output$initial_situation_text <- renderText({
+    req(input$business_short_number)
+    sample_business[sample_business$BusinessShortNumber == input$business_short_number, "InitialSituation"]
+  })
+
+  output$chatgpt_content <- renderUI({
+    req(input$business_short_number)
+    chatgpt_content_filtered <- chatgpt_output_df %>%
+      filter(BusinessShortNumber == input$business_short_number) %>%
+      arrange(query_type)
+    
+    content_blocks <- lapply(unique(chatgpt_content_filtered$query_type), function(query_type) {
+      content_header <- textOutput(paste0("header_", query_type))
+      content_text <- textOutput(paste0("content_", query_type))
+      
+      output[[paste0("header_", query_type)]] <- renderText(get(query_type))
+      output[[paste0("content_", query_type)]] <- renderText(paste(chatgpt_content_filtered[chatgpt_content_filtered$query_type == query_type, "content"], collapse = "\n"))
+      
+      list(content_header, br(), content_text, br())
+    })
+    
+    do.call(tagList, content_blocks)
+  })
+}
+
+shinyApp(ui = ui, server = server)
+Save the app.R file and run the Shiny app by executing runApp("Path/to/your/app_directory") in the R console or clicking on the "Run App" button in RStudio. The app will display the Initial Situation text based on the selected BusinessShortNumber, as well as the corresponding content, sorted by query type, with the header string for each query type.
+
+
+
+Fabian Aiolfi
+Looking good. However, below "Initial Situation:" there's an error:
+argument 1 (type 'list') cannot be handled by 'cat'
+Apologies for the oversight. It seems that the issue arises because the textOutput doesn't handle lists as expected. Instead, you can use verbatimTextOutput and modify the code as follows:
+
+Replace this line:
+
+R
+Copy code
+textOutput("initial_situation_text"),
+with:
+
+R
+Copy code
+verbatimTextOutput("initial_situation_text"),
+Then, your Shiny app should display the initial situation text without any errors.
+
+
+
+
+Fabian Aiolfi
+No, still getting the same error at the same place:
+argument 1 (type 'list') cannot be handled by 'cat'
+I apologize for the confusion. I misunderstood the source of the error earlier. The error is actually caused by renderText returning a list instead of a character vector. This can be fixed by using as.character to convert the output to a character vector. Please update the renderText block in the server function as follows:
+
+Replace this code block:
+
+R
+Copy code
+output$initial_situation_text <- renderText({
+    req(input$business_short_number)
+    sample_business[sample_business$BusinessShortNumber == input$business_short_number, "InitialSituation"]
+})
+with:
+
+R
+Copy code
+output$initial_situation_text <- renderText({
+    req(input$business_short_number)
+    as.character(sample_business[sample_business$BusinessShortNumber == input$business_short_number, "InitialSituation"])
+})
+Now your Shiny app should display the initial situation text without any errors.
+
+
+
+
+Fabian Aiolfi
+How can I make the "query_type" string above the blocks of content bold?
+To make the "query_type" string above the blocks of content bold, you can wrap the text output in an HTML <strong> tag using the tags$strong() function. Modify the content_header line in the lapply function like this:
+
+Replace this line:
+
+R
+Copy code
+content_header <- textOutput(paste0("header_", query_type))
+with:
+
+R
+Copy code
+content_header <- tags$strong(textOutput(paste0("header_", query_type)))
+This will make the "query_type" string above each block of content bold.
+
+
+
+
+Fabian Aiolfi
+The text in "initial_situation_text" contains HTML tags. Is there a way to render them as HTML?
+Yes, you can render the text as HTML by using renderUI and HTML() functions instead of renderText. Replace the textOutput in the UI and the renderText in the server function with the following code:
+
+Replace this line in the ui section:
+
+R
+Copy code
+verbatimTextOutput("initial_situation_text"),
+with:
+
+R
+Copy code
+uiOutput("initial_situation_text"),
+And replace this code block in the server function:
+
+R
+Copy code
+output$initial_situation_text <- renderText({
+    req(input$business_short_number)
+    as.character(sample_business[sample_business$BusinessShortNumber == input$business_short_number, "InitialSituation"])
+})
+with:
+
+R
+Copy code
+output$initial_situation_text <- renderUI({
+    req(input$business_short_number)
+    initial_situation_html <- as.character(sample_business[sample_business$BusinessShortNumber == input$business_short_number, "InitialSituation"])
+    HTML(initial_situation_html)
+})
+Now, the "initial_situation_text" output will render any HTML tags in the text correctly.
