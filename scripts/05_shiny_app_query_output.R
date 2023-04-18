@@ -1,10 +1,10 @@
 # Shiny app displaying ChatGPT query output
 
 ui <- fluidPage(
-  titlePanel("ChatGPT Output"),
+  titlePanel("ChatGPT Output Evaluation"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("business_short_number", "Select BusinessShortNumber:",
+      selectInput("business_short_number", "Select an Item of Business:",
                   choices = sample_business$BusinessShortNumber)
     ),
     mainPanel(
