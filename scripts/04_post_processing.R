@@ -49,14 +49,21 @@ chatgpt_output_df <- chatgpt_output_df %>%
   filter(query_type == "query_smartspider_precise" | query_type == "query_central_stmnt") %>% 
   pivot_wider(names_from = query_type, values_from = content)
 
+chatgpt_output_df <- chatgpt_output_df %>% 
+  separate(query_smartspider_precise, into = c("Offene Aussenpolitik", "Liberale Wirtschaftspolitik", "Restriktive Finanzpolitik", "Law & Order",
+                                               "Restriktive Migrationspolitik", "Ausgebauter Umweltschutz", "Ausgebauter Sozialstaat", "Liberale Gesellschaft"), sep = "\n")
 
+# Custom function to replace entire string with NA if it contains "NA"
+replace_NA <- function(x) {
+  if (is.character(x)) {
+    x[grepl("NA", x)] <- NA
+  }
+  return(x)
+}
 
-
-
-
-
-
-
-
-
-
+value_pattern <- "\\b\\d{2}\\b"
+# Apply custom function to Column1 through Column8
+chatgpt_output_df <- chatgpt_output_df %>%
+  mutate_at(vars("Offene Aussenpolitik":"Liberale Gesellschaft"), replace_NA) %>%
+  mutate_at(vars("Offene Aussenpolitik":"Liberale Gesellschaft"), list(~str_extract(., value_pattern))) %>% 
+  mutate_at(vars("Offene Aussenpolitik":"Liberale Gesellschaft"), as.integer)
