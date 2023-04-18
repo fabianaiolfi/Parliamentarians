@@ -32,10 +32,15 @@ server <- function(input, output) {
     
     content_blocks <- lapply(unique(chatgpt_content_filtered$query_type), function(query_type) {
       content_header <- tags$strong(textOutput(paste0("header_", query_type)))
-      content_text <- textOutput(paste0("content_", query_type))
+      content_text <- uiOutput(paste0("content_", query_type))
       
       output[[paste0("header_", query_type)]] <- renderText(get(query_type))
-      output[[paste0("content_", query_type)]] <- renderText(paste(chatgpt_content_filtered[chatgpt_content_filtered$query_type == query_type, "content"], collapse = "\n"))
+      output[[paste0("content_", query_type)]] <- renderUI({
+        content_string <- paste(chatgpt_content_filtered[chatgpt_content_filtered$query_type == query_type, "content"], collapse = " ")
+        text_with_breaks <- unlist(strsplit(content_string, split = "\\n"))
+        html_text_with_breaks <- paste0(text_with_breaks, collapse = "<br>")
+        HTML(html_text_with_breaks)
+      })
       
       list(content_header, br(), content_text, br())
     })
