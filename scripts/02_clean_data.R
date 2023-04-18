@@ -78,3 +78,6 @@ sample_business_long <- sample_business %>%
 # Wrapper requires `prompt_role_var` to be a column in the dataframe
 sample_business_long$role <- "user"
 
+# Only include smartspider query
+sample_business_long <- sample_business_long %>% 
+  filter(str_detect(id, "smartspider"))
