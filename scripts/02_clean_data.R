@@ -44,14 +44,16 @@ query_3_pts <- "Zusammenfassung in 3 nummerierten Stichpunkten, jeweils maximal 
 query_1_sent <- "Erstelle eine Zusammenfassung, maximal 1 Satz, maximal 15 Wörter, in einfacher Sprache: "
 query_central_stmnt <- "Welche zentrale Aussage soll ein:e Wähler:in von diesem Text mitnehmen? Verwende  einfache Sprache, maximal 15 Wörter und maximal 1 Satz.\n"
 query_3_keywords <- "Welche drei Schlagwörter passen zu diesem Text?\n"
+query_smartspider <- "Du hast 8 Kategorien:\n1. Offene Aussenpolitik\n2. Liberale Wirtschaftspolitik\n3. Restriktive Finanzpolitik\n4. Law & Order\n5. Restriktive Migrationspolitik\n6. Ausgebauter Umweltschutz\n7. Ausgebauter Sozialstaat\n8. Liberale Gesellschaft\nBasierend auf den Text unten gibst du für jede Kategorie einen Wert zwischen 0 und 100. 100 steht für eine starke Zustimmung für die Kategorie, 0 steht für keine Zustimmung. Gebe 'NA' an, wenn eine Kategorie nicht passt. Bitte nur die 8 Punkte zurückgeben.\n"
 
 sample_business <- sample_business %>% 
   mutate(chatgpt_query_3_pts = paste(query_3_pts, InitialSituation_clean, sep = " ")) %>% 
   mutate(chatgpt_query_1_sent = paste(query_1_sent, InitialSituation_clean, sep = " ")) %>% 
   mutate(chatgpt_query_central_stmnt = paste(query_central_stmnt, InitialSituation_clean, sep = " ")) %>% 
-  mutate(chatgpt_query_3_keywords = paste(query_3_keywords, InitialSituation_clean, sep = " "))
+  mutate(chatgpt_query_3_keywords = paste(query_3_keywords, InitialSituation_clean, sep = " ")) %>% 
+  mutate(chatgpt_query_smartspider = paste(query_smartspider, InitialSituation_clean, sep = " ")) 
 
-query_list <- c("chatgpt_query_3_pts", "chatgpt_query_1_sent", "chatgpt_query_central_stmnt", "chatgpt_query_3_keywords")
+query_list <- c("chatgpt_query_3_pts", "chatgpt_query_1_sent", "chatgpt_query_central_stmnt", "chatgpt_query_3_keywords", "chatgpt_query_smartspider")
 
 
 # Truncate Long Query ---------------------------------------------------------------
@@ -76,6 +78,3 @@ sample_business_long <- sample_business %>%
 # Wrapper requires `prompt_role_var` to be a column in the dataframe
 sample_business_long$role <- "user"
 
-# Tweak Council Member DF for Shiny App ---------------------------------------------------------------
-#member_council_legislative_period_51 <- member_council_legislative_period_51 %>% 
-  #mutate(full_name = paste(FirstName, LastName))
