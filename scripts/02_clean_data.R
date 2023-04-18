@@ -44,6 +44,7 @@ query_3_pts <- "Zusammenfassung in 3 nummerierten Stichpunkten, jeweils maximal 
 query_1_sent <- "Erstelle eine Zusammenfassung, maximal 1 Satz, maximal 15 Wörter, in einfacher Sprache: "
 query_central_stmnt <- "Welche zentrale Aussage soll ein:e Wähler:in von diesem Text mitnehmen? Verwende  einfache Sprache, maximal 15 Wörter und maximal 1 Satz.\n"
 query_3_keywords <- "Welche drei Schlagwörter passen zu diesem Text?\n"
+# Sent on 20230418
 query_smartspider <- "Du hast 8 Kategorien:\n1. Offene Aussenpolitik\n2. Liberale Wirtschaftspolitik\n3. Restriktive Finanzpolitik\n4. Law & Order\n5. Restriktive Migrationspolitik\n6. Ausgebauter Umweltschutz\n7. Ausgebauter Sozialstaat\n8. Liberale Gesellschaft\nBasierend auf den Text unten gibst du für jede Kategorie einen Wert zwischen 0 und 100. 100 steht für eine starke Zustimmung für die Kategorie, 0 steht für keine Zustimmung. Gebe 'NA' an, wenn eine Kategorie nicht passt. Bitte nur die 8 Punkte zurückgeben.\n"
 
 sample_business <- sample_business %>% 
@@ -54,19 +55,6 @@ sample_business <- sample_business %>%
   mutate(chatgpt_query_smartspider = paste(query_smartspider, InitialSituation_clean, sep = " ")) 
 
 query_list <- c("chatgpt_query_3_pts", "chatgpt_query_1_sent", "chatgpt_query_central_stmnt", "chatgpt_query_3_keywords", "chatgpt_query_smartspider")
-
-
-# Truncate Long Query ---------------------------------------------------------------
-# The model gpt-3.5-turbo-0301 sets 4096 as the maximum number of tokens for one query (https://platform.openai.com/docs/guides/chat/introduction)
-
-# Calculate number of tokens per query
-# https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them
-# English: 1 token ~ 4 characters
-
-# Own calculations based on https://platform.openai.com/tokenizer
-# German: 1 token ~ 2.6 characters
-# sample_business$chatgpt_query_n_tokens <- nchar(sample_business$chatgpt_query_3_pts) / 2.6
-# max(sample_business$chatgpt_query_n_tokens)
 
 
 # Wide to Long Table ---------------------------------------------------------------

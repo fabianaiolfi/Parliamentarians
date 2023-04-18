@@ -29,15 +29,3 @@ chatgpt_output_df_20230418_170140 <- chatgpt_output_df_20230418_170140 %>%
 
 chatgpt_output_df <- rbind(chatgpt_output_df_20230411_232430,
                            chatgpt_output_df_20230418_170140)
-
-
-# Separate numbered bullet points and spread them over separate columns (Source: ChatGPT)
-# chatgpt_output <- chatgpt_output %>%
-#   separate(content,
-#            into = c("Point_1", "Point_2", "Point_3"),
-#            sep = "\\s+(?=(1|2|3)\\.\\s)",
-#            remove = TRUE, convert = TRUE, extra = "merge", fill = "right")
-
-# Merge ChatGPT output dataframe together with Business dataframe
-# sample_business <- sample_business %>% 
-#   left_join(chatgpt_output, by = "BusinessShortNumber")
