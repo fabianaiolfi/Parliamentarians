@@ -29,3 +29,4 @@ chatgpt_output_df_20230418_170140 <- chatgpt_output_df_20230418_170140 %>%
 
 chatgpt_output_df <- rbind(chatgpt_output_df_20230411_232430,
                            chatgpt_output_df_20230418_170140)
+save(chatgpt_output_df, file = here("scripts", "shiny_app", "data", "chatgpt_output_df.RData")) # save for Shiny app
