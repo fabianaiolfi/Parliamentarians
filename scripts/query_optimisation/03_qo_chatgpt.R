@@ -20,5 +20,5 @@ formatted_timestamp <- format(timestamp, "%Y%m%d_%H%M%S")
 #                           param_max_tokens = 100,
 #                           param_n = 1,
 #                           param_temperature = 0)
-#
-#save(chatgpt_output, file = paste0("data/chatgpt_output_", formatted_timestamp, ".RData"))
+# 
+# save(chatgpt_output, file = paste0("data/chatgpt_output_", formatted_timestamp, ".RData"))

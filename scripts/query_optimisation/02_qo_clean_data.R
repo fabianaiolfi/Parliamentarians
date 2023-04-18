@@ -46,25 +46,28 @@ query_central_stmnt <- "Welche zentrale Aussage soll ein:e Wähler:in von diesem
 query_3_keywords <- "Welche drei Schlagwörter passen zu diesem Text?\n"
 # Sent on 20230418
 query_smartspider <- "Du hast 8 Kategorien:\n1. Offene Aussenpolitik\n2. Liberale Wirtschaftspolitik\n3. Restriktive Finanzpolitik\n4. Law & Order\n5. Restriktive Migrationspolitik\n6. Ausgebauter Umweltschutz\n7. Ausgebauter Sozialstaat\n8. Liberale Gesellschaft\nBasierend auf den Text unten gibst du für jede Kategorie einen Wert zwischen 0 und 100. 100 steht für eine starke Zustimmung für die Kategorie, 0 steht für keine Zustimmung. Gebe 'NA' an, wenn eine Kategorie nicht passt. Bitte nur die 8 Punkte zurückgeben.\n"
+query_smartspider_precise <- "Du hast 8 Kategorien:\n1. Offene Aussenpolitik\n2. Liberale Wirtschaftspolitik\n3. Restriktive Finanzpolitik\n4. Law & Order\n5. Restriktive Migrationspolitik\n6. Ausgebauter Umweltschutz\n7. Ausgebauter Sozialstaat\n8. Liberale Gesellschaft\nBasierend auf den Text unten gibst du für jede Kategorie einen Wert zwischen 0 und 100. 100 steht für eine starke Zustimmung für die Kategorie, 0 steht für keine Zustimmung. Gebe 'NA' an, wenn eine Kategorie nicht passt. Gib immer an, welcher Wert zu welcher Kategorie gehört. Gib keine weiteren Informationen.\n"
 
 # Save for Shiny app
-save(query_3_pts, file = here("scripts", "shiny_app", "data", "query_3_pts.RData"))
-save(query_1_sent, file = here("scripts", "shiny_app", "data", "query_1_sent.RData"))
-save(query_central_stmnt, file = here("scripts", "shiny_app", "data", "query_central_stmnt.RData"))
-save(query_3_keywords, file = here("scripts", "shiny_app", "data", "query_3_keywords.RData"))
-save(query_smartspider, file = here("scripts", "shiny_app", "data", "query_smartspider.RData"))
+save(query_3_pts, file = here("scripts", "query_optimisation", "qo_shiny_app", "data", "query_3_pts.RData"))
+save(query_1_sent, file = here("scripts", "query_optimisation", "qo_shiny_app", "data", "query_1_sent.RData"))
+save(query_central_stmnt, file = here("scripts", "query_optimisation", "qo_shiny_app", "data", "query_central_stmnt.RData"))
+save(query_3_keywords, file = here("scripts", "query_optimisation", "qo_shiny_app", "data", "query_3_keywords.RData"))
+save(query_smartspider, file = here("scripts", "query_optimisation", "qo_shiny_app", "data", "query_smartspider.RData"))
+save(query_smartspider_precise, file = here("scripts", "query_optimisation", "qo_shiny_app", "data", "query_smartspider_precise.RData"))
 
 sample_business <- sample_business %>% 
   mutate(chatgpt_query_3_pts = paste(query_3_pts, InitialSituation_clean, sep = " ")) %>% 
   mutate(chatgpt_query_1_sent = paste(query_1_sent, InitialSituation_clean, sep = " ")) %>% 
   mutate(chatgpt_query_central_stmnt = paste(query_central_stmnt, InitialSituation_clean, sep = " ")) %>% 
   mutate(chatgpt_query_3_keywords = paste(query_3_keywords, InitialSituation_clean, sep = " ")) %>% 
-  mutate(chatgpt_query_smartspider = paste(query_smartspider, InitialSituation_clean, sep = " ")) 
+  mutate(chatgpt_query_smartspider = paste(query_smartspider, InitialSituation_clean, sep = " ")) %>% 
+  mutate(chatgpt_query_smartspider_precise = paste(query_smartspider_precise, InitialSituation_clean, sep = " "))
 
-save(sample_business, file = here("scripts", "shiny_app", "data", "sample_business.RData")) # save for Shiny app
+save(sample_business, file = here("scripts", "query_optimisation", "qo_shiny_app", "data", "sample_business.RData")) # save for Shiny app
 
 
-query_list <- c("chatgpt_query_3_pts", "chatgpt_query_1_sent", "chatgpt_query_central_stmnt", "chatgpt_query_3_keywords", "chatgpt_query_smartspider")
+query_list <- c("chatgpt_query_3_pts", "chatgpt_query_1_sent", "chatgpt_query_central_stmnt", "chatgpt_query_3_keywords", "chatgpt_query_smartspider", "chatgpt_query_smartspider_precise")
 
 
 # Wide to Long Table ---------------------------------------------------------------
@@ -78,4 +81,4 @@ sample_business_long$role <- "user"
 
 # Only include smartspider query
 sample_business_long <- sample_business_long %>% 
-  filter(str_detect(id, "smartspider"))
+  filter(str_detect(id, "smartspider_precise"))
