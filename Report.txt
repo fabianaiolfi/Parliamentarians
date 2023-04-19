@@ -9,9 +9,15 @@
 
 ## Discussion
 
-### Query Output Evaluation
+### ChatGPT Output Evaluation
+Generated Summary
 - Which summary query was the best / most adequat?
+
+Smart Spider Category Values
+- Is a direct comparison with current smart spider possible?
+	- possible comparison: compare parliamentarian profile with with an average of their voting history? → file under possible future work
+- Is there a correlation between Yes/No votes and the level of a category value? E.g.: A parliamentarian tends to vote yes on an item of business that is below a certain value in the category?
 
 ### Technical Aspects
 - Dangers of being dependent on one single API
-- When quering smartvote values: Returns unstructured output
+- When querying smartvote values: Returns unstructured output
