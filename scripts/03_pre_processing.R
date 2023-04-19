@@ -30,7 +30,6 @@ business_legislative_period_51$InitialSituation_clean <- gsub(" {2,}", " ", busi
 
 
 # Create ChatGPT Query String ---------------------------------------------------------------
-
 # Setup query as string
 query_central_stmnt <- "Welche zentrale Aussage soll ein:e Wähler:in von diesem Text mitnehmen? Verwende einfache Sprache, maximal 15 Wörter und maximal 1 Satz.\n"
 query_smartspider_precise <- "Du hast 8 Kategorien:\n1. Offene Aussenpolitik\n2. Liberale Wirtschaftspolitik\n3. Restriktive Finanzpolitik\n4. Law & Order\n5. Restriktive Migrationspolitik\n6. Ausgebauter Umweltschutz\n7. Ausgebauter Sozialstaat\n8. Liberale Gesellschaft\nBasierend auf den Text unten gibst du für jede Kategorie einen Wert zwischen 0 und 100. 100 steht für eine starke Zustimmung für die Kategorie, 0 steht für keine Zustimmung. Gebe 'NA' an, wenn eine Kategorie nicht passt. Gib immer an, welcher Wert zu welcher Kategorie gehört. Gib keine weiteren Informationen.\n"
@@ -38,7 +37,14 @@ query_smartspider_precise <- "Du hast 8 Kategorien:\n1. Offene Aussenpolitik\n2.
 # Merge ChatGPT query string with description text
 business_legislative_period_51 <- business_legislative_period_51 %>% 
   mutate(chatgpt_query_central_stmnt = paste(query_central_stmnt, InitialSituation_clean, sep = " ")) %>% 
-  mutate(chatgpt_query_smartspider_precise = paste(query_smartspider_precise, InitialSituation_clean, sep = " ")) 
+  mutate(chatgpt_query_smartspider_precise = paste(query_smartspider_precise, InitialSituation_clean, sep = " "))
+
+
+# Wide to Long Table ---------------------------------------------------------------
+business_legislative_period_51_long <- business_legislative_period_51 %>% 
+  select(BusinessShortNumber, chatgpt_query_central_stmnt, chatgpt_query_smartspider_precise) %>% 
+  gather(key = "query_type", value = "query", chatgpt_query_central_stmnt, chatgpt_query_smartspider_precise) %>% 
+  mutate(id = paste(BusinessShortNumber, query_type, sep = "-"), .keep = c("unused"))
 
 # ChatGPT wrapper requires `prompt_role_var` to be its own column in the dataframe
-business_legislative_period_51$role <- "user"
+business_legislative_period_51_long$role <- "user"
