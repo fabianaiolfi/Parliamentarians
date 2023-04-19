@@ -51,3 +51,11 @@ chatgpt_output_df <- chatgpt_output_df %>%
   mutate_at(vars("Offene Aussenpolitik":"Liberale Gesellschaft"), replace_NA) %>%
   mutate_at(vars("Offene Aussenpolitik":"Liberale Gesellschaft"), list(~str_extract(., value_pattern))) %>% 
   mutate_at(vars("Offene Aussenpolitik":"Liberale Gesellschaft"), as.integer)
+
+# Save files for Shiny App -------------------------------------------------------
+save(business_legislative_period_51, file = here("scripts", "shiny_app", "data", "business_legislative_period_51.RData"))
+save(chatgpt_output_df, file = here("scripts","shiny_app", "data", "chatgpt_output_df.RData"))
+save(member_council_legislative_period_51, file = here("scripts","shiny_app", "data", "member_council_legislative_period_51.RData"))
+save(voting_legislative_period_51, file = here("scripts","shiny_app", "data", "voting_legislative_period_51.RData"))
+
+
