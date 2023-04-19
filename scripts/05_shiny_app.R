@@ -20,7 +20,7 @@ ui <- fluidPage(
       selectInput(
         "category_filter",
         "Abstimmungen nach Kategorie filtern",
-        choices = c("Alle Kategorien", colnames(result)[4:11])
+        choices = c("Alle Kategorien", colnames(chatgpt_output_df)[3:10])
       )
     ),
     mainPanel(
