@@ -1,13 +1,13 @@
 # Load Locally Stored Parliamentary Data ---------------------------------------------------------------
 # Only run this script if data has already been downloaded via 01_get_parl_data.R
 
-load("data/voting_legislative_period_51.RData")
-load("data/business_legislative_period_51.RData")
-load("data/member_council_legislative_period_51.RData")
+load(here("data", "voting_legislative_period_51.RData"))
+load(here("data", "business_legislative_period_51.RData"))
+load(here("data", "member_council_legislative_period_51.RData"))
 
 
 # Create Sample ---------------------------------------------------------------
-# Only run this segment to create a sample dataframe for testing purposes
+# Only run this segment if you want to create a sample dataframe for testing purposes
 
 # Always sample the same business items
 sample_sbn <- c("22.028", "22.030", "20.063", "20.064", "22.033")

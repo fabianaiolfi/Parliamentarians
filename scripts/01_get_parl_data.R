@@ -30,6 +30,6 @@ length(unique(member_council_legislative_period_51$PersonNumber))
 
 
 # Store data locally ------------------------------------------------------
-save(voting_legislative_period_51, file = "data/voting_legislative_period_51.RData")
-save(business_legislative_period_51, file = "data/business_legislative_period_51.RData")
-save(member_council_legislative_period_51, file = "data/member_council_legislative_period_51.RData")
+save(voting_legislative_period_51, file = here("data", "voting_legislative_period_51.RData"))
+save(business_legislative_period_51, file = here("data", "business_legislative_period_51.RData"))
+save(member_council_legislative_period_51, file = here("data", "member_council_legislative_period_51.RData"))

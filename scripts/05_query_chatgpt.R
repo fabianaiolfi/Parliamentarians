@@ -11,18 +11,20 @@ gpt3_authenticate("ChatGPT_API_Key.txt")
 # Query ChatGPT -----------------------------------------------------
 
 # Get and format the current timestamp
+# Helps preventing overwriting files when saving RData locally
 timestamp <- Sys.time()
 formatted_timestamp <- format(timestamp, "%Y%m%d_%H%M%S")
 
 # Query
-# chatgpt_output <- chatgpt(prompt_role_var = sample_business_long$role,
-#                           prompt_content_var = sample_business_long$query,
-#                           id_var = sample_business_long$id,
+# chatgpt_output <- chatgpt(prompt_role_var = business_legislative_period_51_long$role,
+#                           prompt_content_var = business_legislative_period_51_long$query,
+#                           id_var = business_legislative_period_51_long$id,
 #                           param_max_tokens = 100,
 #                           param_n = 1,
 #                           param_temperature = 0)
 # 
-# save(chatgpt_output, file = paste0("data/chatgpt_output_", formatted_timestamp, ".RData"))
+# file_name <- paste0("chatgpt_output_", formatted_timestamp, ".RData")
+# save(chatgpt_output, file = here("data", file_name))
 
 
 # Convert Output to dataframe -----------------------------------------------------
