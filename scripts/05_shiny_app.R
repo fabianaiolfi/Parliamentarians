@@ -5,7 +5,7 @@
 #item[,3:10]
 
 # Chat GPT Answer to query "Build Web App with Shiny"
-# Update the UI function
+# Update the UI
 ui <- fluidPage(
   titlePanel("Parliamentarian Vote History"),
   sidebarLayout(
@@ -20,6 +20,11 @@ ui <- fluidPage(
             member_council_legislative_period_51$LastName
           )
         )
+      ),
+      selectInput(
+        "category_filter",
+        "Filter by Category:",
+        choices = c("All", colnames(result)[4:11]) # Replace this with the correct category column names from the chatgpt_output_df if needed
       )
     ),
     mainPanel(
@@ -42,10 +47,17 @@ server <- function(input, output) {
     
     # Select relevant columns and rename them
     result <- result %>%
-      select(BusinessShortNumber, Title, query_central_stmnt, Category = "Offene Aussenpolitik":"Liberale Gesellschaft", DecisionText)
+      select(BusinessShortNumber, Title, query_central_stmnt, "Offene Aussenpolitik":"Liberale Gesellschaft", DecisionText)
     
     # Remove duplicate items of business
     result <- distinct(result, BusinessShortNumber, .keep_all = TRUE)
+    
+    # Apply category filtering
+    if (input$category_filter != "All") {
+      result <- result %>%
+        filter_at(vars(input$category_filter), any_vars(!is.na(.))) %>%
+        arrange(desc(!!sym(input$category_filter)))
+    }
     
     card_template <- '
   <div class="card" style="margin-bottom: 20px; padding: 10px;">
@@ -54,7 +66,6 @@ server <- function(input, output) {
     <p>{Category}</p>
     <p><strong>Hat {DecisionText} gestimmt</strong></p>
   </div>'
-    
     
     # Generate the cards HTML
     cards_html <- lapply(1:nrow(result), function(i) {
@@ -74,12 +85,10 @@ server <- function(input, output) {
       )
     })
     
-    
     # Return the HTML code for the cards as a single column
     do.call(htmltools::tagList, cards_html)
   })
 }
 
-
-
 shinyApp(ui = ui, server = server)
+
