@@ -60,7 +60,8 @@ server <- function(input, output) {
     cards_html <- lapply(1:nrow(result), function(i) {
       item <- result[i, ]
       category_names <- colnames(chatgpt_output_df)[3:10]
-      category_values <- paste0(category_names, ": ", item[,4:11], collapse=", ")
+      category_values_with_na <- paste0(category_names, ": ", item[,4:11])
+      category_values <- paste(category_values_with_na[!is.na(item[,4:11])], collapse=", ")
       
       htmltools::HTML(
         glue::glue(
@@ -72,6 +73,7 @@ server <- function(input, output) {
         )
       )
     })
+    
     
     # Return the HTML code for the cards as a single column
     do.call(htmltools::tagList, cards_html)
