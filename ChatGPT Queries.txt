@@ -549,3 +549,1291 @@ Each item of business is displayed in the following manner:
 - Title of the item of business, provided by the column “Title” in the dataframe  “business_legislative_period_51”
 - Summary of the items of business, provided by the column “query_central_stmnt”  in the dataframe “chatgpt_output_df”
 - Category values, provided by columns number 3 through number 10 in the dataframe “chatgpt_output_df”
+
+To create the Shiny web app, follow these steps:
+
+Install and load the required packages:
+R
+Copy code
+install.packages("shiny")
+install.packages("dplyr")
+
+library(shiny)
+library(dplyr)
+Create the UI and server functions:
+R
+Copy code
+ui <- fluidPage(
+  titlePanel("Parliamentarian Vote History"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        "person_number",
+        "Select a Parliamentarian:",
+        choices = member_council_legislative_period_51$PersonNumber
+      )
+    ),
+    mainPanel(
+      tableOutput("vote_history")
+    )
+  )
+)
+
+server <- function(input, output) {
+  output$vote_history <- renderTable({
+    # Filter the voting history by the selected parliamentarian
+    filtered_voting_history <- voting_legislative_period_51 %>%
+      filter(PersonNumber == input$person_number)
+
+    # Join the filtered voting history with business_legislative_period_51 and chatgpt_output_df
+    result <- filtered_voting_history %>%
+      left_join(business_legislative_period_51, by = "BusinessShortNumber") %>%
+      left_join(chatgpt_output_df, by = "BusinessShortNumber")
+
+    # Select relevant columns and rename them
+    result <- result %>%
+      select(Title, query_central_stmnt, Category = V3:V10, DecisionText) %>%
+      rename(Summary = query_central_stmnt)
+
+    return(result)
+  })
+}
+Create and run the Shiny app:
+R
+Copy code
+shinyApp(ui = ui, server = server)
+This Shiny web app creates a dropdown menu that lists every parliamentarian from the "PersonNumber" column in the member_council_legislative_period_51 dataframe. When a parliamentarian is selected, their vote history is displayed as a list of items of business in a table. The table includes the title, summary, category values, and the decision text for each item of business.
+
+Replace the dataframes in the script with your actual dataframes or load them properly to make the app work with your data.
+
+
+
+
+Fabian Aiolfi
+Very good. Now please adjust the code so that only items of business are displayed that are in the dataframe "chatgpt_output_df".
+To display only the items of business present in the chatgpt_output_df dataframe, you can update the server function as follows:
+
+R
+Copy code
+server <- function(input, output) {
+  output$vote_history <- renderTable({
+    # Filter the voting history by the selected parliamentarian
+    filtered_voting_history <- voting_legislative_period_51 %>%
+      filter(PersonNumber == input$person_number)
+
+    # Join the filtered voting history with business_legislative_period_51 and chatgpt_output_df
+    result <- filtered_voting_history %>%
+      inner_join(business_legislative_period_51, by = "BusinessShortNumber") %>%
+      inner_join(chatgpt_output_df, by = "BusinessShortNumber")
+
+    # Select relevant columns and rename them
+    result <- result %>%
+      select(Title, query_central_stmnt, Category = V3:V10, DecisionText) %>%
+      rename(Summary = query_central_stmnt)
+
+    return(result)
+  })
+}
+By changing the left_join function to inner_join when joining with the chatgpt_output_df dataframe, the app will now only display items of business that are present in both the filtered_voting_history and chatgpt_output_df dataframes.
+
+
+
+
+Fabian Aiolfi
+Some items of business are displayed twice. Please ensure that an items of business is only ever displayed once. Every item of business has a unique BusinessShortNumber.
+To ensure that each item of business is displayed only once, you can add the distinct function to the server function. Update the server function as follows:
+
+R
+Copy code
+server <- function(input, output) {
+  output$vote_history <- renderTable({
+    # Filter the voting history by the selected parliamentarian
+    filtered_voting_history <- voting_legislative_period_51 %>%
+      filter(PersonNumber == input$person_number)
+
+    # Join the filtered voting history with business_legislative_period_51 and chatgpt_output_df
+    result <- filtered_voting_history %>%
+      inner_join(business_legislative_period_51, by = "BusinessShortNumber") %>%
+      inner_join(chatgpt_output_df, by = "BusinessShortNumber")
+
+    # Select relevant columns and rename them
+    result <- result %>%
+      select(Title, query_central_stmnt, Category = V3:V10, DecisionText) %>%
+      rename(Summary = query_central_stmnt)
+
+    # Remove duplicate items of business
+    result <- distinct(result, BusinessShortNumber, .keep_all = TRUE)
+
+    return(result)
+  })
+}
+Adding the distinct function with the .keep_all = TRUE option will remove duplicates based on the unique BusinessShortNumber while keeping all the other columns' data.
+
+
+
+
+Fabian Aiolfi
+Warning: Error in distinct: Must use existing variables.
+✖ `BusinessShortNumber` not found in `.data`.
+My apologies for the error. It appears that the BusinessShortNumber column was not included in the result dataframe. We need to add it back to the select function and then apply the distinct function. Here's the corrected server function:
+
+R
+Copy code
+server <- function(input, output) {
+  output$vote_history <- renderTable({
+    # Filter the voting history by the selected parliamentarian
+    filtered_voting_history <- voting_legislative_period_51 %>%
+      filter(PersonNumber == input$person_number)
+
+    # Join the filtered voting history with business_legislative_period_51 and chatgpt_output_df
+    result <- filtered_voting_history %>%
+      inner_join(business_legislative_period_51, by = "BusinessShortNumber") %>%
+      inner_join(chatgpt_output_df, by = "BusinessShortNumber")
+
+    # Select relevant columns and rename them
+    result <- result %>%
+      select(BusinessShortNumber, Title, query_central_stmnt, Category = V3:V10, DecisionText) %>%
+      rename(Summary = query_central_stmnt)
+
+    # Remove duplicate items of business
+    result <- distinct(result, BusinessShortNumber, .keep_all = TRUE)
+
+    # Remove the BusinessShortNumber column for display purposes
+    result <- select(result, -BusinessShortNumber)
+
+    return(result)
+  })
+}
+I've added the BusinessShortNumber column to the select function and then applied the distinct function. After removing duplicates, I removed the BusinessShortNumber column again for display purposes. This should work without any errors now.
+
+
+
+
+Fabian Aiolfi
+In the "Select a Parliamentarian:" dropdown, can you please replace PersonNumber with the parliamentarian's full name? The full name is provided by the columns "FirstName" and "LastName" in the dataframe "member_council_legislative_period_51".
+You can update the ui function to display the full names of the parliamentarians in the dropdown by modifying the choices argument in the selectInput function. Here's the updated ui function:
+
+R
+Copy code
+ui <- fluidPage(
+  titlePanel("Parliamentarian Vote History"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        "person_number",
+        "Select a Parliamentarian:",
+        choices = setNames(
+          member_council_legislative_period_51$PersonNumber,
+          paste(
+            member_council_legislative_period_51$FirstName,
+            member_council_legislative_period_51$LastName
+          )
+        )
+      )
+    ),
+    mainPanel(
+      tableOutput("vote_history")
+    )
+  )
+)
+The setNames function is used to replace the PersonNumber values with the full names by pasting the "FirstName" and "LastName" columns together. The dropdown menu should now display the full names of the parliamentarians.
+
+
+
+
+Fabian Aiolfi
+All working very well.
+I don't want the information to be displayed as a table. Can you change it so that every item of business is its own card? The web app should display the items of business as a single column underneath each other.
+To display each item of business as a separate card in a single column, you can modify the ui function to use uiOutput instead of tableOutput, and then update the server function to render the cards using a custom HTML template. Here's the modified ui and server functions:
+
+R
+Copy code
+# Update the UI function
+ui <- fluidPage(
+  titlePanel("Parliamentarian Vote History"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        "person_number",
+        "Select a Parliamentarian:",
+        choices = setNames(
+          member_council_legislative_period_51$PersonNumber,
+          paste(
+            member_council_legislative_period_51$FirstName,
+            member_council_legislative_period_51$LastName
+          )
+        )
+      )
+    ),
+    mainPanel(
+      uiOutput("vote_history")
+    )
+  )
+)
+
+# Update the server function
+server <- function(input, output) {
+  output$vote_history <- renderUI({
+    # Filter the voting history by the selected parliamentarian
+    filtered_voting_history <- voting_legislative_period_51 %>%
+      filter(PersonNumber == input$person_number)
+
+    # Join the filtered voting history with business_legislative_period_51 and chatgpt_output_df
+    result <- filtered_voting_history %>%
+      inner_join(business_legislative_period_51, by = "BusinessShortNumber") %>%
+      inner_join(chatgpt_output_df, by = "BusinessShortNumber")
+
+    # Select relevant columns and rename them
+    result <- result %>%
+      select(BusinessShortNumber, Title, query_central_stmnt, Category = V3:V10, DecisionText) %>%
+      rename(Summary = query_central_stmnt)
+
+    # Remove duplicate items of business
+    result <- distinct(result, BusinessShortNumber, .keep_all = TRUE)
+
+    # Create the card HTML template
+    card_template <- '
+      <div class="card" style="margin-bottom: 20px; padding: 10px;">
+        <h4><strong>Title:</strong> {Title}</h4>
+        <p><strong>Summary:</strong> {Summary}</p>
+        <p><strong>Categories:</strong> {Category}</p>
+        <p><strong>Decision:</strong> {DecisionText}</p>
+      </div>'
+
+    # Generate the HTML code for each card
+    cards_html <- lapply(1:nrow(result), function(i) {
+      item <- result[i, ]
+      category_values <- paste(item$Category, collapse=", ")
+      htmltools::HTML(
+        glue::glue(
+          card_template,
+          Title = item$Title,
+          Summary = item$Summary,
+          Category = category_values,
+          DecisionText = item$DecisionText
+        )
+      )
+    })
+
+    # Return the HTML code for the cards as a single column
+    do.call(htmltools::tagList, cards_html)
+  })
+}
+The updated ui function uses uiOutput instead of tableOutput. In the updated server function, renderUI is used instead of renderTable. A custom HTML template for cards is created, and then the card elements are generated using the lapply function. Finally, the generated cards are combined into a single column using do.call and htmltools::tagList.
+
+Now, the app should display each item of business as a separate card in a single column.
+
+
+
+
+Fabian Aiolfi
+This is very good. But "Categories" doesn't display anything. Why?
+My apologies for the oversight. It seems that I made a mistake while concatenating the category values. Let me correct this for you. In the server function, update the lapply function that generates the cards HTML as follows:
+
+R
+Copy code
+cards_html <- lapply(1:nrow(result), function(i) {
+  item <- result[i, ]
+  category_values <- paste(item[["Category"]], collapse=", ")
+  htmltools::HTML(
+    glue::glue(
+      card_template,
+      Title = item$Title,
+      Summary = item$Summary,
+      Category = category_values,
+      DecisionText = item$DecisionText
+    )
+  )
+})
+The issue was with accessing the item$Category values inside the lapply function. It should be item[["Category"]] instead. This change should correctly display the category values for each item of business in the cards.
+
+
+
+
+Fabian Aiolfi
+No, "Categories" still doesn't display anything.
+Apologies for the confusion. It appears I made another error in handling the category values. Let's correct it by modifying the lapply function as follows:
+
+R
+Copy code
+cards_html <- lapply(1:nrow(result), function(i) {
+  item <- result[i, ]
+  category_values <- paste(item[V3:V10], collapse=", ")
+  htmltools::HTML(
+    glue::glue(
+      card_template,
+      Title = item$Title,
+      Summary = item$Summary,
+      Category = category_values,
+      DecisionText = item$DecisionText
+    )
+  )
+})
+Instead of using item[["Category"]], we should directly use item[V3:V10] to access the category columns. This change should correctly display the category values for each item of business in the cards.
+
+
+
+
+Fabian Aiolfi
+I want it slightly differently.
+In each card, please display the category name and its corresponding value. The category names are provided by the names of columns 3 through 10 in the dataframe "chatgpt_output_df".
+To display the category names along with their corresponding values, we can modify the lapply function as follows:
+
+R
+Copy code
+cards_html <- lapply(1:nrow(result), function(i) {
+  item <- result[i, ]
+  category_names <- colnames(chatgpt_output_df)[3:10]
+  category_values <- paste0(category_names, ": ", item[V3:V10], collapse=", ")
+
+  htmltools::HTML(
+    glue::glue(
+      card_template,
+      Title = item$Title,
+      Summary = item$Summary,
+      Category = category_values,
+      DecisionText = item$DecisionText
+    )
+  )
+})
+Here, we get the category names from the columns 3 through 10 in the chatgpt_output_df dataframe. Then, we concatenate the category names and their corresponding values, and finally, display them in the cards.
+
+This change should display the category names along with their values in each card.
+
+
+
+
+Fabian Aiolfi
+Why is the summary inserted in the first category? This is a mistake.
+My apologies for the mistake. It appears that the rename(Summary = query_central_stmnt) function was causing the issue. The Summary column name is not updated correctly in the result dataframe, causing the summary to be inserted in the first category. To fix this, let's modify the server function and the select statement as follows:
+
+R
+Copy code
+server <- function(input, output) {
+  output$vote_history <- renderUI({
+    # Filter the voting history by the selected parliamentarian
+    filtered_voting_history <- voting_legislative_period_51 %>%
+      filter(PersonNumber == input$person_number)
+
+    # Join the filtered voting history with business_legislative_period_51 and chatgpt_output_df
+    result <- filtered_voting_history %>%
+      inner_join(business_legislative_period_51, by = "BusinessShortNumber") %>%
+      inner_join(chatgpt_output_df, by = "BusinessShortNumber")
+
+    # Select relevant columns and rename them
+    result <- result %>%
+      select(BusinessShortNumber, Title, query_central_stmnt, Category = V3:V10, DecisionText)
+
+    # Remove duplicate items of business
+    result <- distinct(result, BusinessShortNumber, .keep_all = TRUE)
+
+    # Generate the cards HTML
+    cards_html <- lapply(1:nrow(result), function(i) {
+      item <- result[i, ]
+      category_names <- colnames(chatgpt_output_df)[3:10]
+      category_values <- paste0(category_names, ": ", item[V3:V10], collapse=", ")
+
+      htmltools::HTML(
+        glue::glue(
+          card_template,
+          Title = item$Title,
+          Summary = item$query_central_stmnt,
+          Category = category_values,
+          DecisionText = item$DecisionText
+        )
+      )
+    })
+
+    # Return the HTML code for the cards as a single column
+    do.call(htmltools::tagList, cards_html)
+  })
+}
+Now, instead of renaming the query_central_stmnt column to Summary, we access the query_central_stmnt column directly in the lapply function. This should fix the issue and display the summary and categories correctly in each card.
+
+
+
+
+Fabian Aiolfi
+error: object 'card_template' not found
+Apologies for the oversight. It seems I didn't include the card_template variable in the provided code. Please add the following card_template variable right before the cards_html <- lapply(1:nrow(result), function(i) { line in the server function:
+
+R
+Copy code
+card_template <- '
+  <div class="card" style="margin-bottom: 20px; padding: 10px;">
+    <h4><strong>Title:</strong> {Title}</h4>
+    <p><strong>Summary:</strong> {Summary}</p>
+    <p><strong>Categories:</strong> {Category}</p>
+    <p><strong>Decision:</strong> {DecisionText}</p>
+  </div>'
+With this variable in place, the app should run without errors and display the cards with the correct information.
+
+
+
+
+Fabian Aiolfi
+The summary is still being displayed in the first category. Please display the corresponding value in the first category and not the summary. This is my server function:
+
+server <- function(input, output) {
+  output$vote_history <- renderUI({
+    # Filter the voting history by the selected parliamentarian
+    filtered_voting_history <- voting_legislative_period_51 %>%
+      filter(PersonNumber == input$person_number)
+    
+    # Join the filtered voting history with business_legislative_period_51 and chatgpt_output_df
+    result <- filtered_voting_history %>%
+      inner_join(business_legislative_period_51, by = "BusinessShortNumber") %>%
+      inner_join(chatgpt_output_df, by = "BusinessShortNumber")
+    
+    # Select relevant columns and rename them
+    result <- result %>%
+      select(BusinessShortNumber, Title, query_central_stmnt, Category = "Offene Aussenpolitik":"Liberale Gesellschaft", DecisionText)
+    
+    # Remove duplicate items of business
+    result <- distinct(result, BusinessShortNumber, .keep_all = TRUE)
+    
+    card_template <- '
+  <div class="card" style="margin-bottom: 20px; padding: 10px;">
+    <h4><strong>Title:</strong> {Title}</h4>
+    <p><strong>Summary:</strong> {Summary}</p>
+    <p><strong>Categories:</strong> {Category}</p>
+    <p><strong>Decision:</strong> {DecisionText}</p>
+  </div>'
+    
+    
+    # Generate the cards HTML
+    cards_html <- lapply(1:nrow(result), function(i) {
+      item <- result[i, ]
+      category_names <- colnames(chatgpt_output_df)[3:10]
+      category_values <- paste0(category_names, ": ", item[,3:10], collapse=", ")
+      
+      htmltools::HTML(
+        glue::glue(
+          card_template,
+          Title = item$Title,
+          Summary = item$query_central_stmnt,
+          Category = category_values,
+          DecisionText = item$DecisionText
+        )
+      )
+    })
+    
+    # Return the HTML code for the cards as a single column
+    do.call(htmltools::tagList, cards_html)
+  })
+}
+I apologize for the confusion, and I appreciate your patience. The issue is that I mistakenly used item[,3:10] instead of item[,4:11] to access the category values, as the query_central_stmnt is in the third column. Please modify the lapply function as follows:
+
+R
+Copy code
+# Generate the cards HTML
+cards_html <- lapply(1:nrow(result), function(i) {
+  item <- result[i, ]
+  category_names <- colnames(chatgpt_output_df)[3:10]
+  category_values <- paste0(category_names, ": ", item[,4:11], collapse=", ")
+
+  htmltools::HTML(
+    glue::glue(
+      card_template,
+      Title = item$Title,
+      Summary = item$query_central_stmnt,
+      Category = category_values,
+      DecisionText = item$DecisionText
+    )
+  )
+})
+Now, the category_values should correctly display the values corresponding to each category instead of displaying the summary in the first category.
+
+
+
+
+Fabian Aiolfi
+Can you please only ever display categories that have a value? In other words, remove categories that have a value of NA for a specific item of business.
+Of course! To only display categories with non-NA values, we can modify the lapply function as follows:
+
+R
+Copy code
+# Generate the cards HTML
+cards_html <- lapply(1:nrow(result), function(i) {
+  item <- result[i, ]
+  category_names <- colnames(chatgpt_output_df)[3:10]
+  category_values_with_na <- paste0(category_names, ": ", item[,4:11])
+  category_values <- paste(category_values_with_na[!is.na(item[,4:11])], collapse=", ")
+
+  htmltools::HTML(
+    glue::glue(
+      card_template,
+      Title = item$Title,
+      Summary = item$query_central_stmnt,
+      Category = category_values,
+      DecisionText = item$DecisionText
+    )
+  )
+})
+In this updated code, we first create category_values_with_na, which contains all category names and values, including NAs. Then, we create category_values by only selecting the non-NA values from category_values_with_na. This way, we display only categories with non-NA values for each item of business.
+
+
+
+
+Fabian Aiolfi
+Can you put every category on a new line?
+Certainly! To put each category on a new line, we need to modify the lapply function to use <br> tags to create line breaks between categories. Here's the updated code:
+
+R
+Copy code
+# Generate the cards HTML
+cards_html <- lapply(1:nrow(result), function(i) {
+  item <- result[i, ]
+  category_names <- colnames(chatgpt_output_df)[3:10]
+  category_values_with_na <- paste0(category_names, ": ", item[,4:11])
+  category_values <- paste(category_values_with_na[!is.na(item[,4:11])], collapse="<br>")
+
+  htmltools::HTML(
+    glue::glue(
+      card_template,
+      Title = item$Title,
+      Summary = item$query_central_stmnt,
+      Category = category_values,
+      DecisionText = item$DecisionText
+    )
+  )
+})
+In this code, we replaced the collapse=", " argument in the paste() function with collapse="<br>". This change will insert a line break between each category, placing them on separate lines in the output.
+
+
+
+
+Fabian Aiolfi
+I want to add a feature to the Shiny app.
+The user should be able to filter items of business by category. There should be a dropdown at the top of the column of business items. By default all categories are displayed, nothing is filtered. The user can then pick a category in the dropdown. Once a category is picked, only items of business are displayed that have a non-NA value for that category. The items of business are sorted by corresponding value in descending order.
+To add the feature you described, we will create a new input for filtering by category and modify the server function accordingly. Here's the updated code for both the ui and server functions:
+
+R
+Copy code
+# UI function
+ui <- fluidPage(
+  titlePanel("Parliamentarian Vote History"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        "person_number",
+        "Select a Parliamentarian:",
+        choices = setNames(member_council_legislative_period_51$PersonNumber,
+                           paste(member_council_legislative_period_51$FirstName,
+                                 member_council_legislative_period_51$LastName))
+      ),
+      selectInput(
+        "category_filter",
+        "Filter by Category:",
+        choices = c("All", colnames(chatgpt_output_df)[3:10]),
+        selected = "All"
+      )
+    ),
+    mainPanel(
+      uiOutput("vote_history")
+    )
+  )
+)
+
+# Server function
+server <- function(input, output) {
+  output$vote_history <- renderUI({
+    # Filter the voting history by the selected parliamentarian
+    filtered_voting_history <- voting_legislative_period_51 %>%
+      filter(PersonNumber == input$person_number)
+
+    # Join the filtered voting history with business_legislative_period_51 and chatgpt_output_df
+    result <- filtered_voting_history %>%
+      inner_join(business_legislative_period_51, by = "BusinessShortNumber") %>%
+      inner_join(chatgpt_output_df, by = "BusinessShortNumber")
+
+    # Select relevant columns
+    result <- result %>%
+      select(BusinessShortNumber, Title, query_central_stmnt, Category = "Offene Aussenpolitik":"Liberale Gesellschaft", DecisionText)
+
+    # Remove duplicate items of business
+    result <- distinct(result, BusinessShortNumber, .keep_all = TRUE)
+
+    if (input$category_filter != "All") {
+      result <- result %>%
+        filter(!is.na(.[, input$category_filter])) %>%
+        arrange(desc(.[, input$category_filter]))
+    }
+
+    card_template <- '
+  <div class="card" style="margin-bottom: 20px; padding: 10px;">
+    <h4><strong>Title:</strong> {Title}</h4>
+    <p><strong>Summary:</strong> {Summary}</p>
+    <p><strong>Categories:</strong><br>{Category}</p>
+    <p><strong>Decision:</strong> {DecisionText}</p>
+  </div>'
+
+    # Generate the cards HTML
+    cards_html <- lapply(1:nrow(result), function(i) {
+      item <- result[i, ]
+      category_names <- colnames(chatgpt_output_df)[3:10]
+      category_values_with_na <- paste0(category_names, ": ", item[,4:11])
+      category_values <- paste(category_values_with_na[!is.na(item[,4:11])], collapse="<br>")
+
+      htmltools::HTML(
+        glue::glue(
+          card_template,
+          Title = item$Title,
+          Summary = item$query_central_stmnt,
+          Category = category_values,
+          DecisionText = item$DecisionText
+        )
+      )
+    })
+
+    # Return the HTML code for the cards as a single column
+    do.call(htmltools::tagList, cards_html)
+  })
+}
+
+shinyApp(ui, server)
+In the ui function, we added a new selectInput called "category_filter" with choices from the column names of chatgpt_output_df.
+
+In the server function, we added an if statement to filter and sort the
+
+
+
+
+Fabian Aiolfi
+When picking a category in the dropdown, I get this error:
+
+Warning: Error in filter: ℹ In argument: `!is.na(.[, input$category_filter])`.
+Caused by error in `.[, input$category_filter]`:
+! Can't subset columns that don't exist.
+✖ Column `Offene Aussenpolitik` doesn't exist.
+
+Please only return the code snippet that I have to replace, don't give me the entire code.
+I apologize for the confusion. It seems there's a slight issue with the filtering code. You can replace the problematic if statement with the following code snippet:
+
+R
+Copy code
+if (input$category_filter != "All") {
+  result <- result %>%
+    filter(!is.na(.[, which(colnames(result) == input$category_filter)])) %>%
+    arrange(desc(.[, which(colnames(result) == input$category_filter)]))
+}
+This code snippet uses which(colnames(result) == input$category_filter) to find the correct column index by name and prevent the error you encountered.
+
+
+
+
+Fabian Aiolfi
+When picking a category in the dropdown, I get this error:
+
+Warning: Error in filter: ℹ In argument: `!is.na(.[, which(colnames(result) == input$category_filter)])`.
+Caused by error:
+! `..1` must be a logical vector, not a logical matrix.
+
+Please only return the code snippet that I have to replace, don't give me the entire code.
+I apologize for the confusion. The issue is caused by the use of . in the filter() function. Please replace the problematic if statement with the following code snippet:
+
+R
+Copy code
+if (input$category_filter != "All") {
+  result <- result %>%
+    filter(!is.na(.[[input$category_filter]])) %>%
+    arrange(desc(.[[input$category_filter]]))
+}
+In this code snippet, we use double brackets [[ instead of single brackets [ to access the specific column in the dataframe. This ensures the correct behavior when filtering and sorting the items of business.
+
+
+
+
+Fabian Aiolfi
+Warning: Error in filter: ℹ In argument: `!is.na(.[[input$category_filter]])`.
+Caused by error:
+! `..1` must be of size 5 or 1, not size 0.
+I apologize for the confusion. The issue is caused by using [[ in the filter() function. To resolve this, let's use the across() function instead. Please replace the problematic if statement with the following code snippet:
+
+R
+Copy code
+if (input$category_filter != "All") {
+  result <- result %>%
+    filter(across(input$category_filter, ~!is.na(.))) %>%
+    arrange(across(input$category_filter, ~desc(.)))
+}
+In this code snippet, we use the across() function to filter and sort the dataframe based on the selected category. This ensures the correct behavior when filtering and sorting the items of business.
+
+
+
+
+Fabian Aiolfi
+Warning: Error in filter: ℹ In argument: `across(input$category_filter, ~!is.na(.))`.
+Caused by error in `across()`:
+! Can't subset columns that don't exist.
+✖ Column `Liberale Wirtschaftspolitik` doesn't exist.
+I apologize for the oversight. It appears that the column names in the result dataframe might be different from the column names in the chatgpt_output_df dataframe. We can use the sym() and !! functions from the rlang package to correctly reference the column names. Please replace the problematic if statement with the following code snippet:
+
+R
+Copy code
+if (input$category_filter != "All") {
+  col_name <- rlang::sym(input$category_filter)
+  result <- result %>%
+    filter(!is.na(!!col_name)) %>%
+    arrange(desc(!!col_name))
+}
+In this code snippet, we first convert the input category string into a symbol using rlang::sym() and then use the !! operator to unquote the symbol within the filter() and arrange() functions. This ensures that the correct column name is used when filtering and sorting the items of business.
+
+
+
+
+Fabian Aiolfi
+Still not working:
+
+Warning: Error in filter: ℹ In argument: `!is.na(`Liberale Wirtschaftspolitik`)`.
+Caused by error:
+! object 'Liberale Wirtschaftspolitik' not found
+I apologize for the inconvenience. It seems that the issue is due to the use of non-standard evaluation. Let's switch to using the dplyr function across() in combination with .data pronoun. Please replace the problematic if statement with the following code snippet:
+
+R
+Copy code
+if (input$category_filter != "All") {
+  result <- result %>%
+    filter(!is.na(across(.data[[input$category_filter]]))) %>%
+    arrange(desc(across(.data[[input$category_filter]])))
+}
+In this code snippet, we use across() in combination with the .data pronoun to properly reference the column by name within the filter() and arrange() functions. This should resolve the issue when filtering and sorting the items of business.
+
+
+
+
+Fabian Aiolfi
+This is my entire r shiny app code:
+
+# UI function
+ui <- fluidPage(
+  titlePanel("Parliamentarian Vote History"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        "person_number",
+        "Select a Parliamentarian:",
+        choices = setNames(member_council_legislative_period_51$PersonNumber,
+                           paste(member_council_legislative_period_51$FirstName,
+                                 member_council_legislative_period_51$LastName))
+      ),
+      selectInput(
+        "category_filter",
+        "Filter by Category:",
+        choices = c("All", colnames(chatgpt_output_df)[3:10]),
+        selected = "All"
+      )
+    ),
+    mainPanel(
+      uiOutput("vote_history")
+    )
+  )
+)
+
+# Server function
+server <- function(input, output) {
+  output$vote_history <- renderUI({
+    # Filter the voting history by the selected parliamentarian
+    filtered_voting_history <- voting_legislative_period_51 %>%
+      filter(PersonNumber == input$person_number)
+    
+    # Join the filtered voting history with business_legislative_period_51 and chatgpt_output_df
+    result <- filtered_voting_history %>%
+      inner_join(business_legislative_period_51, by = "BusinessShortNumber") %>%
+      inner_join(chatgpt_output_df, by = "BusinessShortNumber")
+    
+    # Select relevant columns
+    result <- result %>%
+      select(BusinessShortNumber, Title, query_central_stmnt, Category = "Offene Aussenpolitik":"Liberale Gesellschaft", DecisionText)
+    
+    # Remove duplicate items of business
+    result <- distinct(result, BusinessShortNumber, .keep_all = TRUE)
+    
+    if (input$category_filter != "All") {
+      result <- result %>%
+        filter(!is.na(across(.data[[input$category_filter]]))) %>%
+        arrange(desc(across(.data[[input$category_filter]])))
+    }
+    
+    
+    
+    card_template <- '
+  <div class="card" style="margin-bottom: 20px; padding: 10px;">
+    <h4>{Title}</h4>
+    <p>{Summary}</p>
+    <p>{Category}</p>
+    <p><strong>Hat {DecisionText} gestimmt</strong></p>
+  </div>'
+    
+    # Generate the cards HTML
+    cards_html <- lapply(1:nrow(result), function(i) {
+      item <- result[i, ]
+      category_names <- colnames(chatgpt_output_df)[3:10]
+      category_values_with_na <- paste0(category_names, ": ", item[,4:11])
+      category_values <- paste(category_values_with_na[!is.na(item[,4:11])], collapse="<br>")
+      
+      htmltools::HTML(
+        glue::glue(
+          card_template,
+          Title = item$Title,
+          Summary = item$query_central_stmnt,
+          Category = category_values,
+          DecisionText = item$DecisionText
+        )
+      )
+    })
+    
+    # Return the HTML code for the cards as a single column
+    do.call(htmltools::tagList, cards_html)
+  })
+}
+
+shinyApp(ui, server)
+
+I get this error when picking a category to filter the items of business by:
+Warning: Error in filter: ℹ In argument: `!is.na(across(.data[["Liberale Wirtschaftspolitik"]]))`.
+Caused by error in `.data[["Liberale Wirtschaftspolitik"]]`:
+! Column `Liberale Wirtschaftspolitik` not found in `.data`.
+
+Please fix my code.
+I apologize for the confusion. It seems that there's an issue with the way we are referencing the column name within the across() function. Let's switch to using the filter_at() and arrange_at() functions from dplyr. Please replace the problematic if statement in your server function with the following code snippet:
+
+R
+Copy code
+if (input$category_filter != "All") {
+  result <- result %>%
+    filter_at(vars(input$category_filter), any_vars(!is.na(.))) %>%
+    arrange_at(vars(input$category_filter), desc)
+}
+This code snippet uses filter_at() and arrange_at() functions to properly reference the column by name within the filter and arrange functions. This should resolve the issue when filtering and sorting the items of business.
+
+
+
+
+Fabian Aiolfi
+Warning: Error in tbl_at_vars: Can't subset columns that don't exist.
+✖ Column `Offene Aussenpolitik` doesn't exist.
+I apologize for the confusion. It appears that the column names in the result dataframe might be different from the column names in the chatgpt_output_df dataframe. We can use the which() function to find the index of the selected category in the result dataframe. Please replace the problematic if statement with the following code snippet:
+
+R
+Copy code
+if (input$category_filter != "All") {
+  category_index <- which(colnames(result) == input$category_filter)
+  result <- result %>%
+    filter(!is.na(result[[category_index]])) %>%
+    arrange(desc(result[[category_index]]))
+}
+In this code snippet, we first find the index of the selected category in the result dataframe and then use double brackets [[]] to reference the column by index within the filter() and arrange() functions. This ensures that the correct column name is used when filtering and sorting the items of business.
+
+
+
+
+Fabian Aiolfi
+Ok, let's reset and try from the beginning.
+
+--------------------------------------------
+
+This is my current shiny app in R:
+
+ui <- fluidPage(
+  titlePanel("Parliamentarian Vote History"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        "person_number",
+        "Select a Parliamentarian:",
+        choices = setNames(
+          member_council_legislative_period_51$PersonNumber,
+          paste(
+            member_council_legislative_period_51$FirstName,
+            member_council_legislative_period_51$LastName
+          )
+        )
+      )
+    ),
+    mainPanel(
+      uiOutput("vote_history")
+    )
+  )
+)
+
+# Update the server function
+server <- function(input, output) {
+  output$vote_history <- renderUI({
+    # Filter the voting history by the selected parliamentarian
+    filtered_voting_history <- voting_legislative_period_51 %>%
+      filter(PersonNumber == input$person_number)
+    
+    # Join the filtered voting history with business_legislative_period_51 and chatgpt_output_df
+    result <- filtered_voting_history %>%
+      inner_join(business_legislative_period_51, by = "BusinessShortNumber") %>%
+      inner_join(chatgpt_output_df, by = "BusinessShortNumber")
+    
+    # Select relevant columns and rename them
+    result <- result %>%
+      select(BusinessShortNumber, Title, query_central_stmnt, Category = "Offene Aussenpolitik":"Liberale Gesellschaft", DecisionText)
+    
+    # Remove duplicate items of business
+    result <- distinct(result, BusinessShortNumber, .keep_all = TRUE)
+    
+    card_template <- '
+  <div class="card" style="margin-bottom: 20px; padding: 10px;">
+    <h4>{Title}</h4>
+    <p>{Summary}</p>
+    <p>{Category}</p>
+    <p><strong>Hat {DecisionText} gestimmt</strong></p>
+  </div>'
+    
+    
+    # Generate the cards HTML
+    cards_html <- lapply(1:nrow(result), function(i) {
+      item <- result[i, ]
+      category_names <- colnames(chatgpt_output_df)[3:10]
+      category_values_with_na <- paste0(category_names, ": ", item[,4:11])
+      category_values <- paste(category_values_with_na[!is.na(item[,4:11])], collapse="<br>")
+      
+      htmltools::HTML(
+        glue::glue(
+          card_template,
+          Title = item$Title,
+          Summary = item$query_central_stmnt,
+          Category = category_values,
+          DecisionText = item$DecisionText
+        )
+      )
+    })
+    
+    
+    # Return the HTML code for the cards as a single column
+    do.call(htmltools::tagList, cards_html)
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
+I want to add a feature to the Shiny app.
+The user should be able to filter items of business by category. There should be a dropdown at the top of the column of business items. By default all categories are displayed, nothing is filtered. The user can then pick a category in the dropdown. Once a category is picked, only items of business are displayed that have a non-NA value for that category. The items of business are sorted by corresponding value in descending order.
+To add the feature to filter items of business by category, you can follow these steps:
+
+Add a selectInput for category filtering in the sidebarPanel of the UI.
+Update the server function to apply the filtering based on the selected category.
+Update the server function to sort the items of business by the corresponding value in descending order.
+Here's the updated code:
+
+R
+Copy code
+# Update the UI
+ui <- fluidPage(
+  titlePanel("Parliamentarian Vote History"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        "person_number",
+        "Select a Parliamentarian:",
+        choices = setNames(
+          member_council_legislative_period_51$PersonNumber,
+          paste(
+            member_council_legislative_period_51$FirstName,
+            member_council_legislative_period_51$LastName
+          )
+        )
+      ),
+      selectInput(
+        "category_filter",
+        "Filter by Category:",
+        choices = c("All", colnames(chatgpt_output_df)[3:10])
+      )
+    ),
+    mainPanel(
+      uiOutput("vote_history")
+    )
+  )
+)
+
+# Update the server function
+server <- function(input, output) {
+  output$vote_history <- renderUI({
+    # Filter the voting history by the selected parliamentarian
+    filtered_voting_history <- voting_legislative_period_51 %>%
+      filter(PersonNumber == input$person_number)
+    
+    # Join the filtered voting history with business_legislative_period_51 and chatgpt_output_df
+    result <- filtered_voting_history %>%
+      inner_join(business_legislative_period_51, by = "BusinessShortNumber") %>%
+      inner_join(chatgpt_output_df, by = "BusinessShortNumber")
+    
+    # Select relevant columns and rename them
+    result <- result %>%
+      select(BusinessShortNumber, Title, query_central_stmnt, Category = "Offene Aussenpolitik":"Liberale Gesellschaft", DecisionText)
+    
+    # Remove duplicate items of business
+    result <- distinct(result, BusinessShortNumber, .keep_all = TRUE)
+    
+    # Apply category filtering
+    if (input$category_filter != "All") {
+      result <- result %>%
+        filter(!is.na(result[[input$category_filter]])) %>%
+        arrange(desc(result[[input$category_filter]]))
+    }
+    
+    card_template <- '
+  <div class="card" style="margin-bottom: 20px; padding: 10px;">
+    <h4>{Title}</h4>
+    <p>{Summary}</p>
+    <p>{Category}</p>
+    <p><strong>Hat {DecisionText} gestimmt</strong></p>
+  </div>'
+    
+    # Generate the cards HTML
+    cards_html <- lapply(1:nrow(result), function(i) {
+      item <- result[i, ]
+      category_names <- colnames(chatgpt_output_df)[3:10]
+      category_values_with_na <- paste0(category_names, ": ", item[,4:11])
+      category_values <- paste(category_values_with_na[!is.na(item[,4:11])], collapse="<br>")
+      
+      htmltools::HTML(
+        glue::glue(
+          card_template,
+          Title = item$Title,
+          Summary = item$query_central_stmnt,
+          Category = category_values,
+          DecisionText = item$DecisionText
+        )
+      )
+    })
+    
+    # Return the HTML code for the cards as a single column
+    do.call(htmltools::tagList, cards_html)
+  })
+}
+
+shinyApp(ui = ui, server = server)
+This updated Shiny app includes a new `
+
+
+
+
+Fabian Aiolfi
+When picking a category in the dropdown, I get this error in the console:
+
+Warning: Error in filter: ℹ In argument: `!is.na(result[[input$category_filter]])`.
+Caused by error:
+! `..1` must be of size 5 or 1, not size 0.
+
+I also get this error in the shiny app:
+Error: [object Object]
+
+Can you fix this?
+Apologies for the oversight. The issue is caused by using the filter function directly with the result data frame, which might cause some issues with the column names. We can fix this by using the filter_at function from the dplyr package instead.
+
+Here's the updated code with the necessary changes:
+
+R
+Copy code
+# Update the server function
+server <- function(input, output) {
+  output$vote_history <- renderUI({
+    # Filter the voting history by the selected parliamentarian
+    filtered_voting_history <- voting_legislative_period_51 %>%
+      filter(PersonNumber == input$person_number)
+    
+    # Join the filtered voting history with business_legislative_period_51 and chatgpt_output_df
+    result <- filtered_voting_history %>%
+      inner_join(business_legislative_period_51, by = "BusinessShortNumber") %>%
+      inner_join(chatgpt_output_df, by = "BusinessShortNumber")
+    
+    # Select relevant columns and rename them
+    result <- result %>%
+      select(BusinessShortNumber, Title, query_central_stmnt, Category = "Offene Aussenpolitik":"Liberale Gesellschaft", DecisionText)
+    
+    # Remove duplicate items of business
+    result <- distinct(result, BusinessShortNumber, .keep_all = TRUE)
+    
+    # Apply category filtering
+    if (input$category_filter != "All") {
+      result <- result %>%
+        filter_at(vars(input$category_filter), any_vars(!is.na(.))) %>%
+        arrange(desc(!!sym(input$category_filter)))
+    }
+    
+    card_template <- '
+  <div class="card" style="margin-bottom: 20px; padding: 10px;">
+    <h4>{Title}</h4>
+    <p>{Summary}</p>
+    <p>{Category}</p>
+    <p><strong>Hat {DecisionText} gestimmt</strong></p>
+  </div>'
+    
+    # Generate the cards HTML
+    cards_html <- lapply(1:nrow(result), function(i) {
+      item <- result[i, ]
+      category_names <- colnames(chatgpt_output_df)[3:10]
+      category_values_with_na <- paste0(category_names, ": ", item[,4:11])
+      category_values <- paste(category_values_with_na[!is.na(item[,4:11])], collapse="<br>")
+      
+      htmltools::HTML(
+        glue::glue(
+          card_template,
+          Title = item$Title,
+          Summary = item$query_central_stmnt,
+          Category = category_values,
+          DecisionText = item$DecisionText
+        )
+      )
+    })
+    
+    # Return the HTML code for the cards as a single column
+    do.call(htmltools::tagList, cards_html)
+  })
+}
+
+shinyApp(ui = ui, server = server)
+The filter_at function is used to filter rows based on a specific variable, and any_vars is used to apply the condition !is.na(.). Additionally, the arrange function is updated to use the !!sym(input$category_filter) to sort the data frame based on the selected category.
+
+
+
+
+Fabian Aiolfi
+I'm getting this error:
+Warning: Error in tbl_at_vars: Can't subset columns that don't exist.
+The category that I select does not exist as a column. What's the problem?
+Apologies for the confusion earlier. The issue is caused by the column names in the chatgpt_output_df data frame not matching the category names in the selectInput. We can resolve this issue by making sure that the category names in the selectInput match the column names in the chatgpt_output_df.
+
+I'll assume that the chatgpt_output_df has category columns with the same names as the ones in the result data frame, i.e., "Offene Aussenpolitik" to "Liberale Gesellschaft". If this is not the case, please replace the category names in the selectInput with the correct column names from the chatgpt_output_df.
+
+Here's the updated code:
+
+R
+Copy code
+# Update the UI
+ui <- fluidPage(
+  titlePanel("Parliamentarian Vote History"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        "person_number",
+        "Select a Parliamentarian:",
+        choices = setNames(
+          member_council_legislative_period_51$PersonNumber,
+          paste(
+            member_council_legislative_period_51$FirstName,
+            member_council_legislative_period_51$LastName
+          )
+        )
+      ),
+      selectInput(
+        "category_filter",
+        "Filter by Category:",
+        choices = c("All", colnames(result)[4:11]) # Replace this with the correct category column names from the chatgpt_output_df if needed
+      )
+    ),
+    mainPanel(
+      uiOutput("vote_history")
+    )
+  )
+)
+
+# Update the server function
+server <- function(input, output) {
+  output$vote_history <- renderUI({
+    # Filter the voting history by the selected parliamentarian
+    filtered_voting_history <- voting_legislative_period_51 %>%
+      filter(PersonNumber == input$person_number)
+    
+    # Join the filtered voting history with business_legislative_period_51 and chatgpt_output_df
+    result <- filtered_voting_history %>%
+      inner_join(business_legislative_period_51, by = "BusinessShortNumber") %>%
+      inner_join(chatgpt_output_df, by = "BusinessShortNumber")
+    
+    # Select relevant columns and rename them
+    result <- result %>%
+      select(BusinessShortNumber, Title, query_central_stmnt, Category = "Offene Aussenpolitik":"Liberale Gesellschaft", DecisionText)
+    
+    # Remove duplicate items of business
+    result <- distinct(result, BusinessShortNumber, .keep_all = TRUE)
+    
+    # Apply category filtering
+    if (input$category_filter != "All") {
+      result <- result %>%
+        filter_at(vars(input$category_filter), any_vars(!is.na(.))) %>%
+        arrange(desc(!!sym(input$category_filter)))
+    }
+    
+    card_template <- '
+  <div class="card" style="margin-bottom: 20px; padding: 10px;">
+    <h4>{Title}</h4>
+    <p>{Summary}</p>
+    <p>{Category}</p>
+    <p><strong>Hat {DecisionText} gestimmt</strong></p>
+  </div>'
+    
+    # Generate the cards HTML
+    cards_html <- lapply(1:nrow(result), function(i) {
+      item <- result[i, ]
+      category_names <- colnames(chatgpt_output_df)[3:10]
+      category_values_with_na <- paste0(category_names, ": ", item[,4:11])
+      category_values <- paste(category_values_with_na[!is.na(item[,4:11])], collapse="<br>")
+      
+      htmltools::HTML(
+        glue::glue(
+          card
+
+
+
+Fabian Aiolfi
+Something else: Can you add a line between each card? Please only give me the relevant code snippet and where I have to place it.
+Sure, you can add a line between each card by modifying the card_template string to include a horizontal line <hr> after the closing </div> tag of the card. Here's the updated card_template string and where to place it:
+
+Replace the existing card_template string in the server function with this updated string:
+
+R
+Copy code
+card_template <- '
+  <div class="card" style="margin-bottom: 20px; padding: 10px;">
+    <h4>{Title}</h4>
+    <p>{Summary}</p>
+    <p>{Category}</p>
+    <p><strong>Hat {DecisionText} gestimmt</strong></p>
+  </div>
+  <hr>'
+This will add a horizontal line between each card in the Shiny app.
+
+
+
+
+Fabian Aiolfi
+Please make the following adjustment:
+Every time I load the app, the app should display a different person by random.
+To display a different person at random every time you load the app, you can use the sample function in R to choose a random person_number when initializing the selectInput for the parliamentarian selection. Here's how to update the UI code:
+
+R
+Copy code
+# Update the UI
+ui <- fluidPage(
+  titlePanel("Parliamentarian Vote History"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        "person_number",
+        "Select a Parliamentarian:",
+        choices = setNames(
+          member_council_legislative_period_51$PersonNumber,
+          paste(
+            member_council_legislative_period_51$FirstName,
+            member_council_legislative_period_51$LastName
+          )
+        ),
+        selected = sample(member_council_legislative_period_51$PersonNumber, 1)
+      ),
+      selectInput(
+        "category_filter",
+        "Filter by Category:",
+        choices = c("All", colnames(result)[4:11]) # Replace this with the correct category column names from the chatgpt_output_df if needed
+      )
+    ),
+    mainPanel(
+      uiOutput("vote_history")
+    )
+  )
+)
+By adding the selected parameter with the value sample(member_council_legislative_period_51$PersonNumber, 1), you ensure that a random person is selected as the default choice every time the app is loaded.
