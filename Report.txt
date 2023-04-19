@@ -8,5 +8,10 @@
 - ChatGPT for technical support and Shiny App: v4
 
 ## Discussion
+
+### Query Output Evaluation
+- Which summary query was the best / most adequat?
+
+### Technical Aspects
 - Dangers of being dependent on one single API
 - When quering smartvote values: Returns unstructured output
