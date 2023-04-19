@@ -11,7 +11,8 @@ load("data/voting_legislative_period_51.RData")
 
 # Chat GPT Answer to query "Build Web App with Shiny"
 ui <- fluidPage(
-  titlePanel("Abstimmungsverhalten Nationalrät:innen 2019–2023"),
+  titlePanel("Abstimmungsverhalten Nationalrät:innen 2020–2023"),
+  "Schlussabstimmung zwischen dem 10. Dezember 2020 und dem 17. März 2023.",
   sidebarLayout(
     sidebarPanel(
       selectInput(
