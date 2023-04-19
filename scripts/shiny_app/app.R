@@ -1,3 +1,12 @@
+# Setup
+library("tidyverse")
+
+# Load Data
+load("data/business_legislative_period_51.RData")
+load("data/chatgpt_output_df.RData")
+load("data/member_council_legislative_period_51.RData")
+load("data/voting_legislative_period_51.RData")
+
 # Merge ChatGPT summaries with voting records of parliamentarians
 
 # Chat GPT Answer to query "Build Web App with Shiny"
