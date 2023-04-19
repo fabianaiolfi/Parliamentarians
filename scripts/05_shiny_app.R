@@ -1,11 +1,6 @@
 # Merge ChatGPT summaries with voting records of parliamentarians
 
-# Create Shiny App
-# "Offene Aussenpolitik":"Liberale Gesellschaft"
-#item[,3:10]
-
 # Chat GPT Answer to query "Build Web App with Shiny"
-# Update the UI
 ui <- fluidPage(
   titlePanel("Parliamentarian Vote History"),
   sidebarLayout(
