@@ -1,8 +1,12 @@
 # Report
 
 ## Workflow
-- Compare different queries in order to get the best summary
 - using chatgpt on two different levels: producing content and technical support
+- Compare different queries in order to get the best summary
+	- Shiny App: https://a88fuu-fabian-aiolfi.shinyapps.io/ChatGPT_Output_Evaluation/
+- Voting record with summary and smart spider category values
+	- Shiny App: https://a88fuu-fabian-aiolfi.shinyapps.io/abstimmungsverhalten/
+- Evaluation
 
 ### Technical Aspects
 - ChatGPT API (for summaries): v3.5
@@ -15,9 +19,13 @@ Generated Summary
 - Which summary query was the best / most adequat?
 
 Smart Spider Category Values
+- eyeball the results, sample all 8 categories
 - Is a direct comparison with current smart spider possible?
 	- possible comparison: compare parliamentarian profile with with an average of their voting history? → file under possible future work
 - Is there a correlation between Yes/No votes and the level of a category value? E.g.: A parliamentarian tends to vote yes on an item of business that is below a certain value in the category?
+
+Vote Decision
+- Add feature where vote is compared to other parliamentarians in the same faction
 
 ### Technical Aspects
 - Dangers of being dependent on one single API
