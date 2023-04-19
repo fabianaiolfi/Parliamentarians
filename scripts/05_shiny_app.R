@@ -2,24 +2,25 @@
 
 # Chat GPT Answer to query "Build Web App with Shiny"
 ui <- fluidPage(
-  titlePanel("Parliamentarian Vote History"),
+  titlePanel("Abstimmungsverhalten Nationalrät:innen 2019–2023"),
   sidebarLayout(
     sidebarPanel(
       selectInput(
         "person_number",
-        "Select a Parliamentarian:",
+        "Parlamentarier:in auswählen",
         choices = setNames(
           member_council_legislative_period_51$PersonNumber,
           paste(
             member_council_legislative_period_51$FirstName,
             member_council_legislative_period_51$LastName
           )
-        )
+        ),
+        selected = sample(member_council_legislative_period_51$PersonNumber, 1)
       ),
       selectInput(
         "category_filter",
-        "Filter by Category:",
-        choices = c("All", colnames(result)[4:11]) # Replace this with the correct category column names from the chatgpt_output_df if needed
+        "Abstimmungen nach Kategorie filtern",
+        choices = c("Alle Kategorien", colnames(result)[4:11])
       )
     ),
     mainPanel(
@@ -48,7 +49,7 @@ server <- function(input, output) {
     result <- distinct(result, BusinessShortNumber, .keep_all = TRUE)
     
     # Apply category filtering
-    if (input$category_filter != "All") {
+    if (input$category_filter != "Alle Kategorien") {
       result <- result %>%
         filter_at(vars(input$category_filter), any_vars(!is.na(.))) %>%
         arrange(desc(!!sym(input$category_filter)))
@@ -59,8 +60,9 @@ server <- function(input, output) {
     <h4>{Title}</h4>
     <p>{Summary}</p>
     <p>{Category}</p>
-    <p><strong>Hat {DecisionText} gestimmt</strong></p>
-  </div>'
+    <p><strong>Stimmentscheid: {DecisionText}</strong></p>
+  </div>
+    <hr>'
     
     # Generate the cards HTML
     cards_html <- lapply(1:nrow(result), function(i) {
