@@ -1,0 +1,8 @@
+# Report
+
+## Workflow
+- Compare different queries in order to get the best summary
+
+## Discussion
+- Dangers of being dependent on one single API
+- When quering smartvote values: Returns unstructured output
