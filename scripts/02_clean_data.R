@@ -51,8 +51,3 @@ max(business_legislative_period_51$chatgpt_query_n_tokens) # The longest query h
 
 # Wrapper requires `prompt_role_var` to be a column in the dataframe
 business_legislative_period_51$role <- "user"
-
-
-# Tweak Council Member DF for Shiny App ---------------------------------------------------------------
-member_council_legislative_period_51 <- member_council_legislative_period_51 %>% 
-  mutate(full_name = paste(FirstName, LastName))
