@@ -3,6 +3,10 @@
 ## Workflow
 - Compare different queries in order to get the best summary
 
+### Technical Aspects
+- ChatGPT API (for summaries): v3.5
+- ChatGPT for technical support and Shiny App: v4
+
 ## Discussion
 - Dangers of being dependent on one single API
 - When quering smartvote values: Returns unstructured output
