@@ -2,6 +2,7 @@
 
 ## Workflow
 - Compare different queries in order to get the best summary
+- using chatgpt on two different levels: producing content and technical support
 
 ### Technical Aspects
 - ChatGPT API (for summaries): v3.5
@@ -20,4 +21,8 @@ Smart Spider Category Values
 
 ### Technical Aspects
 - Dangers of being dependent on one single API
+	- alternative: huggingface open source models
 - When querying smartvote values: Returns unstructured output
+
+### Other
+- Money spent on ChatGPT API
