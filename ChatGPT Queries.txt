@@ -532,3 +532,20 @@ output$initial_situation_text <- renderUI({
     HTML(initial_situation_html)
 })
 Now, the "initial_situation_text" output will render any HTML tags in the text correctly.
+
+
+-------------------------------------------------
+
+# 230419: Build Web App with Shiny
+
+Fabian Aiolfi
+Please help me build a Shiny web app with R.
+
+The final web app has a dropdown with every parliamentarian from the column “PersonNumber” in the dataframe “member_council_legislative_period_51”.
+
+When the user selects a parliamentarian from the dropdown, the web app displays the selected parliamentarian’s vote history as a list of items of business. The dataframe “voting_legislative_period_51” contains every parliamentarian’s vote history. The column “PersonNumber” links this dataframe to “member_council_legislative_period_51”. The column “DecisionText” shows how the parliamentarian voted. The column “BusinessShortNumber” shows which item of business was voted on.
+
+Each item of business is displayed in the following manner:
+- Title of the item of business, provided by the column “Title” in the dataframe  “business_legislative_period_51”
+- Summary of the items of business, provided by the column “query_central_stmnt”  in the dataframe “chatgpt_output_df”
+- Category values, provided by columns number 3 through number 10 in the dataframe “chatgpt_output_df”
