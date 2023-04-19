@@ -2,6 +2,7 @@
 
 # Create Shiny App
 # "Offene Aussenpolitik":"Liberale Gesellschaft"
+#item[,3:10]
 
 # Chat GPT Answer to query "Build Web App with Shiny"
 # Update the UI function
@@ -41,32 +42,31 @@ server <- function(input, output) {
     
     # Select relevant columns and rename them
     result <- result %>%
-      select(BusinessShortNumber, Title, query_central_stmnt, Category = "Offene Aussenpolitik":"Liberale Gesellschaft", DecisionText) %>%
-      rename(Summary = query_central_stmnt)
+      select(BusinessShortNumber, Title, query_central_stmnt, Category = "Offene Aussenpolitik":"Liberale Gesellschaft", DecisionText)
     
     # Remove duplicate items of business
     result <- distinct(result, BusinessShortNumber, .keep_all = TRUE)
     
-    # Create the card HTML template
     card_template <- '
-      <div class="card" style="margin-bottom: 20px; padding: 10px;">
-        <h4><strong>Title:</strong> {Title}</h4>
-        <p><strong>Summary:</strong> {Summary}</p>
-        <p><strong>Categories:</strong> {Category}</p>
-        <p><strong>Decision:</strong> {DecisionText}</p>
-      </div>'
-    #item[,3:10]
-    # Generate the HTML code for each card
+  <div class="card" style="margin-bottom: 20px; padding: 10px;">
+    <h4><strong>Title:</strong> {Title}</h4>
+    <p><strong>Summary:</strong> {Summary}</p>
+    <p><strong>Categories:</strong> {Category}</p>
+    <p><strong>Decision:</strong> {DecisionText}</p>
+  </div>'
+    
+    
+    # Generate the cards HTML
     cards_html <- lapply(1:nrow(result), function(i) {
       item <- result[i, ]
       category_names <- colnames(chatgpt_output_df)[3:10]
-      category_values <- paste0(category_names, ": ", item[,3:10], collapse=", ")
+      category_values <- paste0(category_names, ": ", item[,4:11], collapse=", ")
       
       htmltools::HTML(
         glue::glue(
           card_template,
           Title = item$Title,
-          Summary = item$Summary,
+          Summary = item$query_central_stmnt,
           Category = category_values,
           DecisionText = item$DecisionText
         )
@@ -77,6 +77,7 @@ server <- function(input, output) {
     do.call(htmltools::tagList, cards_html)
   })
 }
+
 
 
 shinyApp(ui = ui, server = server)
