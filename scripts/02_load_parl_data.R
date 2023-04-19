@@ -10,8 +10,8 @@ load(here("data", "member_council_legislative_period_51.RData"))
 # Only run this segment if you want to create a sample dataframe for testing purposes
 
 # Always sample the same business items
-sample_sbn <- c("22.028", "22.030", "20.063", "20.064", "22.033")
+# sample_sbn <- c("22.028", "22.030", "20.063", "20.064", "22.033")
 
 # Create sample dataframe
-business_legislative_period_51 <- business_legislative_period_51 %>% 
-  filter(BusinessShortNumber %in% sample_sbn)
+# business_legislative_period_51 <- business_legislative_period_51 %>% 
+#   filter(BusinessShortNumber %in% sample_sbn)

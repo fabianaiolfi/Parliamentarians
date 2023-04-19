@@ -2,8 +2,8 @@
 
 
 # Load ChatGPT Data -------------------------------------------------------
-load(here("data", "chatgpt_output_20230419_165256.RData"))
-chatgpt_output_20230419_165256 <- chatgpt_output
+load(here("data", "chatgpt_output_20230419_204609.RData"))
+chatgpt_output_20230419_204609 <- chatgpt_output
 rm(chatgpt_output)
 
 
@@ -12,8 +12,8 @@ rm(chatgpt_output)
 chatgpt_output_df <- do.call(
   rbind,
   Map(data.frame,
-      BusinessShortNumber = chatgpt_output_20230419_165256[[1]][["id"]],
-      content = chatgpt_output_20230419_165256[[1]][["chatgpt_content"]]))
+      BusinessShortNumber = chatgpt_output_20230419_204609[[1]][["id"]],
+      content = chatgpt_output_20230419_204609[[1]][["chatgpt_content"]]))
 
 # Split business short number and query type
 chatgpt_output_df <- chatgpt_output_df %>% 

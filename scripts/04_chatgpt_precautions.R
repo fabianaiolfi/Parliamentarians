@@ -10,7 +10,7 @@
 # Own calculations based on https://platform.openai.com/tokenizer
 # German: 1 token ~ 2.6 characters
 business_legislative_period_51$chatgpt_query_n_tokens <- nchar(business_legislative_period_51$chatgpt_query_smartspider_precise) / 2.6
-max(business_legislative_period_51$chatgpt_query_n_tokens) # The longest query has 1843 tokens, leaving 2253 tokens for a response
+max(business_legislative_period_51$chatgpt_query_n_tokens) # The longest query has 3515 tokens, leaving 581 tokens for a response
 
 
 # Calculate API Costs -----------------------------------------------------
@@ -20,6 +20,6 @@ max(business_legislative_period_51$chatgpt_query_n_tokens) # The longest query h
 
 # Sum of queries and returning tokens
 token_sum <- round(sum(business_legislative_period_51$chatgpt_query_n_tokens)) + (nrow(business_legislative_period_51) * 100)
-round(token_sum / 1000 * 0.002, 2) # Queries will cost about $0.33 in total
+round(token_sum / 1000 * 0.002, 2) # Queries will cost about $0.37 in total
 
 
