@@ -49,10 +49,10 @@ server <- function(input, output) {
     
     card_template <- '
   <div class="card" style="margin-bottom: 20px; padding: 10px;">
-    <h4><strong>Title:</strong> {Title}</h4>
-    <p><strong>Summary:</strong> {Summary}</p>
-    <p><strong>Categories:</strong> {Category}</p>
-    <p><strong>Decision:</strong> {DecisionText}</p>
+    <h4>{Title}</h4>
+    <p>{Summary}</p>
+    <p>{Category}</p>
+    <p><strong>Hat {DecisionText} gestimmt</strong></p>
   </div>'
     
     
@@ -61,7 +61,7 @@ server <- function(input, output) {
       item <- result[i, ]
       category_names <- colnames(chatgpt_output_df)[3:10]
       category_values_with_na <- paste0(category_names, ": ", item[,4:11])
-      category_values <- paste(category_values_with_na[!is.na(item[,4:11])], collapse=", ")
+      category_values <- paste(category_values_with_na[!is.na(item[,4:11])], collapse="<br>")
       
       htmltools::HTML(
         glue::glue(
