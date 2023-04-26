@@ -23,7 +23,12 @@ The second level on which ChatGPT was employed was in the summarisation and scor
 ```
 
 ## List of Tasks and Technical Difficulties
+In order to achieve the goals defined above, the following tasks have to be performed.
 
+- Download the relevant parliamentary data through the API. This includes all items of business that were voted on in the Swiss National Council in the 51st legislative period.
+- Clean and prepare the data in order to run it through the OpenAI API. This step includes removing HTML tags from the item of business descriptions and adding a natural language prompt that instructs the model what to output.
+- Feed the prepared data through the OpenAI API in order to retrieve the summaries and scores.
+- Develop natural language prompts for `GPT-4`. These explain how the Shiny app is supposed to function, what it is meant to look like and how it should handle the available data.
 
 retrieve data through parliamentary api
 - r wrapper used
@@ -32,7 +37,7 @@ retrieve data through parliamentary api
 
 run parliamentary data through chatgpt api
 - r wrapper
-- restrained use of api due to “costs”
+- restrained use of api due to “costs” → create sample (refer to 02_load_parl…)
 - how to query chatgpt properly to get the best results? Compare different queries in order to get the best summary
 	- Shiny App: https://a88fuu-fabian-aiolfi.shinyapps.io/ChatGPT_Output_Evaluation/
 
