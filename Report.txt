@@ -48,9 +48,9 @@ The OpenAI API is not free. This lead to putting in place a range of different p
 Four different natural language queries were tested to see which one returned a suitable summary. The results of this query optimisation are presented in [this Shiny app](https://a88fuu-fabian-aiolfi.shinyapps.io/ChatGPT_Output_Evaluation/). One specific query [Footnote: “Zusammenfassung in 3 nummerierten Stichpunkten, jeweils maximal 10 Wörter, mit Verweis auf die wichtigsten Akteure in jedem Stichpunkt”] aimed at retrieving a three-point summary of the item of business, whereby the main parties involved in the item of business are meant to be repeated in each bullet point. The idea behind this repetition was to create self-sufficient bullet points that could be understood independetly from each other. Here’s an example of what the three point summary should have ideally looked like:
 
 ```
-1. The double-taxation treaty between Armenia and Switzerland contains BEPS minimum standards and a abuse clause.
-2. The double-taxation treaty between Armenia and Switzerland revises provisions on permanent establishments, dividends, interest.
-3. The double-taxation treaty between Armenia and Switzerland contains an administrative assistance clause for exchange of information on request.
+1. Das Doppelbesteuerungsabkommen zwischen Armenien und der Schweiz enthält BEPS-Mindeststandards und eine Missbrauchsklausel.
+2. Das Doppelbesteuerungsabkommen zwischen Armenien und der Schweiz überarbeitet die Bestimmungen über Betriebsstätten, Dividenden und Zinsen.
+3. Das Doppelbesteuerungsabkommen zwischen Armenien und der Schweiz enthält eine Amtshilfeklausel für den Austausch von Informationen auf Anfrage.
 ```
 
 These bullet points could then be, in a later stage, separated from each other and combined with bullet points from other items of business. These combined bullet points would allow a user of the web app to get a general impression of what a parliamentarian voted for.
@@ -69,7 +69,7 @@ The OpenAI API failed this specific task. It did not repeat the main actors in t
 ```
 
 ### Structuring Unstructured Output
-The OpenAI API returns a string of characters when providing the smartvote category scores. In order to render them in the Shiny web app and for future use, this unstructured data had to be converted to [structured data](https://github.com/fabianaiolfi/Parliamentarians/blob/313ea51762ce0c6d657ef5e22afe78960cb4c85c/scripts/06_post_processing.R#L48-L53). While this code snippet is trivial, it is important to point out that it is not futureproof. Depending on how the GPT model changes in future versions, the model’s output may change, rendering the output of this code faulty or useless.
+The OpenAI API returns a string of characters when delivering the smartvote category scores. In order to render them in the Shiny web app and for future use, this unstructured data had to be converted to [structured data](https://github.com/fabianaiolfi/Parliamentarians/blob/313ea51762ce0c6d657ef5e22afe78960cb4c85c/scripts/06_post_processing.R#L48-L53). While this code snippet is trivial, it is important to point out that it is not futureproof. Depending on how the GPT model changes in future versions, the model’s output may change, rendering the output of this code faulty or useless.
 
 ### Complex Shiny App
 ChatGPT had difficulties understanding the more complex features that were added to the final Shiny web app. These difficulties are documented [here](https://github.com/fabianaiolfi/Parliamentarians/blob/313ea51762ce0c6d657ef5e22afe78960cb4c85c/ChatGPT%20Conversation%20Documentation.txt#L1107-L1779). I assume there to be two reasons why errors started occuring. First, the natural language queries were probably too unclear. Second, the entire code for the web app was becoming so long that ChatGPT failed to return the entire code in one go. This problem was solved by tirelessly prompting ChatGPT until the web app worked.
@@ -78,10 +78,11 @@ ChatGPT had difficulties understanding the more complex features that were added
 4. present how the contribution/application worked out in practice, showing what has been achieved and what could not be achieved (in the latter case, identify the causes of the impossibility to achieve a feature). 
 ```
 
-- Voting record with summary and smart spider category values
-	- Shiny App: https://a88fuu-fabian-aiolfi.shinyapps.io/abstimmungsverhalten/
+The DMCP’s final project is a [Shiny web app](https://a88fuu-fabian-aiolfi.shinyapps.io/abstimmungsverhalten/) that displays a parliamentarian’s vote record between 2020 and 2023. Each item of business is displayed by its title, a short summary and a score for different smartvote categories. A smartvote category is only included if the model returned a score for a category.
 
-- describe functionality: if sorted by a category, the items of business are sorted by smart spider scores
+The web app allows the user to pick a parliamentarian using the “Parlamentarier:in auswählen” dropdown on the left. By default, the parliamentarian’s full voting record is displayed as a long list on the right. The user can then go on to filter this list by picking one of the eight smartvote categories in a second dropdown, just beneth the first dropdown. Selecting a category filters the voting record, only displaying items of business that include a score in the chosen category. Furthermore, the list is then sorted by the category’s score in descending order. This means that items of business at the top of the list are deemed by the model to be close matches of the category picked [change this]
+
+
 
 - working prototype could be set up and can be used to demonstrate what I aim at with my lumacss capstone project
 - prototype shows that with relatively small amount of code and very little financial resources, a lot of content can be produced and can be displayed in an appealing manner
