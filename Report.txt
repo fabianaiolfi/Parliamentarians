@@ -39,23 +39,40 @@ Fourth, develop natural language prompts for `GPT-4`. These prompts explain to C
 ```
 
 ## Tasks in Action and Difficulties Encountered
-In short, all steps described above worked smoothly after being set up, adjusted and slightly tweaked. The following points are noteworthy:
+In short, all steps described above worked smoothly after being set up and adjusted. There are some noteworthy points that I would like to focus on.
 
-The OpenAI API is not free. This lead to putting in place a range of different precautions designed to prevent a cost explosion, e.g. [sampling five items of business](https://github.com/fabianaiolfi/Parliamentarians/blob/f55b9b01f93f87209abe9ae5a0275fe482e3b5ca/scripts/02_load_parl_data.R#L9) from the 147 available, or [estimating the number of tokens](https://github.com/fabianaiolfi/Parliamentarians/blob/f55b9b01f93f87209abe9ae5a0275fe482e3b5ca/scripts/04_chatgpt_precautions.R#L6) being sent to OpenAI.
+### Paying for the API
+The OpenAI API is not free. This lead to putting in place a range of different precautions designed to prevent a cost explosion, e.g. [sampling five items of business](https://github.com/fabianaiolfi/Parliamentarians/blob/f55b9b01f93f87209abe9ae5a0275fe482e3b5ca/scripts/02_load_parl_data.R#L9) from the 147 available while optimising the queries. Or calculating the expected costs by [estimating the number of tokens](https://github.com/fabianaiolfi/Parliamentarians/blob/f55b9b01f93f87209abe9ae5a0275fe482e3b5ca/scripts/04_chatgpt_precautions.R#L6) being sent to OpenAI before generating summaries and scores for all items of business.
 
-- restrained use of api due to “costs” → create sample (refer to 02_load_parl…)
+### Query Optimisation
+Four different natural language queries were tested to see which one returned a suitable summary. The results of this query optimisation are presented in [this Shiny app](https://a88fuu-fabian-aiolfi.shinyapps.io/ChatGPT_Output_Evaluation/). One specific query [Footnote: “Zusammenfassung in 3 nummerierten Stichpunkten, jeweils maximal 10 Wörter, mit Verweis auf die wichtigsten Akteure in jedem Stichpunkt”] aimed at retrieving a three-point summary of the item of business, whereby the main parties involved in the item of business are meant to be repeated in each bullet point. The idea behind this repetition was to create self-sufficient bullet points that could be understood independetly from each other. Here’s an example of what the three point summary should have ideally looked like:
 
-Four different natural language queries were tested to see which one returned a suitable summary. The results of this query optimisation are presented in [this Shiny app](https://a88fuu-fabian-aiolfi.shinyapps.io/ChatGPT_Output_Evaluation/).
+```
+1. The double-taxation treaty between Armenia and Switzerland contains BEPS minimum standards and a abuse clause.
+2. The double-taxation treaty between Armenia and Switzerland revises provisions on permanent establishments, dividends, interest.
+3. The double-taxation treaty between Armenia and Switzerland contains an administrative assistance clause for exchange of information on request.
+```
 
+These bullet points could then be, in a later stage, separated from each other and combined with bullet points from other items of business. These combined bullet points would allow a user of the web app to get a general impression of what a parliamentarian voted for.
 
+The OpenAI API failed this specific task. It did not repeat the main actors in the bullet points, rendering them useless if separated. However, it did explicitly display the main actors in one or two cases, as displayed in the following output:
 
+```
+1. Erstes DBA der Schweiz mit Ostafrika
+- Schweiz, Ostafrika
 
+2. Gewährleistung von Rechtssicherheit und vorteilhafter Rahmen für Wirtschaftsbeziehungen
+- Schweiz, Ostafrika
 
-- When querying smartvote values: Returns unstructured output which has to be converted into structured data
-- when creating final web app: explaining sorting logic to chatgpt became difficult, which created lots of bugs (link to correct line in documentation)
+3. Berücksichtigung der Ergebnisse des OECD-Projekts BEPS gegen Gewinnverschiebungen
+- Kantone, Wirtschaftsverbände
+```
 
+### Structuring Unstructured Output
+The OpenAI API returns a string of characters when providing the smartvote category scores. In order to render them in the Shiny web app and for future use, this unstructured data had to be converted to [structured data](https://github.com/fabianaiolfi/Parliamentarians/blob/313ea51762ce0c6d657ef5e22afe78960cb4c85c/scripts/06_post_processing.R#L48-L53). While this code snippet is trivial, it is important to point out that it is not futureproof. Depending on how the GPT model changes in future versions, the model’s output may change, rendering the output of this code faulty or useless.
 
-
+### Complex Shiny App
+ChatGPT had difficulties understanding the more complex features that were added to the final Shiny web app. These difficulties are documented [here](https://github.com/fabianaiolfi/Parliamentarians/blob/313ea51762ce0c6d657ef5e22afe78960cb4c85c/ChatGPT%20Conversation%20Documentation.txt#L1107-L1779). I assume there to be two reasons why errors started occuring. First, the natural language queries were probably too unclear. Second, the entire code for the web app was becoming so long that ChatGPT failed to return the entire code in one go. This problem was solved by tirelessly prompting ChatGPT until the web app worked.
 
 ```
 4. present how the contribution/application worked out in practice, showing what has been achieved and what could not be achieved (in the latter case, identify the causes of the impossibility to achieve a feature). 
