@@ -14,7 +14,7 @@ The goal of the DMCP is to package the features described above into a working p
 
 The DMCP has two main features. The first feature encompasses a complete working pipeline. The pipeline begins with retrieving raw data from the Swiss parliamentary services through the [swissparl](https://github.com/zumbov2/swissparl) R package. The end of the pipeline constitutes a [functioning Shiny web app](https://a88fuu-fabian-aiolfi.shinyapps.io/abstimmungsverhalten/) that displays summaries and scoring of items of business.
 
-The second main feature is the use of OpenAI’s ChatGPT on two different levels. On the first level, ChatGPT was used for technical support for writing code in R. The model `GPT-4` was used through the browser interface. Snippets of code in the scripts produced by ChatGPT [are labelled appropriately](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/03_pre_processing.R#L11). Furthermore, ChatGPT was used to create Shiny web apps from scratch, [documented here](https://github.com/fabianaiolfi/Parliamentarians/blob/main/ChatGPT%20Conversation%20Documentation.txt). This is especially noteworthy because I have absolutely no previous knowledge of Shiny web app development and managed to create fully functioning web apps by simply using natural language prompts.
+The second main feature is the use of OpenAI’s ChatGPT on two different levels. On the first level, ChatGPT was used for technical support for writing code in R. The model `GPT-4` was used through the browser interface. Snippets of code in the scripts produced by ChatGPT [are labelled appropriately](https://github.com/fabianaiolfi/Parliamentarians/blob/f55b9b01f93f87209abe9ae5a0275fe482e3b5ca/scripts/03_pre_processing.R#L11). Furthermore, ChatGPT was used to create Shiny web apps from scratch, [documented here](https://github.com/fabianaiolfi/Parliamentarians/blob/main/ChatGPT%20Conversation%20Documentation.txt). This is especially noteworthy because I have absolutely no previous knowledge of Shiny web app development and managed to create fully functioning web apps by simply using natural language prompts.
 
 The second level on which ChatGPT was employed was in the summarisation and scoring of content. To do this, the OpenAI API was used, which employs the model `gpt-3.5-turbo-0301`. The API was prompted to create a short and concise summary of the descriptions of the items of business in *Leichter Sprache*, a simplified version of the German language. Furthermore, the API was used to score each item of business based on the eight categories [Footnote: Open foreign policy, liberal economic policy, restrictive fiscal policy, law and order, restrictive migration policy, expanded environmental protection, expanded welfare state and liberal society.] used by [smartvote](https://sv19.cdn.prismic.io/sv19%2Fc76da00f-6ada-4589-9bdf-ac51d3f5d8c7_methodology_smartspider_de.pdf).
 
@@ -23,30 +23,38 @@ The second level on which ChatGPT was employed was in the summarisation and scor
 ```
 
 ## List of Tasks and Technical Difficulties
-In order to achieve the goals defined above, the following tasks have to be performed.
+In order to achieve the goals defined above, the following tasks are performed.
 
-- Download the relevant parliamentary data through the API. This includes all items of business that were voted on in the Swiss National Council in the 51st legislative period.
-- Clean and prepare the data in order to run it through the OpenAI API. This step includes removing HTML tags from the item of business descriptions and adding a natural language prompt that instructs the model what to output.
-- Feed the prepared data through the OpenAI API in order to retrieve the summaries and scores.
-- Develop natural language prompts for `GPT-4`. These explain how the Shiny app is supposed to function, what it is meant to look like and how it should handle the available data.
+First, download of the relevant parliamentary data through the API. The R package [swissparl](https://github.com/zumbov2/swissparl) provides easy access to the API. This includes all items of business that were voted on in the Swiss National Council in the 51st legislative period. A first problem appears here due to the lack of API documentation. The browser-based tool [XOData](https://www.pragmatiqa.com/xodata/#) provides a remedy here. The parliamentary services provide metadata of the API, which can be fed into XOData in order to visualise the different tables and variables accessible through the API.
 
-retrieve data through parliamentary api
-- r wrapper used
-- problem: lack of documentation from Parliament API
-	- could be solved with [website from beni] and through trial and error
+Second, clean and prepare the data in order to run it through the OpenAI API. This step includes removing HTML tags from the item of business descriptions and adding a natural language prompt that instructs the model what to output.
 
-run parliamentary data through chatgpt api
-- r wrapper
-- restrained use of api due to “costs” → create sample (refer to 02_load_parl…)
-- how to query chatgpt properly to get the best results? Compare different queries in order to get the best summary
-	- Shiny App: https://a88fuu-fabian-aiolfi.shinyapps.io/ChatGPT_Output_Evaluation/
+Third, feed the prepared data through the OpenAI API in order to retrieve the summaries and scores. The R package [rgpt3](https://github.com/ben-aaron188/rgpt3) enables easy access to the API.
+
+Fourth, develop natural language prompts for `GPT-4`. These prompts explain to ChatGPT how the Shiny app is supposed to function, what it is meant to look like and how it should handle the available data.
 
 
 ```
 3. review how the activities actually unfolded and the difficulties that were encountered during the project. 
 ```
+
+## Tasks in Action and Difficulties Encountered
+In short, all steps described above worked smoothly after being set up, adjusted and slightly tweaked. The following points are noteworthy:
+
+The OpenAI API is not free. This lead to putting in place a range of different precautions designed to prevent a cost explosion, e.g. [sampling five items of business](https://github.com/fabianaiolfi/Parliamentarians/blob/f55b9b01f93f87209abe9ae5a0275fe482e3b5ca/scripts/02_load_parl_data.R#L9) from the 147 available, or [estimating the number of tokens](https://github.com/fabianaiolfi/Parliamentarians/blob/f55b9b01f93f87209abe9ae5a0275fe482e3b5ca/scripts/04_chatgpt_precautions.R#L6) being sent to OpenAI.
+
+- restrained use of api due to “costs” → create sample (refer to 02_load_parl…)
+
+Four different natural language queries were tested to see which one returned a suitable summary. The results of this query optimisation are presented in [this Shiny app](https://a88fuu-fabian-aiolfi.shinyapps.io/ChatGPT_Output_Evaluation/).
+
+
+
+
+
 - When querying smartvote values: Returns unstructured output which has to be converted into structured data
 - when creating final web app: explaining sorting logic to chatgpt became difficult, which created lots of bugs (link to correct line in documentation)
+
+
 
 
 ```
@@ -80,3 +88,4 @@ run parliamentary data through chatgpt api
 - Dangers of being dependent on one single API
 	- alternative: huggingface open source models
 - Money spent on ChatGPT API / effect of paying money for an api strongly hinders / makes you pace yourself very strongly
+- run parliamentary data through chatgpt api
