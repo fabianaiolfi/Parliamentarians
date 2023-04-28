@@ -1,9 +1,5 @@
 # Report
 
-```
-1. present an overview of the intended goals of the project and of its main features (this part may include a diagram)
-```
-
 ## Project Goals and Main Features
 This report documents the Data Mining Capstone Project (DMCP). The aim of the DMCP is to lay a foundation for my LUMACSS Capstone Project (LCP), which I intend to pursue in July and August 2023. The goal of the LCP is to create a web app that documents the voting behaviour of Swiss parliamentarians and makes their voting record understandable and accessible to the general public. The idea of the LCP is loosely based on [They Work For You](https://www.theyworkforyou.com/), a website that monitors British parliaments and aims to increase accountability for politicians in the UK.
 
@@ -17,10 +13,6 @@ The second main feature is the use of OpenAI’s ChatGPT on two different levels
 
 The second level on which ChatGPT was employed was in the summarisation and scoring of content. To do this, the OpenAI API was used, which employs the model `gpt-3.5-turbo-0301`. The API was prompted to create a short and concise summary of the descriptions of the items of business in *[Leichter Sprache](https://en.wikipedia.org/wiki/Leichte_Sprache)*, a simplified version of the German language. Furthermore, the API was used to score each item of business based on the eight categories [Footnote: Open foreign policy, liberal economic policy, restrictive fiscal policy, law and order, restrictive migration policy, expanded environmental protection, expanded welfare state and liberal society.] used by [smartvote](https://sv19.cdn.prismic.io/sv19%2Fc76da00f-6ada-4589-9bdf-ac51d3f5d8c7_methodology_smartspider_de.pdf).
 
-```
-2. list of tasks needed to achieve the goals and the identified technical difficulties. 
-```
-
 ## List of Tasks and Technical Difficulties
 In order to achieve the goals defined above, the following tasks are performed.
 
@@ -31,11 +23,6 @@ Second, clean and prepare the data in order to run it through the OpenAI API. Th
 Third, feed the prepared data through the OpenAI API in order to retrieve the summaries and scores. The R package [rgpt3](https://github.com/ben-aaron188/rgpt3) enables easy access to the API.
 
 Fourth, develop natural language prompts for `GPT-4`. These prompts explain to ChatGPT how the Shiny app is supposed to function, what it is meant to look like and how it should handle the available data.
-
-
-```
-3. review how the activities actually unfolded and the difficulties that were encountered during the project. 
-```
 
 ## Tasks in Action and Difficulties Encountered
 In short, all steps described above worked smoothly after some tweaking. There are some noteworthy points that I would like to focus on.
@@ -73,9 +60,7 @@ The OpenAI API returns a string of characters when delivering the smartvote cate
 ### Complex Shiny App
 ChatGPT had difficulties understanding the more complex features that were added to the final Shiny web app. These difficulties are documented [here](https://github.com/fabianaiolfi/Parliamentarians/blob/313ea51762ce0c6d657ef5e22afe78960cb4c85c/ChatGPT%20Conversation%20Documentation.txt#L1107-L1779). I assume there to be two reasons why the Shiny app code failed to work. First, the natural language queries were probably too unclear. Second, the entire code for the web app was becoming so long that ChatGPT could not return the entire code in one go. This problem was solved by tirelessly prompting ChatGPT until the web app functioned.
 
-```
-4. present how the contribution/application worked out in practice, showing what has been achieved and what could not be achieved (in the latter case, identify the causes of the impossibility to achieve a feature). 
-```
+## Final Project Output and Next Steps
 
 The DMCP’s final output is a prototype in the form of [Shiny web app](https://a88fuu-fabian-aiolfi.shinyapps.io/abstimmungsverhalten/). The working prototype lays the foundation for the LCP and shows how this can be achieved with a relatively small amount of code, no prior knowledge of Shiny app development and very little financial resources. The prototype, despite its flaws and rudimentary user interface, provides a good feeling of the quality that the OpenAI API can produce.
 
