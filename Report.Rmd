@@ -1,9 +1,18 @@
-# Report
+---
+title: "Report"
+author: "Fabian Aiolfi"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ## Project Goals and Main Features
 This report documents the Data Mining Capstone Project (DMCP). The aim of the DMCP is to lay a foundation for my LUMACSS Capstone Project (LCP), which I intend to pursue in July and August 2023. The goal of the LCP is to create a web app that documents the voting behaviour of Swiss parliamentarians and makes their voting record understandable and accessible to the general public. The idea of the LCP is loosely based on [They Work For You](https://www.theyworkforyou.com/), a website that monitors British parliaments and aims to increase accountability for politicians in the UK.
 
-How the LCP will display content similar to They Work For You is still to be defined. In this first attempt, the DMCP aims at performing the following two tasks: First, displaying easily understandable summaries of the individual items of business that parliamentarians vote on. Second, categorising and scoring each item of business. The DMCP lays a foundation for the LCP by testing if these tasks can be performed automatically. To limit the scope of the DMCP, this project focuses on items of business that were voted on during a final vote, in the [51st legislative period](https://de.wikipedia.org/wiki/51._Legislaturperiode_der_Schweizer_Bundesversammlung) in the National Council (the lower house of the Swiss Federal Assembly, *Nationalrat* in German). In sum, the DMCP includes 213 parliamentarians [Footnote: The National Council has 200 members. The data set includes 13 additional parliamentarians due to resignations during the 51st legislative period.] and 147 items of business.
+How the LCP will display content similar to They Work For You is still to be defined. In this first attempt, the DMCP aims at performing the following two tasks: First, displaying easily understandable summaries of the individual items of business that parliamentarians vote on. Second, categorising and scoring each item of business. The DMCP lays a foundation for the LCP by testing if these tasks can be performed automatically. To limit the scope of the DMCP, this project focuses on items of business that were voted on during a final vote, in the [51st legislative period](https://de.wikipedia.org/wiki/51._Legislaturperiode_der_Schweizer_Bundesversammlung) in the National Council (the lower house of the Swiss Federal Assembly, *Nationalrat* in German). In sum, the DMCP includes 213 parliamentarians ^[The National Council has 200 members. The data set includes 13 additional parliamentarians due to resignations during the 51st legislative period.] and 147 items of business.
 
 The goal of the DMCP is to package the features described above into a working prototype in the form of a Shiny app. The prototype will then be sent to potential LCP project sponsors to better explain the project’s intent. Project sponsors are people or organisations that have an interest in the LCP’s output, e.g., the web app or the data the web app displays.
 
@@ -11,7 +20,7 @@ The DMCP has two main features. The first feature encompasses a complete working
 
 The second main feature is the use of OpenAI’s ChatGPT on two different levels. On the first level, ChatGPT was used for technical support for writing code in R. The model `GPT-4` was used through the browser interface. Snippets of code in the scripts produced by ChatGPT [are labelled appropriately](https://github.com/fabianaiolfi/Parliamentarians/blob/f55b9b01f93f87209abe9ae5a0275fe482e3b5ca/scripts/03_pre_processing.R#L11). Furthermore, ChatGPT was used to create Shiny web apps from scratch, [documented here](https://github.com/fabianaiolfi/Parliamentarians/blob/main/ChatGPT%20Conversation%20Documentation.txt). This is especially noteworthy because I have absolutely no previous knowledge of Shiny web app development and managed to create fully functioning web apps by simply prompting ChatGPT with using natural language.
 
-The second level on which ChatGPT was employed was in the summarisation and scoring of content. To do this, the OpenAI API was used, which employs the model `gpt-3.5-turbo-0301`. The API was prompted to create a short and concise summary of the descriptions of the items of business in *[Leichter Sprache](https://en.wikipedia.org/wiki/Leichte_Sprache)*, a simplified version of the German language. Furthermore, the API was used to score each item of business based on the eight categories [Footnote: Open foreign policy, liberal economic policy, restrictive fiscal policy, law and order, restrictive migration policy, expanded environmental protection, expanded welfare state and liberal society.] used by [smartvote](https://sv19.cdn.prismic.io/sv19%2Fc76da00f-6ada-4589-9bdf-ac51d3f5d8c7_methodology_smartspider_de.pdf).
+The second level on which ChatGPT was employed was in the summarisation and scoring of content. To do this, the OpenAI API was used, which employs the model `gpt-3.5-turbo-0301`. The API was prompted to create a short and concise summary of the descriptions of the items of business in *[Leichter Sprache](https://en.wikipedia.org/wiki/Leichte_Sprache)*, a simplified version of the German language. Furthermore, the API was used to score each item of business based on the eight categories ^[Open foreign policy, liberal economic policy, restrictive fiscal policy, law and order, restrictive migration policy, expanded environmental protection, expanded welfare state and liberal society.] used by [smartvote](https://sv19.cdn.prismic.io/sv19%2Fc76da00f-6ada-4589-9bdf-ac51d3f5d8c7_methodology_smartspider_de.pdf).
 
 ## List of Tasks and Technical Difficulties
 In order to achieve the goals defined above, the following tasks are performed.
