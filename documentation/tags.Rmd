@@ -1,0 +1,220 @@
+---
+title: "Item of Business Tags"
+author: "Fabian Aiolfi"
+date: "13 June 2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(here)
+library(tidyverse)
+library(ggplot2)
+library(factoextra)
+library(seededlda)
+library(tidymodels)
+library(tidyclust)
+library(kableExtra)
+
+knitr::opts_chunk$set(echo = TRUE)
+load(here("data", "business_legislative_period_51.RData"))
+```
+
+```{r include=FALSE}
+# Functions ---------------------------------------------------------------
+
+# Remove HTML tags (Source: https://stackoverflow.com/a/17227415)
+strip_html <- function(htmlString) {
+  return(gsub("<.*?>", " ", htmlString))
+}
+
+# Remove text in bold tags because these are already summaries (Source: ChatGPT)
+delete_bold_tags <- function(input_string) {
+  # Define the pattern to match text inside <b> tags
+  pattern <- "<b>[^<>]*</b>"
+  # Replace the pattern with an empty string
+  result_string <- gsub(pattern, "", input_string, perl = TRUE)
+  return(result_string)
+}
+
+
+# Clean Data ---------------------------------------------------------------
+# Remove bold tags
+business_legislative_period_51$InitialSituation_clean <- delete_bold_tags(business_legislative_period_51$InitialSituation)
+
+# Remove all HTML tags
+business_legislative_period_51$InitialSituation_clean <- strip_html(business_legislative_period_51$InitialSituation_clean)
+
+# Remove double whitespaces (Source: ChatGPT)
+business_legislative_period_51$InitialSituation_clean <- gsub(" {2,}", " ", business_legislative_period_51$InitialSituation_clean)
+
+# Add title to text
+business_legislative_period_51$InitialSituation_clean <- paste(business_legislative_period_51$Title,
+                                                               business_legislative_period_51$InitialSituation_clean)
+```
+
+
+## Introduction
+
+Each item of business has between one and five tags.
+```{r}
+business_legislative_period_51 %>% select(BusinessShortNumber, TagNames) %>% head()
+```
+
+There are a total of 27 different tags:
+```{r}
+business_tags <- business_legislative_period_51$TagNames
+business_tags <- unlist(strsplit(business_tags, "|", fixed = TRUE))
+business_tags <- unique(business_tags)
+business_tags
+```
+
+**RQ**: How can the tags be used to help summarise the items of business?
+
+
+## Idea 1: Create Link between Tags and Description
+
+- Create a document term matrix for all 147 items of business
+- Reduce dimensionality using PCA
+- Create clusters using k-means clustering
+- Compare clusters with tags
+
+### Document Term Matrix
+```{r}
+# https://tutorials.quanteda.io/machine-learning/topicmodel/
+
+tokens_business <- tokens(business_legislative_period_51$InitialSituation_clean)
+tokens_business <- tokens(tokens_business, remove_punct = TRUE, remove_numbers = TRUE, remove_symbol = TRUE)
+custom_stopwords <- scan(here("scripts", "sandbox", "custom_stopwords.txt"), character(), sep = "\n")
+tokens_business <- tokens_remove(tokens_business, pattern = c(stopwords("de"), custom_stopwords))
+
+dfmat_business <- dfm(tokens_business) %>% 
+  dfm_trim(min_termfreq = 0.9, termfreq_type = "quantile",
+           max_docfreq = 0.1, docfreq_type = "prop")
+
+k_means_data <- convert(dfmat_business, to = "data.frame")
+k_means_data$doc_id <- NULL
+
+dfmat_business
+```
+
+### PCA
+```{r}
+# Step 1: Standardize the data
+standardized_data <- scale(k_means_data)
+
+# Step 2: Perform PCA
+pca_result <- prcomp(standardized_data, scale. = TRUE)
+
+# Step 3: Extract the principal components
+principal_components <- pca_result$x
+
+# Step 4: Select the desired number of components (2 in this case)
+reduced_data <- principal_components[, 1:2]
+reduced_data_df <- as.data.frame(reduced_data)
+
+head(reduced_data_df)
+```
+
+
+### Determine Number of Clusters
+```{r}
+# Perform k-means clustering for different values of k and calculate WCSS
+wcss <- c()
+for (k in 1:20) {
+  kmeans_model <- kmeans(reduced_data_df, centers = k, nstart = 25)
+  wcss[k] <- kmeans_model$tot.withinss
+}
+
+# Create a line plot of WCSS against the number of clusters
+plot_data <- data.frame(k = 1:20, WCSS = wcss)
+ggplot(data = plot_data, aes(x = k, y = WCSS)) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Number of Clusters (k)", y = "Within-Cluster Sum of Squares (WCSS)")
+
+# Use the fviz_nbclust() function from the factoextra package to visualize the elbow point
+elbow_plot <- fviz_nbclust(reduced_data_df, kmeans, method = "wss", k.max = 20)
+```
+
+
+
+### k-means Clustering
+```{r}
+
+# Specify model type and computational engine -----------------------------
+
+kmeans_model <- k_means() %>%
+  set_engine("stats") %>% # use the {stats} package as the engine
+  set_mode("partition") %>% # {tidyclust} offers the partition mode
+  set_args(num_clusters = 10) # specify the number of clusters
+
+
+# Fit ---------------------------------------------------------------------
+
+kmeans_fit <- kmeans_model %>%
+  fit(~., data = reduced_data_df) # Passes all the features for fitting
+
+
+# Predict -----------------------------------------------------------------
+
+kmeans_pred <- predict(kmeans_fit, new_data = reduced_data_df)
+predictions <- reduced_data_df %>%
+  bind_cols(., kmeans_pred) # attach cluster assignments
+```
+
+```{r}
+# Results -----------------------------------------------------------------
+
+table(predictions$.pred_cluster)
+
+predictions %>%
+  ggplot(mapping = aes(x = PC1, y = PC2, colour = .pred_cluster)) +
+  geom_point() +
+  xlim(-10, 10) +
+  ylim(-10, 10)
+```
+
+
+### Compare Clusters with Tags
+```{r}
+topic_check <- business_legislative_period_51 %>% select(TagNames)
+topic_check$cluster <- predictions$.pred_cluster
+topic_check <- as.data.frame(topic_check)
+
+topic_check <- topic_check %>%
+  arrange(cluster)
+
+kable(topic_check)
+```
+
+
+### To Do
+- Evaluate matching between clustering and tags
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
