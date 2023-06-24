@@ -20,10 +20,10 @@ delete_bold_tags <- function(input_string) {
 
 # Clean Data ---------------------------------------------------------------
 # Remove bold tags
-business_legislative_period_51$InitialSituation_clean <- delete_bold_tags(business_legislative_period_51$InitialSituation)
+#business_legislative_period_51$InitialSituation_clean <- delete_bold_tags(business_legislative_period_51$InitialSituation)
 
 # Remove all HTML tags
-business_legislative_period_51$InitialSituation_clean <- strip_html(business_legislative_period_51$InitialSituation_clean)
+business_legislative_period_51$InitialSituation_clean <- strip_html(business_legislative_period_51$InitialSituation)
 
 # Remove double whitespaces (Source: ChatGPT)
 business_legislative_period_51$InitialSituation_clean <- gsub(" {2,}", " ", business_legislative_period_51$InitialSituation_clean)

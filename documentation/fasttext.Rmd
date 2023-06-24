@@ -1,0 +1,25 @@
+---
+title: "FastText"
+author: "Fabian Aiolfi"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Plots
+
+plot1.png
+- No preprocessing
+- Includes column header
+
+plot2.png
+- No preprocessing
+- Column header removed
+
+plot3.png
+- Preprocessing: remove_punct, remove_numbers, remove_symbol, remove stopwords
+- Column header removed
+

@@ -93,3 +93,6 @@ sinn*
 beantragt*
 betrifft
 betreffen
+SDA-Meldung
+sda-meldung
+sda

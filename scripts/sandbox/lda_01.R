@@ -74,7 +74,7 @@ dfmat_business <- dfm(tokens_business) %>%
   dfm_trim(min_termfreq = 0.9, termfreq_type = "quantile",
            max_docfreq = 0.1, docfreq_type = "prop")
 
-tmod_lda <- textmodel_lda(dfmat_business, k = 27) # k=27; 105; 9
+tmod_lda <- textmodel_lda(dfmat_business, k = 10) # k=27; 105; 9
 #terms(tmod_lda, 10)
 
 lda_topics <- topics(tmod_lda)
@@ -82,6 +82,16 @@ lda_topics <- topics(tmod_lda)
 business_legislative_period_51$topic <- lda_topics
 
 topic_check <- business_legislative_period_51 %>% select(TagNames, topic)
+
+topic_check_reduced <- topic_check %>% 
+  group_by(TagNames, topic) %>% 
+  distinct(TagNames, topic)
+
+# 105 unique TagNames
+# k = 27: 147 -> 128
+# k = 15: 147 -> 126
+# k = 10: 147 -> 124
+# k = 5: 147 -> 119
 
 
 ################## using the tags

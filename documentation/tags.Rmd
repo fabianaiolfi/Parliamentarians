@@ -67,6 +67,26 @@ business_tags <- unlist(strsplit(business_tags, "|", fixed = TRUE))
 business_tags <- unique(business_tags)
 business_tags
 ```
+Number of tag occurences in the 51st legislative period:
+```{r}
+business_tags_plot <- business_legislative_period_51 %>% 
+  select(BusinessShortNumber, TagNames, Title, InitialSituation)
+
+# Transform dataframe to have one tag per row
+business_tags_plot <- business_tags_plot %>%
+  separate_rows(TagNames, sep = "\\|") %>% 
+  group_by(TagNames) %>%
+  mutate(count_name_occurr = n()) %>% 
+  ungroup()
+
+# Plot occurences
+ggplot(business_tags_plot) +
+  geom_bar(aes(x = reorder(TagNames, count_name_occurr)), stat = "count") +
+  coord_flip() +
+  xlab("") +
+  theme_minimal()
+```
+
 
 **RQ**: How can the tags be used to help summarise the items of business?
 
