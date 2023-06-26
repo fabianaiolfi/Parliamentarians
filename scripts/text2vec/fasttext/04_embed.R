@@ -5,11 +5,12 @@
 list_params <- list(command = 'print-sentence-vectors',
                     model = here("models", "cc.de.300.bin")) # https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.de.300.bin.gz
 
-for (col in df_colnames) {
-  res <- fasttext_interface(list_params,
-                            path_input = here("scripts", "text2vec", "fasttext", "input_files", paste0(col, ".txt")),
-                            path_output = here("scripts", "text2vec", "fasttext", "vec_files", paste0(col, ".txt")))
-}
+# Uncomment to create embeddings
+# for (col in df_colnames) {
+#   res <- fasttext_interface(list_params,
+#                             path_input = here("scripts", "text2vec", "fasttext", "input_files", paste0(col, ".txt")),
+#                             path_output = here("scripts", "text2vec", "fasttext", "vec_files", paste0(col, ".txt")))
+# }
 
 
 ### delete later
@@ -66,37 +67,31 @@ read_embeddings <- function(file_path) {
 file_directory <- here("scripts", "text2vec", "fasttext", "vec_files")
 file_paths <- list.files(file_directory, pattern = "\\.txt$", full.names = TRUE)
 
-all_vecs <- lapply(file_paths, read_embeddings)
+#all_vecs <- lapply(file_paths, read_embeddings)
+#save(all_vecs, file = here("data", "all_vecs.Rda"))
+rm(all_vecs)
+load(here("data", "all_vecs.Rda"))
 
-# Remove ".txt" from the file_name column in the current dataframe
+# Remove ".txt" from the file_name column
 for (i in seq_along(all_vecs)) {
   all_vecs[[i]]$file_name <- gsub("\\.txt$", "", all_vecs[[i]]$file_name)
 }
 
-
-
-
-
-
-for (i in all_vecs) {
-  print(gsub("\\.txt", "", i$file_name))
-  # i$file_name <- gsub("\\.txt", "", i$file_name)
+# Add text from DF to each data to check for NAs
+# Then replace NAs wieghts with 0
+# Iterate over each dataframe in the list
+for (i in seq_along(all_vecs)) {
+  # Get the current dataframe
+  current_df <- all_vecs[[i]]
+  # Get the corresponding file name from the "file_name" column
+  file_name <- current_df$file_name[1]  # Assuming the file name is consistent within each dataframe
+  current_df <- cbind(df[[file_name]], current_df)
+  current_df <- current_df %>% rename(na_check = `df[[file_name]]`)
+  current_df <- current_df %>% mutate_at(vars(-na_check, -file_name),
+                                         ~ if_else(na_check == "NA</s>", 0, .))
+  all_vecs[[i]] <- current_df
 }
 
-test_vec <- all_vecs[[4]]
-test_vec$file_name[4]
-test_vec <- cbind(df$Description, test_vec)
-
-test_vec <- test_vec %>%
-  mutate_at(vars(-`df$Description`, -file_name),
-            ~ if_else(`df$Description` == "NA</s>", 0, .))
-
-
-#test_vec[!!rowSums(is.na(sf_SubmittedText_vecs)),] <- 0
-
-# deal with NA</s>
-# convert NA to 0
-#sf_SubmittedText_vecs[!!rowSums(is.na(sf_SubmittedText_vecs)),] <- 0
 
 # Created weighted sum of all features
 combined_df <- sf_BusinessTypeName_vecs*0.1 +
