@@ -85,5 +85,8 @@ df <- df %>% left_join(lemma_df, by = "BusinessShortNumber")
 
 # Prepare for Fasttext ----------------------------------------------------
 
+# Remove all newline characters
+df <- df %>% mutate_at(vars(-BusinessShortNumber), ~ gsub("\n", "", .))
+
 # Add </s> at end of strings
 df <- df %>% mutate_at(vars(-BusinessShortNumber), ~ paste0(., "</s>"))
