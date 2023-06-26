@@ -20,3 +20,6 @@ library(DT)
 
 library(udpipe)
 library(quanteda)
+library(fastText)
+
+library(readr)
