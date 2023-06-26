@@ -5,4 +5,4 @@ load(here("data", "business_legislative_period_51.RData"))
 load(here("data", "chatgpt_output_20230419_204609.RData"))
 
 ud_model <- udpipe_load_model(here("models", "german-gsd-ud-2.5-191206.udpipe"))
-custom_stopwords <- scan(here("scripts", "sandbox", "custom_stopwords.txt"), character(), sep = "\n")
+custom_stopwords <- scan(here("data", "custom_stopwords.txt"), character(), sep = "\n")
