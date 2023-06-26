@@ -18,4 +18,5 @@ library(dplyr)
 #install.packages("DT")
 library(DT)
 
-#library(udpipe)
+library(udpipe)
+library(quanteda)

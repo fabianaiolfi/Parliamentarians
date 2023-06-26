@@ -13,8 +13,10 @@ strip_html <- function(htmlString) {
 df <- business_legislative_period_51 %>% 
   select(-c(ID, Language, BusinessType, BusinessTypeAbbreviation, DraftText, DocumentationText, MotionText, FederalCouncilResponseText, FederalCouncilProposal, FederalCouncilProposalDate, FederalCouncilProposalText, BusinessStatus, BusinessStatusText, BusinessStatusDate, ResponsibleDepartment, ResponsibleDepartmentAbbreviation, IsLeadingDepartment, Tags, Category, Modified, SubmissionDate, SubmissionCouncil, SubmissionCouncilAbbreviation, SubmissionSession, SubmissionLegislativePeriod, FirstCouncil1, FirstCouncil1Abbreviation, FirstCouncil2, FirstCouncil2Name, FirstCouncil2Abbreviation)) %>% 
   mutate(main_tag = TagNames) %>% # Save main tag
-  mutate(main_tag = gsub("\\|.*", "", main_tag)) %>% 
-  separate_rows(TagNames, sep = "\\|") # Transform dataframe to have one tag per row
+  mutate(main_tag = gsub("\\|.*", "", main_tag)) %>%
+  separate_rows(main_tag, sep = "\\|") %>% # Transform column to have one tag per row
+  mutate(TagNames = gsub("\\|", " ", TagNames))
+
 
 # Only keep ChatGPT summaries
 chatgpt_summaries <- chatgpt_output[[1]][["chatgpt_content"]]
@@ -32,7 +34,7 @@ rm(temp_df)
 # Clean up text heavy columns
 text_cols <- c("InitialSituation", "Proceedings", "SubmittedText", "ReasonText", "chatgpt_summaries")
 df <- df %>% mutate(across(text_cols, ~strip_html(.))) # Remove all HTML tags
-df <- df %>% mutate(across(text_cols, ~gsub(" {2,}", " ", (.)))) # Remove double whitespaces (Source: ChatGPT)
+df <- df %>% mutate(across(text_cols, ~gsub(" {2,}", " ", (.)))) # Remove double whitespaces
 
 # Uncomment to Lemmatise Text
 # lemma_df <- df %>% select(BusinessShortNumber, text_cols)
@@ -57,20 +59,31 @@ df <- df %>% mutate(across(text_cols, ~gsub(" {2,}", " ", (.)))) # Remove double
 # save(lemma_df, file = here("data", "text2vec_fasttext_lemma_df.Rda"))
 load(here("data", "text2vec_fasttext_lemma_df.Rda"))
 
-
 # Further Preprocessing
-# CONTINUE HERE
 for (col in text_cols) {
-  lemma_df[[col]] <- tolower(lemma_df[[col]])
+  lemma_df[[col]] <- tolower(lemma_df[[col]]) # Lowercasing
+  # Tokenisation
   text <- tokens(lemma_df[[col]])
   text <- tokens(text, remove_punct = TRUE, remove_numbers = TRUE, remove_symbol = TRUE)
   text <- tokens_remove(text, pattern = c(stopwords("de"), custom_stopwords))
+  # Merge back with lemma_df
+  text <- data.frame(text = sapply(text, paste, collapse = " "))
+  lemma_df[[col]] <- text$text
 }
 
+# Replace "na" strings with NA
+lemma_df <- lemma_df %>% mutate(across(everything(), ~replace(., . == "na", NA)))
 
-text <- data.frame(text = sapply(text, paste, collapse = " "))
-text <- text %>% mutate(text = replace(text, text == "na", NA))
-soziale_fragen$chatgpt_summaries <- text$text
+# Rename lemma columns for merge with main DF
+new_colnames <- colnames(lemma_df)
+new_colnames[-1] <- paste0(new_colnames[-1], "_lemma")
+colnames(lemma_df) <- new_colnames
 
-soziale_fragen_edit <- soziale_fragen %>% mutate_at(vars(-BusinessShortNumber), ~ paste0(., "</s>")) # add </s> at end of strings
-soziale_fragen_edit$TagNames <- gsub("\\|", " ", soziale_fragen_edit$TagNames)
+# Merge with main DF
+df <- df %>% left_join(lemma_df, by = "BusinessShortNumber")
+
+
+# Prepare for Fasttext ----------------------------------------------------
+
+# Add </s> at end of strings
+df <- df %>% mutate_at(vars(-BusinessShortNumber), ~ paste0(., "</s>"))
