@@ -15,9 +15,9 @@ timestamp <- Sys.time()
 formatted_timestamp <- format(timestamp, "%Y%m%d_%H%M%S")
 
 # Query
-chatgpt_output <- chatgpt(prompt_role_var = business_legislative_period_51_long$role,
-                          prompt_content_var = business_legislative_period_51_long$query,
-                          id_var = business_legislative_period_51_long$id,
+chatgpt_output <- chatgpt(prompt_role_var = all_businesses_long$role,
+                          prompt_content_var = all_businesses_long$query,
+                          id_var = all_businesses_long$id,
                           param_max_tokens = 100,
                           param_n = 1,
                           param_temperature = 0)

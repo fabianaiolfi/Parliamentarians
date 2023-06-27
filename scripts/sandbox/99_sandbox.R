@@ -295,3 +295,9 @@ gmm_num_clusters <- length(unique(gmm_cluster_assignments))
 
 # do not understand
 
+############ merged all businesses
+all_businesses_nas <- all_businesses %>% 
+  dplyr::filter(is.na(InitialSituation) == T)
+
+
+
