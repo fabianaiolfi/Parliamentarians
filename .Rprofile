@@ -23,3 +23,4 @@ library(quanteda)
 library(fastText)
 
 library(readr)
+library(cluster)
