@@ -74,7 +74,6 @@ for (i in seq_along(all_vecs)) {
 
 all_vecs_df_names <- as.data.frame(all_vecs_df_names)
 all_vecs_df_names <- all_vecs_df_names %>% rowid_to_column("index")
-all_vecs_df_names
 
 # Remove first two colums of each dataframe
 # Iterate over each dataframe in the list
@@ -89,19 +88,41 @@ for (i in seq_along(all_vecs)) {
   all_vecs[[i]] <- current_df
 }
 
+# > all_vecs_df_names
+# index         all_vecs_df_names
+# 1      1          BusinessTypeName
+# 2      2   chatgpt_summaries_lemma
+# 3      3         chatgpt_summaries
+# 4      4               Description
+# 5      5         FirstCouncil1Name
+# 6      6    InitialSituation_lemma
+# 7      7          InitialSituation
+# 8      8                  main_tag
+# 9      9         Proceedings_lemma
+# 10    10               Proceedings
+# 11    11          ReasonText_lemma
+# 12    12                ReasonText
+# 13    13 ResponsibleDepartmentName
+# 14    14     SubmissionCouncilName
+# 15    15               SubmittedBy
+# 16    16       SubmittedText_lemma
+# 17    17             SubmittedText
+# 18    18                  TagNames
+# 19    19                     Title
+
 # Sum up weighted embeddings
 combined_vecs <- all_vecs[[1]]*0.1 + # BusinessTypeName
-  #all_vecs[[2]] + # chatgpt_summaries_lemma
-  all_vecs[[3]]*0.8 + # chatgpt_summaries_lemma
+  all_vecs[[2]] + # chatgpt_summaries_lemma
+  #all_vecs[[3]]*0.6 + # chatgpt_summaries_lemma
   all_vecs[[4]]*0.5 + # Description
   all_vecs[[5]]*0.1 + # FirstCouncil1Name
   all_vecs[[6]] + # InitialSituation_lemma
   #all_vecs[[8]] + # main_tag
   all_vecs[[9]]*0.5 + # Proceedings_lemma
-  all_vecs[[11]]*0.5 + # ReasonText_lemma
+  all_vecs[[11]]*0.2 + # ReasonText_lemma
   all_vecs[[13]]*0.4 + # ResponsibleDepartmentName
   all_vecs[[14]]*0.1 + # SubmissionCouncilName
   all_vecs[[15]]*0.1 + # SubmittedBy
-  all_vecs[[16]]*0.2 + # SubmittedText_lemma
+  all_vecs[[16]]*0.1 + # SubmittedText_lemma
   all_vecs[[18]] + # TagNames
-  all_vecs[[19]]*0.8 # Title
+  all_vecs[[19]]*0.7 # Title
