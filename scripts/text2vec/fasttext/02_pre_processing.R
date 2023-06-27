@@ -28,7 +28,6 @@ df <- df %>% left_join(chatgpt_summaries, by = "BusinessShortNumber")
 rm(temp_df)
 
 
-
 # Clean Text ------------------------------------------------------
 
 # Clean up text heavy columns
