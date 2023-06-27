@@ -30,9 +30,9 @@ list_params <- list(command = 'print-sentence-vectors',
 # file_paths <- list.files(file_directory, pattern = "\\.txt$", full.names = TRUE)
 # 
 # all_vecs <- lapply(file_paths, read_embeddings)
-
-# Save imported embeddings
-#save(all_vecs, file = here("data", "all_vecs.Rda"))
+# 
+# # Save imported embeddings
+# save(all_vecs, file = here("data", "all_vecs.Rda"))
 
 # Load previously saved embeddings
 load(here("data", "all_vecs.Rda"))

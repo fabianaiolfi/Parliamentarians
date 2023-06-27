@@ -56,7 +56,7 @@ df <- df %>% mutate(across(text_cols, ~gsub(" {2,}", " ", (.)))) # Remove double
 #   print(counter)
 #   counter <- counter -1
 #   }
-# save(lemma_df, file = here("data", "text2vec_fasttext_lemma_df.Rda"))
+#save(lemma_df, file = here("data", "text2vec_fasttext_lemma_df.Rda"))
 load(here("data", "text2vec_fasttext_lemma_df.Rda"))
 
 # Further Preprocessing
