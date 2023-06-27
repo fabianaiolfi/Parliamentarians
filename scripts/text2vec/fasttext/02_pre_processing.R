@@ -36,7 +36,7 @@ text_cols <- c("InitialSituation", "Proceedings", "SubmittedText", "ReasonText",
 df <- df %>% mutate(across(text_cols, ~strip_html(.))) # Remove all HTML tags
 df <- df %>% mutate(across(text_cols, ~gsub(" {2,}", " ", (.)))) # Remove double whitespaces
 
-# Uncomment to Lemmatise Text
+# Uncomment to Lemmatise Text (https://cran.r-project.org/web/packages/udpipe/vignettes/udpipe-annotation.html)
 # lemma_df <- df %>% select(BusinessShortNumber, text_cols)
 # 
 # counter = length(text_cols)

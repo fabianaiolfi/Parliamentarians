@@ -18,9 +18,9 @@ library(dplyr)
 #install.packages("DT")
 library(DT)
 
-library(udpipe)
+library(udpipe) # https://cran.r-project.org/web/packages/udpipe/vignettes/udpipe-annotation.html
 library(quanteda)
-library(fastText)
+library(fastText) # https://cran.r-project.org/web/packages/fastText/vignettes/the_fastText_R_package.html
 
 library(readr)
 library(cluster)
