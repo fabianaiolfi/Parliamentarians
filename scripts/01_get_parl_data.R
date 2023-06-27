@@ -12,32 +12,32 @@
 # Warning: Takes around 15-30 minutes
 
 # Final votes from a legislative period ------------------------------------------------------------------------
-voting_legislative_period_46 <- swissparl::get_data("Voting",
+voting_legislative_period_50 <- swissparl::get_data("Voting",
                                                     Language = "DE",
-                                                    IdLegislativePeriod = 46,
+                                                    IdLegislativePeriod = 50,
                                                     Subject = "Schlussabstimmung")
 
 
 # Business details of final votes from a legislative period ------------------------------------------------------
 # Get all BusinessShortNumber (i.e., Business IDs) of final votes
-bsn_legislative_period_46 <- unique(voting_legislative_period_46$BusinessShortNumber)
+bsn_legislative_period_50 <- unique(voting_legislative_period_50$BusinessShortNumber)
 
-business_legislative_period_46 <- swissparl::get_data("Business",
+business_legislative_period_50 <- swissparl::get_data("Business",
                                                       Language = "DE",
-                                                      BusinessShortNumber = bsn_legislative_period_46)
+                                                      BusinessShortNumber = bsn_legislative_period_50)
 
 
 # Parliamentarians casting final votes in a legislative period ------------------------------------------------------
-member_council_legislative_period_46 <- swissparl::get_data("MemberCouncil", Language = "DE") # Filtering in get_data() doesn't seem to work here
-member_council_legislative_period_46 <- member_council_legislative_period_46 %>%
-  filter(PersonNumber %in% unique(voting_legislative_period_46$PersonNumber))
+member_council_legislative_period_50 <- swissparl::get_data("MemberCouncil", Language = "DE") # Filtering in get_data() doesn't seem to work here
+member_council_legislative_period_50 <- member_council_legislative_period_50 %>%
+  filter(PersonNumber %in% unique(voting_legislative_period_50$PersonNumber))
 
 # The National Council counts 200 members. However, this data set counts 213 people.
 # The 13 remaining people are parliamentarians who resigned before the legislative period was over.
-length(unique(member_council_legislative_period_46$PersonNumber))
+length(unique(member_council_legislative_period_50$PersonNumber))
 
 
 # Store data locally ------------------------------------------------------
-save(voting_legislative_period_46, file = here("data", "voting_legislative_period_46.RData"))
-save(business_legislative_period_46, file = here("data", "business_legislative_period_46.RData"))
-save(member_council_legislative_period_46, file = here("data", "member_council_legislative_period_46.RData"))
+save(voting_legislative_period_50, file = here("data", "voting_legislative_period_50.RData"))
+save(business_legislative_period_50, file = here("data", "business_legislative_period_50.RData"))
+save(member_council_legislative_period_50, file = here("data", "member_council_legislative_period_50.RData"))
