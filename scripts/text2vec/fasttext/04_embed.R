@@ -18,20 +18,23 @@ list_params <- list(command = 'print-sentence-vectors',
 
 # Import Embeddings -------------------------------------------------------------------
 
-read_embeddings <- function(file_path) {
-  file_name <- basename(file_path)
-  embeddings <- read_delim(file_path, delim = " ", col_names = FALSE)
-  embeddings <- embeddings %>% mutate(file_name = file_name, .before = X1)  # Add file_name column at the first position
-  embeddings$X301 <- NULL
-  return(embeddings)
-}
+# read_embeddings <- function(file_path) {
+#   file_name <- basename(file_path)
+#   embeddings <- read_delim(file_path, delim = " ", col_names = FALSE)
+#   embeddings <- embeddings %>% mutate(file_name = file_name, .before = X1)  # Add file_name column at the first position
+#   embeddings$X301 <- NULL
+#   return(embeddings)
+# }
+# 
+# file_directory <- here("scripts", "text2vec", "fasttext", "vec_files")
+# file_paths <- list.files(file_directory, pattern = "\\.txt$", full.names = TRUE)
+# 
+# all_vecs <- lapply(file_paths, read_embeddings)
 
-file_directory <- here("scripts", "text2vec", "fasttext", "vec_files")
-file_paths <- list.files(file_directory, pattern = "\\.txt$", full.names = TRUE)
-
-#all_vecs <- lapply(file_paths, read_embeddings)
+# Save imported embeddings
 #save(all_vecs, file = here("data", "all_vecs.Rda"))
-rm(all_vecs)
+
+# Load previously saved embeddings
 load(here("data", "all_vecs.Rda"))
 
 
@@ -61,30 +64,44 @@ for (i in seq_along(all_vecs)) {
 
 # Create weighted sum of all features -------------------------------------------------------------------
 
+# Get DF names
+all_vecs_df_names <- c()
 
+for (i in seq_along(all_vecs)) {
+  current_df <- all_vecs[[i]]
+  all_vecs_df_names <- append(all_vecs_df_names, current_df$file_name[1])
+}
 
+all_vecs_df_names <- as.data.frame(all_vecs_df_names)
+all_vecs_df_names <- all_vecs_df_names %>% rowid_to_column("index")
+all_vecs_df_names
 
+# Remove first two colums of each dataframe
+# Iterate over each dataframe in the list
+for (i in seq_along(all_vecs)) {
+  # Get the current dataframe
+  current_df <- all_vecs[[i]]
+  
+  # Remove the first 2 columns in the current dataframe
+  current_df <- subset(current_df, select = -(1:2))
+  
+  # Update the current dataframe in all_vecs with the modified dataframe
+  all_vecs[[i]] <- current_df
+}
 
-# old calculation
-combined_df <- sf_BusinessTypeName_vecs*0.1 +
-  sf_Description_vecs*0.5 + # *0.8 +
-  sf_FirstCouncil1Name_vecs*0.1 +
-  sf_InitialSituation_vecs +
-  sf_Proceedings_vecs*0.5 +
-  sf_ReasonText_vecs*0.5 + #*0.8 +
-  sf_ResponsibleDepartmentName_vecs*0.7 + #*0.8 +
-  sf_SubmissionCouncilName_vecs*0.1 +
-  sf_SubmittedBy_vecs*0.2 + #*0.8 +
-  sf_SubmittedText_vecs*0.5 + #*0.8 +
-  sf_TagNames_vecs +
-  sf_Title_vecs +
-  sf_chatgpt_summaries_vecs # *2
-
-
-
-
-
-# archive
-# Vectorise Description
-# soziale_fragen_description <- soziale_fragen %>% select(Description)
-# write.table(soziale_fragen_description, sep=",", "soziale_fragen_description.txt", col.names = F, row.names = F)
+# Sum up weighted embeddings
+combined_vecs <- all_vecs[[1]]*0.1 + # BusinessTypeName
+  #all_vecs[[2]] + # chatgpt_summaries_lemma
+  all_vecs[[3]]*0.8 + # chatgpt_summaries_lemma
+  all_vecs[[4]]*0.5 + # Description
+  all_vecs[[5]]*0.1 + # FirstCouncil1Name
+  all_vecs[[6]] + # InitialSituation_lemma
+  #all_vecs[[8]] + # main_tag
+  all_vecs[[9]]*0.5 + # Proceedings_lemma
+  all_vecs[[11]]*0.5 + # ReasonText_lemma
+  all_vecs[[13]]*0.4 + # ResponsibleDepartmentName
+  all_vecs[[14]]*0.1 + # SubmissionCouncilName
+  all_vecs[[15]]*0.1 + # SubmittedBy
+  all_vecs[[16]]*0.2 + # SubmittedText_lemma
+  all_vecs[[18]] + # TagNames
+  all_vecs[[19]]*0.8 # Title
