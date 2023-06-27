@@ -16,7 +16,7 @@ library(tidyclust)
 library(kableExtra)
 
 knitr::opts_chunk$set(echo = TRUE)
-load(here("data", "business_legislative_period_51.RData"))
+load(here("data", "all_businesses.RData"))
 ```
 
 ```{r include=FALSE}
@@ -39,17 +39,17 @@ delete_bold_tags <- function(input_string) {
 
 # Clean Data ---------------------------------------------------------------
 # Remove bold tags
-business_legislative_period_51$InitialSituation_clean <- delete_bold_tags(business_legislative_period_51$InitialSituation)
-
+# all_businesses$InitialSituation_clean <- delete_bold_tags(all_businesses$InitialSituation)
+# 
 # Remove all HTML tags
-business_legislative_period_51$InitialSituation_clean <- strip_html(business_legislative_period_51$InitialSituation_clean)
-
+all_businesses$InitialSituation_clean <- strip_html(all_businesses$InitialSituation)
+# 
 # Remove double whitespaces (Source: ChatGPT)
-business_legislative_period_51$InitialSituation_clean <- gsub(" {2,}", " ", business_legislative_period_51$InitialSituation_clean)
-
+all_businesses$InitialSituation_clean <- gsub(" {2,}", " ", all_businesses$InitialSituation_clean)
+# 
 # Add title to text
-business_legislative_period_51$InitialSituation_clean <- paste(business_legislative_period_51$Title,
-                                                               business_legislative_period_51$InitialSituation_clean)
+all_businesses$InitialSituation_clean <- paste(all_businesses$Title,
+                                               all_businesses$InitialSituation_clean)
 ```
 
 
@@ -57,19 +57,19 @@ business_legislative_period_51$InitialSituation_clean <- paste(business_legislat
 
 Each item of business has between one and five tags.
 ```{r}
-business_legislative_period_51 %>% select(BusinessShortNumber, TagNames) %>% head()
+all_businesses %>% select(BusinessShortNumber, TagNames) %>% head()
 ```
 
-There are a total of 27 different tags:
+There are a total of 29 different tags:
 ```{r}
-business_tags <- business_legislative_period_51$TagNames
+business_tags <- all_businesses$TagNames
 business_tags <- unlist(strsplit(business_tags, "|", fixed = TRUE))
 business_tags <- unique(business_tags)
 business_tags
 ```
 Number of tag occurences in the 51st legislative period:
 ```{r}
-business_tags_plot <- business_legislative_period_51 %>% 
+business_tags_plot <- all_businesses %>% 
   select(BusinessShortNumber, TagNames, Title, InitialSituation)
 
 # Transform dataframe to have one tag per row
@@ -102,9 +102,9 @@ ggplot(business_tags_plot) +
 ```{r}
 # https://tutorials.quanteda.io/machine-learning/topicmodel/
 
-tokens_business <- tokens(business_legislative_period_51$InitialSituation_clean)
+tokens_business <- tokens(all_businesses$InitialSituation_clean)
 tokens_business <- tokens(tokens_business, remove_punct = TRUE, remove_numbers = TRUE, remove_symbol = TRUE)
-custom_stopwords <- scan(here("scripts", "sandbox", "custom_stopwords.txt"), character(), sep = "\n")
+custom_stopwords <- scan(here("data", "custom_stopwords.txt"), character(), sep = "\n")
 tokens_business <- tokens_remove(tokens_business, pattern = c(stopwords("de"), custom_stopwords))
 
 dfmat_business <- dfm(tokens_business) %>% 
@@ -197,7 +197,7 @@ predictions %>%
 
 ### Compare Clusters with Tags
 ```{r}
-topic_check <- business_legislative_period_51 %>% select(TagNames)
+topic_check <- all_businesses %>% select(TagNames)
 topic_check$cluster <- predictions$.pred_cluster
 topic_check <- as.data.frame(topic_check)
 

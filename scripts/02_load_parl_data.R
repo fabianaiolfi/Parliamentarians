@@ -24,6 +24,9 @@ rm(business_legislative_period_47,
       business_legislative_period_50,
       business_legislative_period_51)
 
+# Store data locally ------------------------------------------------------
+#save(all_businesses, file = here("data", "all_businesses.RData"))
+
 # Create Sample ---------------------------------------------------------------
 # Only run this segment if you want to create a sample dataframe for testing purposes
 

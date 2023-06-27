@@ -300,4 +300,16 @@ all_businesses_nas <- all_businesses %>%
   dplyr::filter(is.na(InitialSituation) == T)
 
 
+# samples
+all_businesses$InitialSituation_clean[5]
+all_businesses$query_central_stmnt[5]
+
+
+
+
+
+
+
+
+
 
