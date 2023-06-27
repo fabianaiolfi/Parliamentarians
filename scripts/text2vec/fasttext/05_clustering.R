@@ -5,66 +5,53 @@
 combined_vecs_scaled <- scale(combined_vecs)
 combined_vecs_scaled <- as.data.frame(combined_vecs_scaled)
 combined_vecs_scaled$BusinessShortNumber <- df$BusinessShortNumber
-combined_vecs_scaled$main_tag <- df$main_tag
 
-# Split dataframe by main tag
-combined_vecs_scaled_split <- split(combined_vecs_scaled, combined_vecs_scaled$main_tag)
-df_main_tag_split <- split(df, df$main_tag)
+df_main_tag <- df %>%
+  distinct(BusinessShortNumber, .keep_all = T) %>% 
+  select(BusinessShortNumber, main_tag)
+
+combined_vecs_scaled <- combined_vecs_scaled %>%
+  distinct(BusinessShortNumber, .keep_all = T) %>% 
+  left_join(df_main_tag, by = "BusinessShortNumber")
 
 
 # Hierarchical clustering ---------------------------------------------------------------------
 # https://www.statology.org/hierarchical-clustering-in-r/
 
-for (i in seq_along(combined_vecs_scaled_split)) {
-  if (nrow(combined_vecs_scaled_split[[i]]) < 9) {
+main_tags <- combined_vecs_scaled %>% 
+  select(main_tag) %>% distinct(main_tag)
+main_tags <- as.vector(main_tags$main_tag)
+
+df_clustered <- as.data.frame(NULL)
+
+for (i in main_tags) {
+  temp_df <- combined_vecs_scaled %>% dplyr::filter(combined_vecs_scaled$main_tag == i)
+
+  if (nrow(temp_df) < 9) {
     # Deal with dataframes/tags with few bills
-    combined_vecs_scaled_split[[i]]$cluster <- 0
+    temp_df$cluster <- 0
+    df_clustered <- rbind(df_clustered, temp_df)
   } else {
     # Compute distance matrix
-    d <- dist(combined_vecs_scaled_split[[i]][,c(1:300)], method = "euclidean")
+    d <- dist(temp_df[,c(1:300)], method = "euclidean")
     d <- as.dist(d)
-    
+
     # Perform hierarchical clustering using Ward's method
     final_clust <- hclust(d, method = "ward.D2")
     #final_clust <- hclust(d, method = "complete")
-    
+
     # Cut the dendrogram into k clusters
     groups <- cutree(final_clust, k = 9)
-    
-    # Append cluster labels to original data
-    combined_vecs_scaled_split[[i]] <- cbind(combined_vecs_scaled_split[[i]], cluster = groups)
-    combined_vecs_scaled_split[[i]] <- combined_vecs_scaled_split[[i]] %>% distinct(BusinessShortNumber, .keep_all = T)
+
+    # Append cluster labels to df
+    temp_df <- cbind(temp_df, cluster = groups)
+    df_clustered <- rbind(df_clustered, temp_df)
   }
 }
 
 
-# Merge dataframes ---------------------------------------------------------------------
+# Merge with original df ---------------------------------------------------------------------
 
-df_clustered <- as.data.frame(NULL)
-
-# for (i in seq_along(combined_vecs_scaled_split)) {
-  temp_df <- df_main_tag_split[[8]]
-  temp_df <- temp_df %>% distinct(BusinessShortNumber, .keep_all = T)
-  
-  # Append cluster labels to original dataframe
-  temp_df <- cbind(temp_df, cluster = combined_vecs_scaled_split[[8]]$cluster)
-  temp_df <- temp_df %>% distinct(BusinessShortNumber, .keep_all = T) # Repeat this?
-  
-  df_clustered <- rbind(df_clustered, temp_df)
-# }
-
-
-
-
-combined_vecs_scaled_split[[3]]$cluster
-
-inspect_df <- df_main_tag_split[[20]]
-inspect_df <- inspect_df %>% distinct(BusinessShortNumber, .keep_all = T)
-
-# Append cluster labels to original data
-inspect_df <- cbind(inspect_df, cluster = combined_vecs_scaled_split[[20]]$cluster)
-
-
-
-
-
+df_clustered <- df_clustered %>% select(BusinessShortNumber, cluster)
+df <- df %>% distinct(BusinessShortNumber, .keep_all = T)
+df <- df %>% left_join(df_clustered, by = "BusinessShortNumber")
