@@ -10,7 +10,7 @@ strip_html <- function(htmlString) {
 # Wrangle Dataframes ------------------------------------------------------
 
 # Setup Dataframe, one tags per line
-df <- business_legislative_period_51 %>% 
+df <- all_businesses %>% 
   select(-c(ID, Language, BusinessType, BusinessTypeAbbreviation, DraftText, DocumentationText, MotionText, FederalCouncilResponseText, FederalCouncilProposal, FederalCouncilProposalDate, FederalCouncilProposalText, BusinessStatus, BusinessStatusText, BusinessStatusDate, ResponsibleDepartment, ResponsibleDepartmentAbbreviation, IsLeadingDepartment, Tags, Category, Modified, SubmissionDate, SubmissionCouncil, SubmissionCouncilAbbreviation, SubmissionSession, SubmissionLegislativePeriod, FirstCouncil1, FirstCouncil1Abbreviation, FirstCouncil2, FirstCouncil2Name, FirstCouncil2Abbreviation)) %>% 
   mutate(main_tag = TagNames) %>% # Save main tag
   mutate(main_tag = gsub("\\|.*", "", main_tag)) %>%
@@ -19,13 +19,13 @@ df <- business_legislative_period_51 %>%
 
 
 # Only keep ChatGPT summaries
-chatgpt_summaries <- chatgpt_output[[1]][["chatgpt_content"]]
-chatgpt_summaries <- chatgpt_summaries[1:147]
-chatgpt_summaries <- as.data.frame(chatgpt_summaries)
-temp_df <- business_legislative_period_51 %>% select(BusinessShortNumber)
-chatgpt_summaries <- cbind(chatgpt_summaries, temp_df)
-df <- df %>% left_join(chatgpt_summaries, by = "BusinessShortNumber")
-rm(temp_df)
+# chatgpt_summaries <- chatgpt_output[[1]][["chatgpt_content"]]
+# chatgpt_summaries <- chatgpt_summaries[1:147]
+# chatgpt_summaries <- as.data.frame(chatgpt_summaries)
+# temp_df <- business_legislative_period_51 %>% select(BusinessShortNumber)
+# chatgpt_summaries <- cbind(chatgpt_summaries, temp_df)
+# df <- df %>% left_join(chatgpt_summaries, by = "BusinessShortNumber")
+# rm(temp_df)
 
 
 # Clean Text ------------------------------------------------------
@@ -36,27 +36,27 @@ df <- df %>% mutate(across(text_cols, ~strip_html(.))) # Remove all HTML tags
 df <- df %>% mutate(across(text_cols, ~gsub(" {2,}", " ", (.)))) # Remove double whitespaces
 
 # Uncomment to Lemmatise Text (https://cran.r-project.org/web/packages/udpipe/vignettes/udpipe-annotation.html)
-# lemma_df <- df %>% select(BusinessShortNumber, text_cols)
-# 
-# counter = length(text_cols)
-# for (col in text_cols) {
-#   temp_vector <- lemma_df[[col]] # %>% select({{ col }})
-#   temp_vector <- udpipe_annotate(ud_model, temp_vector)
-#   temp_df <- as.data.frame(temp_vector)
-#   temp_df <- temp_df %>% select(doc_id, lemma) %>% drop_na()
-# 
-#   temp_df <- temp_df %>% group_by(doc_id) %>% summarize(temp_df = paste(lemma, collapse = " "))
-# 
-#   temp_df$doc_id <- gsub('doc', '', temp_df$doc_id)
-#   temp_df$doc_id <- as.numeric(temp_df$doc_id)
-#   temp_df <- temp_df %>% arrange(doc_id)
-# 
-#   lemma_df[[col]] <- temp_df$temp_df
-#   print(counter)
-#   counter <- counter -1
-#   }
-#save(lemma_df, file = here("data", "text2vec_fasttext_lemma_df.Rda"))
-load(here("data", "text2vec_fasttext_lemma_df.Rda"))
+lemma_df <- df %>% select(BusinessShortNumber, text_cols)
+
+counter = length(text_cols)
+for (col in text_cols) {
+  temp_vector <- lemma_df[[col]] # %>% select({{ col }})
+  temp_vector <- udpipe_annotate(ud_model, temp_vector)
+  temp_df <- as.data.frame(temp_vector)
+  temp_df <- temp_df %>% select(doc_id, lemma) %>% drop_na()
+
+  temp_df <- temp_df %>% group_by(doc_id) %>% summarize(temp_df = paste(lemma, collapse = " "))
+
+  temp_df$doc_id <- gsub('doc', '', temp_df$doc_id)
+  temp_df$doc_id <- as.numeric(temp_df$doc_id)
+  temp_df <- temp_df %>% arrange(doc_id)
+
+  lemma_df[[col]] <- temp_df$temp_df
+  print(counter)
+  counter <- counter -1
+  }
+save(lemma_df, file = here("data", "text2vec_fasttext_lemma_df_230703.Rda"))
+# load(here("data", "text2vec_fasttext_lemma_df.Rda"))
 
 # Further Preprocessing
 for (col in text_cols) {
