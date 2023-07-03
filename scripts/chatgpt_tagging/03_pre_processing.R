@@ -28,16 +28,18 @@ all_businesses$InitialSituation_clean <- strip_html(all_businesses$InitialSituat
 # Remove double whitespaces (Source: ChatGPT)
 all_businesses$InitialSituation_clean <- gsub(" {2,}", " ", all_businesses$InitialSituation_clean)
 
+# Remove whitespace at beginning
+all_businesses$InitialSituation_clean <- gsub("^\\s+", "", all_businesses$InitialSituation_clean)
+
 
 # Create ChatGPT Query String ---------------------------------------------------------------
 # Setup query as string
-query_central_stmnt <- "Welche zentrale Aussage soll ein:e Wähler:in von diesem Text mitnehmen? Verwende einfache Sprache, maximal 15 Wörter und maximal 1 Satz.\n"
-#query_smartspider_precise <- "Du hast 8 Kategorien:\n1. Offene Aussenpolitik\n2. Liberale Wirtschaftspolitik\n3. Restriktive Finanzpolitik\n4. Law & Order\n5. Restriktive Migrationspolitik\n6. Ausgebauter Umweltschutz\n7. Ausgebauter Sozialstaat\n8. Liberale Gesellschaft\nBasierend auf den Text unten gibst du für jede Kategorie einen Wert zwischen 0 und 100. 100 steht für eine starke Zustimmung für die Kategorie, 0 steht für keine Zustimmung. Gebe 'NA' an, wenn eine Kategorie nicht passt. Gib immer an, welcher Wert zu welcher Kategorie gehört. Gib keine weiteren Informationen.\n"
+query_central_stmnt <- "Kategorisiere den Text und gebe nur die Kategorien zurück:"
 
 # Merge ChatGPT query string with description text
 all_businesses <- all_businesses %>% 
-  mutate(chatgpt_query_central_stmnt = paste(query_central_stmnt, InitialSituation_clean, sep = " "))# %>% 
-  #mutate(chatgpt_query_smartspider_precise = paste(query_smartspider_precise, InitialSituation_clean, sep = " "))
+  mutate(chatgpt_query_central_stmnt = paste(query_central_stmnt, Title, InitialSituation_clean, sep = "\n"))# %>% 
+  #mutate(chatgpt_query_central_stmnt = paste(query_central_stmnt, InitialSituation_clean, sep = " "))
 
 
 # Wide to Long Table ---------------------------------------------------------------
