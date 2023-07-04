@@ -31,13 +31,13 @@ rm(business_legislative_period_47,
 # Only run this segment if you want to create a sample dataframe for testing purposes
 
 # Always sample the same business items
-set.seed(42)
-sample_sbn <- all_businesses %>% select(BusinessShortNumber) %>% slice_sample(n = 5)
-sample_sbn <- as.vector(sample_sbn$BusinessShortNumber)
+# set.seed(42)
+# sample_sbn <- all_businesses %>% select(BusinessShortNumber) %>% slice_sample(n = 5)
+# sample_sbn <- as.vector(sample_sbn$BusinessShortNumber)
 
 # Create sample dataframe
-all_businesses <- all_businesses %>%
-  dplyr::filter(BusinessShortNumber %in% sample_sbn)
+# all_businesses <- all_businesses %>%
+#   dplyr::filter(BusinessShortNumber %in% sample_sbn)
 # 
 # all_businesses %>% select(BusinessShortNumber)
 # A tibble: 5 × 1
