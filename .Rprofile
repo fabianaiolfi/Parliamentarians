@@ -23,4 +23,7 @@ library(quanteda)
 library(fastText) # https://cran.r-project.org/web/packages/fastText/vignettes/the_fastText_R_package.html
 
 library(readr)
+
+# Hierarchical Clustering and Evaluation (https://www.statology.org/hierarchical-clustering-in-r/)
 library(cluster)
+library(factoextra)
