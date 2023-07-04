@@ -2,7 +2,7 @@
 
 
 # Load ChatGPT Data -------------------------------------------------------
-# load(here("data", "chatgpt_output_20230703_104316.RData"))
+# load(here("data", "chatgpt_output_20230703_213415.RData"))
 # chatgpt_output_20230419_204609 <- chatgpt_output
 # rm(chatgpt_output)
 
@@ -49,12 +49,6 @@ all_businesses <- all_businesses %>%
   left_join(chatgpt_output_df, by = "BusinessShortNumber")
 
 all_businesses <- all_businesses %>% 
-  rename(chatgpt_summaries = query_central_stmnt)
+  rename(chatgpt_tags = query_central_stmnt)
 
-save(all_businesses, file = here("data", "all_businesses_and_summaries.RData"))
-
-
-
-
-
-
+save(all_businesses, file = here("data", "all_businesses_and_tags_230703.RData"))

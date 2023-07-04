@@ -34,12 +34,11 @@ all_businesses$InitialSituation_clean <- gsub("^\\s+", "", all_businesses$Initia
 
 # Create ChatGPT Query String ---------------------------------------------------------------
 # Setup query as string
-query_central_stmnt <- "Kategorisiere den Text und gebe nur die Kategorien zurück:"
+query_central_stmnt <- "Hier ist ein Dokument mit einem Titel. Gib dem Dokument 5 bis 10 Kategorien. Jede Kategorie muss 1 bis 3 Wörter umfassen. Gib nur die Kategorien zurück:\n"
 
 # Merge ChatGPT query string with description text
 all_businesses <- all_businesses %>% 
-  mutate(chatgpt_query_central_stmnt = paste(query_central_stmnt, Title, InitialSituation_clean, sep = "\n"))# %>% 
-  #mutate(chatgpt_query_central_stmnt = paste(query_central_stmnt, InitialSituation_clean, sep = " "))
+  mutate(chatgpt_query_central_stmnt = paste(query_central_stmnt, "Titel:", Title, "\nInhalt:", InitialSituation_clean, sep = "\n"))
 
 
 # Wide to Long Table ---------------------------------------------------------------
@@ -50,3 +49,6 @@ all_businesses_long <- all_businesses %>%
 
 # ChatGPT wrapper requires `prompt_role_var` to be its own column in the dataframe
 all_businesses_long$role <- "user"
+
+# Check
+cat(all_businesses_long$query[670])
