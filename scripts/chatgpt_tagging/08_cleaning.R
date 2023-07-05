@@ -60,17 +60,17 @@ all_businesses$chatgpt_tags_clean <- gsub('^$', 'NA', all_businesses$chatgpt_tag
 # Adjust stopword choice based on this
 
 # # Combine all the text into a single character vector
-# all_tags <- paste(all_businesses$chatgpt_tags_clean, collapse = " ")
-# 
-# # Split the combined text into individual words
-# all_tags <- gsub('\n', ' ', all_tags) # remove \n
-# words <- unlist(strsplit(all_tags, "\\d+\\s\\.\\s"))
-# words <- gsub('\\s$', '', words) # remove trailing whitespace
-# 
-# # Count the occurrences of each word
-# word_counts <- table(words)
-# word_counts <- as.data.frame(word_counts)
-# word_counts %>% arrange(-Freq) %>% select(words) %>% head(n = 100) %>% print(row.names = FALSE)
+all_tags <- paste(all_businesses$chatgpt_tags_clean, collapse = " ")
+
+# Split the combined text into individual words
+all_tags <- gsub('\n', ' ', all_tags) # remove \n
+words <- unlist(strsplit(all_tags, "\\d+\\s\\.\\s"))
+words <- gsub('\\s$', '', words) # remove trailing whitespace
+
+# Count the occurrences of each word
+word_counts <- table(words)
+word_counts <- as.data.frame(word_counts)
+word_counts %>% arrange(-Freq) %>% select(words) %>% head(n = 100) %>% print(row.names = FALSE)
 
 
 # Prepare for Fasttext ----------------------------------------------------
