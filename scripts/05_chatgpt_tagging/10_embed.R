@@ -9,13 +9,13 @@ list_params <- list(command = 'print-sentence-vectors',
 # Create Embeddings -------------------------------------------------------------------
 
 res <- fasttext_interface(list_params,
-                          path_input = here("scripts", "chatgpt_tagging", "input_files", "chatgpt_tags.txt"),
-                          path_output = here("scripts", "chatgpt_tagging", "vec_files", "chatgpt_tags.txt"))
+                          path_input = here("scripts", "05_chatgpt_tagging", "input_files", "chatgpt_tags.txt"),
+                          path_output = here("scripts", "05_chatgpt_tagging", "vec_files", "chatgpt_tags.txt"))
 
 
 # Import Embeddings -------------------------------------------------------------------
 
-chatgpt_tag_embeddings <- read_delim(here("scripts", "chatgpt_tagging", "vec_files", "chatgpt_tags.txt"), delim = " ", col_names = FALSE)
+chatgpt_tag_embeddings <- read_delim(here("scripts", "05_chatgpt_tagging", "vec_files", "chatgpt_tags.txt"), delim = " ", col_names = FALSE)
 chatgpt_tag_embeddings$X301 <- NULL
 
 

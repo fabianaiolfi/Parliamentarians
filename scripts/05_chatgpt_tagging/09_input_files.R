@@ -13,6 +13,6 @@ all_businesses$chatgpt_tags_clean <- gsub("^\\|", "", all_businesses$chatgpt_tag
 write.table(
   all_businesses$chatgpt_tags_clean,
   sep = ",",
-  here("scripts", "chatgpt_tagging", "input_files", "chatgpt_tags.txt"),
+  here("scripts", "05_chatgpt_tagging", "input_files", "chatgpt_tags.txt"),
   col.names = F, row.names = F, quote = F
 )
