@@ -59,16 +59,16 @@ all_businesses_clean_tags <- all_businesses %>% select(BusinessShortNumber, chat
 all_businesses_eval <- all_businesses_cluster
 
 all_businesses_eval <- all_businesses_eval %>% 
-  # left_join(all_businesses_tags, by = "BusinessShortNumber") %>%
-  # left_join(all_businesses_clean_tags, by = "BusinessShortNumber") %>%
+  left_join(all_businesses_tags, by = "BusinessShortNumber") %>%
+  left_join(all_businesses_clean_tags, by = "BusinessShortNumber") %>%
   left_join(all_businesses_summaries, by = "BusinessShortNumber")
 
-ggplot(all_businesses_eval, aes(x = cluster)) +
-  geom_bar(stat = "count")
-
-length(unique(all_businesses_eval$cluster))
+# ggplot(all_businesses_eval, aes(x = cluster)) +
+#   geom_bar(stat = "count")
+# 
+# length(unique(all_businesses_eval$cluster))
 
 all_businesses_eval %>% 
   dplyr::filter(cluster == floor(runif(1, min = 1, max = 226))) %>%
-  select(BusinessShortNumber, cluster, TagNames, Title, InitialSituation_clean, chatgpt_summaries, chatgpt_tags, chatgpt_tags_clean) %>%
+  select(BusinessShortNumber, cluster, TagNames, Title, InitialSituation, chatgpt_summaries, chatgpt_tags, chatgpt_tags_clean) %>%
   View()
