@@ -33,13 +33,13 @@ chatgpt_tags$X301 <- NULL
 
 
 # Clean Embeddings -------------------------------------------------------------------
-# NAs in the text should have a embedding value of 0
 
 # Remove ".txt" from the file_name column
 for (i in seq_along(all_vecs)) {
   all_vecs[[i]]$file_name <- gsub("\\.txt$", "", all_vecs[[i]]$file_name)
 }
 
+# NAs in the text should have a embedding value of 0
 # Replace NAs with 0
 all_vecs <- lapply(all_vecs, function(df) {
   df[is.na(df)] <- 0

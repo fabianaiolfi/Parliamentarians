@@ -56,7 +56,7 @@ for (col in text_cols) {
   counter <- counter -1
   }
 save(lemma_df, file = here("data", "text2vec_fasttext_lemma_df_230703.Rda"))
-# load(here("data", "text2vec_fasttext_lemma_df.Rda"))
+# load(here("data", "text2vec_fasttext_lemma_df_230703.Rda"))
 
 # Further Preprocessing
 for (col in text_cols) {

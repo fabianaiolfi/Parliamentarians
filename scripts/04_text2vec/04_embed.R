@@ -35,31 +35,22 @@ all_vecs <- lapply(file_paths, read_embeddings)
 save(all_vecs, file = here("data", "all_vecs_230703.Rda"))
 
 # Load previously saved embeddings
-# load(here("data", "all_vecs.Rda"))
+load(here("data", "all_vecs_230703.Rda"))
 
 
 # Clean Embeddings -------------------------------------------------------------------
-# NAs in the text should have a embedding value of 0
 
 # Remove ".txt" from the file_name column
 for (i in seq_along(all_vecs)) {
   all_vecs[[i]]$file_name <- gsub("\\.txt$", "", all_vecs[[i]]$file_name)
 }
 
-# Add text from DF to each data to check for NAs
-# Then replace NAs wieghts with 0
-# Iterate over each dataframe in the list
-for (i in seq_along(all_vecs)) {
-  # Get the current dataframe
-  current_df <- all_vecs[[i]]
-  # Get the corresponding file name from the "file_name" column
-  file_name <- current_df$file_name[1]  # Assuming the file name is consistent within each dataframe
-  current_df <- cbind(df[[file_name]], current_df)
-  current_df <- current_df %>% rename(na_check = `df[[file_name]]`)
-  current_df <- current_df %>% mutate_at(vars(-na_check, -file_name),
-                                         ~ if_else(na_check == "NA</s>", 0, .))
-  all_vecs[[i]] <- current_df
-}
+# NAs in the text should have a embedding value of 0
+# Replace NAs with 0
+all_vecs <- lapply(all_vecs, function(df) {
+  df[is.na(df)] <- 0
+  return(df)
+})
 
 
 # Create weighted sum of all features -------------------------------------------------------------------
@@ -82,7 +73,7 @@ for (i in seq_along(all_vecs)) {
   current_df <- all_vecs[[i]]
   
   # Remove the first 2 columns in the current dataframe
-  current_df <- subset(current_df, select = -(1:2))
+  current_df <- subset(current_df, select = -1)
   
   # Update the current dataframe in all_vecs with the modified dataframe
   all_vecs[[i]] <- current_df
