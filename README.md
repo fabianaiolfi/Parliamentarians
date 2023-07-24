@@ -26,3 +26,5 @@ The output of this sub-project are two Shiny web apps: - [Abstimmungsverhalten N
 -   04_text2vec: Create embeddings using fasttext; Use all available information as features ([details](https://github.com/fabianaiolfi/Parliamentarians/blob/00f1a7fceb99fb1fdf9951c44bf74051d29cb2ec/scripts/text2vec/fasttext/04_embed.R#L115)); Use hierarchical clustering
 - 05_chatgpt_tagging: Use ChatGPT to create tags for each item of business
 - 06_all_features: Combine all features (including chatgpt summaries and chatgpt tags) into a single embedding and then cluster
+- 07_BERTopic: …
+- 08_main_tag_cluster: Create hierarchical clusters **within** main tag groups
