@@ -36,3 +36,4 @@ rsconnect
 models/
 input_files/
 vec_files/
+*.RData

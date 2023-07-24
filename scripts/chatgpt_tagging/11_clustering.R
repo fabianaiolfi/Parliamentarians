@@ -70,10 +70,5 @@ length(unique(all_businesses_eval$cluster))
 
 all_businesses_eval %>% 
   dplyr::filter(cluster == floor(runif(1, min = 1, max = 226))) %>%
-  # dplyr::filter(cluster == 158) %>%
-  select(cluster, TagNames, Title, InitialSituation_clean, chatgpt_summaries, chatgpt_tags, chatgpt_tags_clean) %>% 
+  select(BusinessShortNumber, cluster, TagNames, Title, InitialSituation_clean, chatgpt_summaries, chatgpt_tags, chatgpt_tags_clean) %>%
   View()
-
-
-
-

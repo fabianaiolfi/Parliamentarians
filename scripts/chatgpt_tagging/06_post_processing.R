@@ -2,9 +2,9 @@
 
 
 # Load ChatGPT Data -------------------------------------------------------
-# load(here("data", "chatgpt_output_20230703_213415.RData"))
-# chatgpt_output_20230419_204609 <- chatgpt_output
-# rm(chatgpt_output)
+load(here("data", "chatgpt_output_20230703_213415.RData"))
+chatgpt_output_20230419_204609 <- chatgpt_output
+rm(chatgpt_output)
 
 
 # Convert ChatGPT output to dataframe -------------------------------------------------------
