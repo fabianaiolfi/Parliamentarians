@@ -57,12 +57,12 @@ for (i in seq_along(all_vecs)) {
 
 # Sum up weighted embeddings
 combined_vecs <- all_vecs[[1]]*0.1 + # BusinessTypeName
-  all_vecs[[3]]*0.1 + # chatgpt_summaries_lemma
-  all_vecs[[4]]*0.1 + # chatgpt_summaries
+  #all_vecs[[3]]*0.1 + # chatgpt_summaries_lemma
+  all_vecs[[4]]*0.8 + # chatgpt_summaries
   all_vecs[[5]]*0.1 + # Description
   all_vecs[[6]]*0.1 + # FirstCouncil1Name
-  all_vecs[[8]]*0.1 + # InitialSituation_lemma
-  all_vecs[[10]]*0.1 + # main_tag
+  all_vecs[[8]] + # InitialSituation_lemma
+  #all_vecs[[10]]*0.1 + # main_tag
   all_vecs[[11]]*0.1 + # Proceedings_lemma
   all_vecs[[13]]*0.1 + # ReasonText_lemma
   all_vecs[[15]]*0.1 + # ResponsibleDepartmentName
@@ -70,5 +70,5 @@ combined_vecs <- all_vecs[[1]]*0.1 + # BusinessTypeName
   all_vecs[[17]]*0.1 + # SubmittedBy
   all_vecs[[18]]*0.1 + # SubmittedText_lemma
   all_vecs[[20]]*0.1 + # TagNames
-  all_vecs[[21]]*0.1 + # Title
+  all_vecs[[21]]*0.8 + # Title
   chatgpt_tags
