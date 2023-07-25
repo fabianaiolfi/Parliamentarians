@@ -28,3 +28,4 @@ The output of this sub-project are two Shiny web apps: - [Abstimmungsverhalten N
 - 06_all_features: Combine all features (including chatgpt summaries and chatgpt tags) into a single embedding and then cluster
 - 07_BERTopic: …
 - 08_main_tag_cluster: Create hierarchical clusters **within** main tag groups
+- Futher options: Plain LDA
