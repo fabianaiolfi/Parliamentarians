@@ -232,3 +232,6 @@ information
 geschlossenen
 geschlossene
 geschlossen
+publikation
+publikationen
+einsicht
