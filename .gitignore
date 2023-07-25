@@ -38,4 +38,5 @@ input_files/
 vec_files/
 *.RData
 *.csv
+*.tsv
 .ipynb_checkpoints
