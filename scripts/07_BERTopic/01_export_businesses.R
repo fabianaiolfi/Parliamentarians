@@ -42,6 +42,13 @@ all_businesses <- all_businesses_and_tags_230703 %>%
 all_businesses$chatgpt_tags_clean <- gsub("\\b\\d\\b", "", all_businesses$chatgpt_tags_clean)
 all_businesses$chatgpt_tags_clean <- gsub("\\.\\s", "", all_businesses$chatgpt_tags_clean)
 
+# Remove any rows containing NAs in relevant columns
+all_businesses <- all_businesses %>% drop_na(InitialSituation_clean,
+                                             main_tag,
+                                             chatgpt_tags_clean,
+                                             chatgpt_summaries)
+
+all_businesses <- all_businesses %>% dplyr::filter(chatgpt_tags_clean != "NA")
 
 
 # Export Data ---------------------------------------------------------------
