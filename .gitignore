@@ -27,8 +27,8 @@ vignettes/*.pdf
 *.knit.md
 # R Environment Variables
 .Renviron
+
 # Project specific
-data/
 archive/
 ChatGPT_API_Key.txt
 data_backup
@@ -37,6 +37,7 @@ models/
 input_files/
 vec_files/
 *.RData
+*.RDa
 *.csv
 *.tsv
 .ipynb_checkpoints
