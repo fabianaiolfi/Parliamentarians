@@ -37,3 +37,5 @@ models/
 input_files/
 vec_files/
 *.RData
+*.csv
+.ipynb_checkpoints
