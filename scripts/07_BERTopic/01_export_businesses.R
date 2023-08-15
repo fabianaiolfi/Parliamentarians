@@ -55,9 +55,17 @@ all_businesses <- all_businesses %>% dplyr::filter(chatgpt_tags_clean != "NA")
 
 all_businesses_export <- all_businesses
 all_businesses_export$BusinessShortNumber <- NULL
-all_businesses_export <- all_businesses_export %>% unite(all, sep = " ", remove = T, na.rm = T)
+
+# Unite all columns for plain vanilla topic modelling
+#all_businesses_export <- all_businesses_export %>% unite(all, sep = " ", remove = T, na.rm = T)
+
+# Keep main_tag in seperate column for semi-supervised modelling
+#all_businesses_export <- all_businesses_export %>% unite("all", -main_tag, sep = " ", remove = T, na.rm = T)
+
+# Keep TagNames in seperate column for semi-supervised modelling
+all_businesses_export <- all_businesses_export %>% unite("all", -TagNames, sep = " ", remove = T, na.rm = T)
 
 write.table(all_businesses_export,
             sep = "\t",
-            here("scripts", "07_BERTopic", "all_businesses.tsv"),
-            row.names = F, col.names = F, quote = F)
+            here("scripts", "07_BERTopic", "all_businesses_04.tsv"),
+            row.names = F, col.names = T, quote = F)
