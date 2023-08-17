@@ -30,6 +30,10 @@ all_businesses <- all_businesses %>%
 
 
 # Inspect ---------------------------------------------------------------
+
+all_businesses <- tibble::rowid_to_column(all_businesses, "python_ID")
+all_businesses$python_ID <- all_businesses$python_ID - 1
+
 summary(all_businesses$Topic)
 hist(all_businesses$Topic, breaks = 144)
 
