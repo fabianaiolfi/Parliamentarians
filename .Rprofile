@@ -27,3 +27,6 @@ library(readr)
 # Hierarchical Clustering and Evaluation (https://www.statology.org/hierarchical-clustering-in-r/)
 library(cluster)
 library(factoextra)
+
+# Reshaping from wide to long for BERTopic heatmap
+library(reshape2)
