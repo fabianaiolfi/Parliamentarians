@@ -1,4 +1,7 @@
 
+# Pre-process items of business for BERTopic ---------------------------------------------------------------
+
+
 # Load Businesses ---------------------------------------------------------------
 
 load(here("data", "all_businesses_and_tags_230703.RData"))
@@ -50,22 +53,25 @@ all_businesses <- all_businesses %>% drop_na(InitialSituation_clean,
 
 all_businesses <- all_businesses %>% dplyr::filter(chatgpt_tags_clean != "NA")
 
+# Add index
+all_businesses <- tibble::rowid_to_column(all_businesses, "index")
+
 
 # Export Data ---------------------------------------------------------------
 
 all_businesses_export <- all_businesses
 all_businesses_export$BusinessShortNumber <- NULL
-
-# Unite all columns for plain vanilla topic modelling
-#all_businesses_export <- all_businesses_export %>% unite(all, sep = " ", remove = T, na.rm = T)
-
-# Keep main_tag in seperate column for semi-supervised modelling
-#all_businesses_export <- all_businesses_export %>% unite("all", -main_tag, sep = " ", remove = T, na.rm = T)
+all_businesses_export$index <- NULL
 
 # Keep TagNames in seperate column for semi-supervised modelling
 all_businesses_export <- all_businesses_export %>% unite("all", -TagNames, sep = " ", remove = T, na.rm = T)
 
 write.table(all_businesses_export,
             sep = "\t",
-            here("scripts", "07_BERTopic", "all_businesses_04.tsv"),
+            here("scripts", "07_BERTopic", "data", "all_businesses.tsv"),
             row.names = F, col.names = T, quote = F)
+
+
+# Clean Up Environment ---------------------------------------------------------------
+
+rm(list=setdiff(ls(), "all_businesses"))

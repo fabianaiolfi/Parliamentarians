@@ -1,0 +1,17 @@
+Welches Dokument passt nicht in diese Gruppe? Das Thema der Gruppe ist “Zoll- und Marktregulierungen”. Gib nur die Dokumentennummer zurück:
+
+Dokument 1
+Titel: Bundesgesetz über den Binnenmarkt. Änderung
+Text: Das Binnenmarktgesetz soll den Marktzugang erleichtern, die Berufsausübungsfreiheit stärken und die Wettbewerbskommission stärken.
+
+Dokument 2
+Titel: Schutz vor Passivrauchen. Volksinitiative
+Text: Die Initiative zum Schutz vor Passivrauchen sollte abgelehnt werden, da die derzeitige Gesetzgebung ausreichend ist.
+
+Dokument 3
+Titel: Stop der Hochpreisinsel – für faire Preise. Volksinitiative und indirekter Gegenvorschlag
+Text: Die Fair-Preis-Initiative geht zu weit, der indirekte Gegenvorschlag schützt Schweizer Unternehmen im Wettbewerb.
+
+Dokument 4
+Titel: Bundesgesetz gegen den unlauteren Wettbewerb (UWG). Änderung
+Text: Beherbergungsbetriebe sollen frei in ihrer Preisgestaltung sein und Preisbindungsklauseln sollen verboten werden.
