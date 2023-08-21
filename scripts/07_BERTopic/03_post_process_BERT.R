@@ -55,13 +55,13 @@ top_topics <- topic_probs %>%
   separate(top_3_topics, into = c("topic_1", "topic_2", "topic_3"), sep = ",") %>%
   mutate_at(vars(topic_1:topic_3), ~as.integer(sub("V", "", .))) %>% 
   # Re-align topic numbers with topic number generated in BERTopic (topic nr 1 -> topic nr 0)
-  mutate(topic_1 = topic_1 - 1) %>% mutate(topic_2 = topic_1 - 1) %>% mutate(topic_3 = topic_1 - 1) %>% 
-  mutate(topic_2 = case_when(prob_2 < 0.0001 ~ NA,
-                             prob_2 >= 0.0001 ~ topic_2)) %>% 
+  mutate(topic_1 = topic_1 - 1) %>% mutate(topic_2 = topic_2 - 1) %>% mutate(topic_3 = topic_3 - 1) %>% 
+  mutate(topic_2 = case_when(prob_2 < 0.001 ~ NA,
+                             prob_2 >= 0.001 ~ topic_2)) %>% 
   mutate(topic_3 = case_when(is.na(topic_2) == TRUE ~ NA,
                              is.na(topic_2) == FALSE ~ topic_3)) %>% 
-  mutate(prob_2 = case_when(prob_2 < 0.0001 ~ NA,
-                             prob_2 >= 0.0001 ~ prob_2)) %>% 
+  mutate(prob_2 = case_when(prob_2 < 0.001 ~ NA,
+                             prob_2 >= 0.001 ~ prob_2)) %>% 
   mutate(prob_3 = case_when(is.na(prob_2) == TRUE ~ NA,
                              is.na(prob_2) == FALSE ~ prob_3))
 
