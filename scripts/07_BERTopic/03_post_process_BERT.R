@@ -2,7 +2,7 @@
 # Prepare Topic Probability Data ---------------------------------------------------------------
 
 # Load Topics
-topics <- read.csv(here("scripts", "07_BERTopic", "BERT_data", "topic_info.csv"), header = T)
+topics <- read.csv(here("scripts", "07_BERTopic", "BERT_data", "v230820", "topic_info.csv"), header = T)
 
 # Remove outlier topic (Topic: "-1")
 topics <- topics %>% dplyr::filter(Topic != -1)
@@ -11,7 +11,7 @@ topics <- topics %>% dplyr::filter(Topic != -1)
 topics_count <- nrow(topics)
 
 # Load Topic Probabilities
-topic_probs <- read.csv(here("scripts", "07_BERTopic", "BERT_data", "probs.csv"), header = F)
+topic_probs <- read.csv(here("scripts", "07_BERTopic", "BERT_data", "v230820", "probs.csv"), header = F)
 
 # Add index
 topic_probs <- tibble::rowid_to_column(topic_probs, "index")
@@ -54,6 +54,8 @@ top_topics <- topic_probs %>%
   select(index, top_3_topics, prob_1, prob_2, prob_3) %>% 
   separate(top_3_topics, into = c("topic_1", "topic_2", "topic_3"), sep = ",") %>%
   mutate_at(vars(topic_1:topic_3), ~as.integer(sub("V", "", .))) %>% 
+  # Re-align topic numbers with topic number generated in BERTopic (topic nr 1 -> topic nr 0)
+  mutate(topic_1 = topic_1 - 1) %>% mutate(topic_2 = topic_1 - 1) %>% mutate(topic_3 = topic_1 - 1) %>% 
   mutate(topic_2 = case_when(prob_2 < 0.0001 ~ NA,
                              prob_2 >= 0.0001 ~ topic_2)) %>% 
   mutate(topic_3 = case_when(is.na(topic_2) == TRUE ~ NA,
