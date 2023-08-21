@@ -28,7 +28,7 @@ chatgpt_topics$role <- "user"
 # Query ChatGPT ---------------------------------------------------------------
 
 # Connect to ChatGPT 
-gpt3_authenticate("ChatGPT_API_Key.txt")
+# gpt3_authenticate("ChatGPT_API_Key.txt")
 
 # # Get and format the current timestamp to prevent overwriting files when saving RData locally
 # timestamp <- Sys.time()
@@ -50,7 +50,7 @@ gpt3_authenticate("ChatGPT_API_Key.txt")
 # Clean ChatGPT Output ---------------------------------------------------------------
 
 # Load ChatGPT Data
-load(here("data", "chatgpt_output_topics_20230821_092124.RData"))
+load(here("data", "chatgpt_output_topics_20230821_102051.RData"))
 
 # Convert to DF
 chatgpt_output_topics <- do.call(
