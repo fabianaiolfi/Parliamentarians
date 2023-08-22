@@ -183,3 +183,11 @@ print(paste("Accuracy: ", round(accuracy, 3)))
 print(paste("Precision (Mean over all Topics): ", round(precision_mean, 3)))
 print(paste("Recall (Mean over all Topics): ", round(recall_mean, 3)))
 print(paste("F1 Score (Mean over all Topics): ", round(f1_score, 3)))
+
+
+# Eyeball Evaluation ---------------------------------------------------------------
+
+eyeball_eval <- all_businesses %>% 
+  select(BusinessShortNumber, Title, chatgpt_summaries, TagNames, ResponsibleDepartmentName, InitialSituation_clean) %>% 
+  left_join(top_topics %>% select(BusinessShortNumber, topic_1), by = "BusinessShortNumber") %>% 
+  left_join(chatgpt_topics %>% select(Topic, chatgpt_topic_title), by = c("topic_1" = "Topic"))
