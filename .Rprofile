@@ -30,3 +30,6 @@ library(factoextra)
 
 # Reshaping from wide to long for BERTopic heatmap
 library(reshape2)
+
+# Calculate document intrusion metrics
+library(caret)
