@@ -33,6 +33,9 @@ topic_model = BERTopic(
     embedding_model = "paraphrase-multilingual-mpnet-base-v2").fit(docs, y = categories) # perform supervised topic modeling, we simply use all categories
 ```
 
+Topic Names
+- Generated using “Representation” (top_n_words?) produced by BERTopic
+
 Automated Document Intrusion Detection
 [1] "Accuracy:  0.731"
 [1] "Precision (Mean over all Topics):  0.693"
