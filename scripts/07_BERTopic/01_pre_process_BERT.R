@@ -54,16 +54,12 @@ all_businesses <- all_businesses %>% drop_na(InitialSituation_clean,
 
 all_businesses <- all_businesses %>% dplyr::filter(chatgpt_tags_clean != "NA")
 
-# Add index
-all_businesses <- tibble::rowid_to_column(all_businesses, "index")
-
 
 # Export Data ---------------------------------------------------------------
 
 # Create export TSV and change order of columns for BERTopic
 all_businesses_export <- all_businesses %>% 
-  select(index,
-         BusinessShortNumber,
+  select(BusinessShortNumber,
          Title,
          chatgpt_summaries,
          main_tag,
@@ -71,9 +67,6 @@ all_businesses_export <- all_businesses %>%
          InitialSituation_clean,
          ResponsibleDepartmentName,
          TagNames)
-
-#all_businesses_export$BusinessShortNumber <- NULL
-all_businesses_export$index <- NULL
 
 # Keep TagNames in seperate column for semi-supervised modelling
 all_businesses_export <- all_businesses_export %>% unite("all", -BusinessShortNumber, -TagNames, sep = " ", remove = T, na.rm = T)
