@@ -3,4 +3,4 @@
 
 # Store data locally ------------------------------------------------------
 
-save(all_businesses_eval, file = here("scripts", "chatgpt_tagging", "chatgpt_tagging_output", "all_businesses_eval.RData"))
+save(all_businesses_eval, file = here("scripts", "05_chatgpt_tagging", "chatgpt_tagging_output", "all_businesses_eval.RData"))
