@@ -31,12 +31,13 @@ all_businesses_and_tags_230703 <- all_businesses_and_tags_230703 %>%
   separate_rows(main_tag, sep = "\\|") %>% # Transform column to have one tag per row
   mutate(TagNames = gsub("\\|", " ", TagNames))
 
-all_businesses_and_clean_tags_230703 <- all_businesses_and_clean_tags_230703 %>% select(BusinessShortNumber, chatgpt_tags_clean)
+all_businesses_and_clean_tags_230703 <- all_businesses_and_clean_tags_230703 %>% select(BusinessShortNumber,
+                                                                                        chatgpt_tags_clean)
 
 all_businesses_and_summaries <- all_businesses_and_summaries %>% select(BusinessShortNumber, chatgpt_summaries)
 
-all_businesses <- all_businesses_and_tags_230703 %>% 
-  left_join(all_businesses_and_clean_tags_230703, by = "BusinessShortNumber") %>% 
+all_businesses <- all_businesses_and_tags_230703 %>%
+  left_join(all_businesses_and_clean_tags_230703, by = "BusinessShortNumber") %>%
   left_join(all_businesses_and_summaries, by = "BusinessShortNumber")
 
 
@@ -59,12 +60,23 @@ all_businesses <- tibble::rowid_to_column(all_businesses, "index")
 
 # Export Data ---------------------------------------------------------------
 
-all_businesses_export <- all_businesses
-all_businesses_export$BusinessShortNumber <- NULL
+# Create export TSV and change order of columns for BERTopic
+all_businesses_export <- all_businesses %>% 
+  select(index,
+         BusinessShortNumber,
+         Title,
+         chatgpt_summaries,
+         main_tag,
+         chatgpt_tags_clean,
+         InitialSituation_clean,
+         ResponsibleDepartmentName,
+         TagNames)
+
+#all_businesses_export$BusinessShortNumber <- NULL
 all_businesses_export$index <- NULL
 
 # Keep TagNames in seperate column for semi-supervised modelling
-all_businesses_export <- all_businesses_export %>% unite("all", -TagNames, sep = " ", remove = T, na.rm = T)
+all_businesses_export <- all_businesses_export %>% unite("all", -BusinessShortNumber, -TagNames, sep = " ", remove = T, na.rm = T)
 
 write.table(all_businesses_export,
             sep = "\t",
