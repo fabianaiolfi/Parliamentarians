@@ -1,5 +1,5 @@
 
-# Save final data from chatgpt_tagging pipelline
+# Save final data from chatgpt_tagging pipeline
 
 # Store data locally ------------------------------------------------------
 
