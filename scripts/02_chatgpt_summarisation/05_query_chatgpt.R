@@ -40,7 +40,7 @@ for(i in 1:nrow(all_businesses_long)) {
   print(i)
 
   # Pause
-  Sys.sleep(15)
+  Sys.sleep(20)
 }
  
 file_name <- paste0("chatgpt_output_df_", formatted_timestamp, ".RData")

@@ -14,7 +14,7 @@ all_businesses$chatgpt_tags_clean <- gsub('\n', ' ', all_businesses$chatgpt_tags
 all_businesses$chatgpt_tags_clean <- gsub('\\d+\\.', '|', all_businesses$chatgpt_tags_clean)
 
 # Remove numbers, punctuation and stopwords
-temp_df <- tokens(all_businesses$chatgpt_tags_clean, remove_punct = F, remove_numbers = F, remove_symbol = F)
+temp_df <- tokens(all_businesses$chatgpt_tags_clean, remove_punct = T, remove_numbers = F, remove_symbol = F)
 
 # Create quanteda dictionary for multi-word stopwords (e.g. "Parlamentarische Initiative")
 sw_dict <- dictionary(list(tag_sw = tag_stopwords))

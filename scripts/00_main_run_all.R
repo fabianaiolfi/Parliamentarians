@@ -16,7 +16,7 @@ rm(list = setdiff(ls(), c("all_businesses")))
 
 source(here("scripts", "02_chatgpt_summarisation", "03_pre_processing.R"))
 # source(here("scripts", "02_chatgpt_summarisation", "04_chatgpt_precautions.R"))
-source(here("scripts", "02_chatgpt_summarisation", "05_query_chatgpt.R"))
+# source(here("scripts", "02_chatgpt_summarisation", "05_query_chatgpt.R"))
 source(here("scripts", "02_chatgpt_summarisation", "06_post_processing.R"))
 rm(list = setdiff(ls(), c("all_businesses")))
 
@@ -24,7 +24,7 @@ rm(list = setdiff(ls(), c("all_businesses")))
 # 05 ChatGPT Tagging ------------------------------------------
 
 source(here("scripts", "05_chatgpt_tagging", "03_pre_processing.R"))
-source(here("scripts", "05_chatgpt_tagging", "05_query_chatgpt.R"))
+# source(here("scripts", "05_chatgpt_tagging", "05_query_chatgpt.R"))
 source(here("scripts", "05_chatgpt_tagging", "06b_post_processing_BERTopic.R"))
 # source(here("scripts", "05_chatgpt_tagging", "07_evaluation.R"))
 source(here("scripts", "05_chatgpt_tagging", "08b_cleaning_BERTopic.R"))

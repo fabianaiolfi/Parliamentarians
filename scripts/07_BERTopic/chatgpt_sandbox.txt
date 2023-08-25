@@ -66,3 +66,47 @@ Der Bundesrat hat die Botschaft für das Projekt Cargo sous terrain verabschiede
 
 Güterverkehrsverlagerungsgesetz und Bundesbeschluss über den Zahlungsrahmen für die Förderung des begleiteten kombinierten Verkehrs; Änderung
 Der Bundesrat will die "Rollende Landstrasse" bis 2026 weiterführen, um den Gütertransport auf die Schiene zu verlagern.
+
+
+
+
+--
+**topic name generation based on business titles**
+
+Hier ist eine Liste von Dokumententiteln. Die Dokumente gehören zu einer Gruppe. Wie lautet der Name der Gruppe? Gib nur einen möglichen Namen zurück, nichts anderes. Der Name soll kurz und allgemein gehalten sein. Verwende keine spezifischen Begriffe.
+
+
+Bildungsrahmenartikel in der Bundesverfassung
+
+Bundesgesetz über die Freizügigkeit der Anwältinnen und Anwälte. Änderung
+
+EU-Bildungs-, Berufsbildungs- und Jugendprogramme bis 2013. Beteiligung der Schweiz
+
+Bundesgesetz über die Weiterbildung
+
+Vermittlung schweizerischer Bildung im Ausland. Bundesgesetz
+
+Bundesgesetz über Beiträge für die kantonale französischsprachige Schule in Bern. Totalrevision
+
+--
+
+
+Hier ist eine Liste von Dokumententiteln und eine dazugehörige Zusammenfassung. Diese Dokumente gehören zu einer Gruppe. Wie lautet der Name der Gruppe? Gib nur einen möglichen Namen zurück, nichts anderes. Der Name soll kurz und allgemein gehalten sein. Verwende keine spezifischen Begriffe.
+
+Titel: Bildungsrahmenartikel in der Bundesverfassung
+Zusammenfassung: Die Regierung will die Bildung in der Schweiz verbessern und dafür Regeln und Ziele festlegen.
+
+Titel: Bundesgesetz über die Freizügigkeit der Anwältinnen und Anwälte. Änderung
+Zusammenfassung: Das Anwaltsgesetz in der Schweiz wird angepasst, sodass jetzt auch ein Master für die Anwaltsregistrierung nötig ist.
+
+Titel: EU-Bildungs-, Berufsbildungs- und Jugendprogramme bis 2013. Beteiligung der Schweiz
+Zusammenfassung: Die Schweiz will offiziell an EU-Programmen für Bildung und Jugend teilnehmen, um Vorteile wie Mitsprache und Förderungen zu bekommen.
+
+Titel: Bundesgesetz über die Weiterbildung
+Zusammenfassung: Das neue Gesetz will die Qualität von Weiterbildungen verbessern und Grundkompetenzen für Erwachsene fördern.
+
+Titel: Vermittlung schweizerischer Bildung im Ausland. Bundesgesetz
+Zusammenfassung: Das neue Gesetz stärkt Schweizer Schulen im Ausland durch mehr Flexibilität und neue Fördermöglichkeiten.
+
+Titel: Bundesgesetz über Beiträge für die kantonale französischsprachige Schule in Bern. Totalrevision
+Zusammenfassung: Das neue Gesetz aktualisiert die Regeln und bestätigt die wichtige Rolle der französischsprachigen Schule in Bern.

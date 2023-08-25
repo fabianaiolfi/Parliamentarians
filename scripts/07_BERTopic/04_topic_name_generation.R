@@ -4,18 +4,23 @@
 
 # Prepare Dataset ---------------------------------------------------------------
 
-chatgpt_topics <- topics %>%
-  select(Topic, Representation) %>% 
-  mutate(Representation = gsub("\\[|\\]|'", "", Representation))
+query <- "Hier ist eine Liste von Dokumententiteln und eine dazugehörige Zusammenfassung. Diese Dokumente gehören zu einer Gruppe. Wie lautet der Name der Gruppe? Gib nur einen möglichen Namen zurück, nichts anderes. Der Name soll kurz und allgemein gehalten sein. Verwende keine spezifischen Begriffe."
+ 
+all_businesses <- all_businesses %>% 
+  left_join(select(doc_info, BusinessShortNumber, Topic), by = "BusinessShortNumber")
 
-query_start <- "Ich habe folgende Begriffe: "
-query_end <- ". Kannst du einen kurzen (max. 5 Wörter) und allgemein gehaltenen Titel basierend auf diesen Begriffen vorschlagen? Gib nur den Titel zurück, nichts anderes."
+topics_by_title_summary <- all_businesses %>% 
+  select(Topic, Title, chatgpt_summary) %>% 
+  mutate(titel_and_summary = paste("Titel: ", Title, "\n", "Zusammenfassung: ", chatgpt_summary, sep = "")) %>% 
+  group_by(Topic) %>%
+  summarise(titel_and_summary = paste(titel_and_summary, collapse = "\n\n"))
 
-# Create new column with query and terms
-chatgpt_topics <- chatgpt_topics %>% mutate(chatgpt_query = paste(query_start, Representation, query_end, sep = ""))
 
 # ChatGPT wrapper requires `prompt_role_var` to be its own column in the dataframe
 chatgpt_topics$role <- "user"
+
+# Create new column with query and terms
+chatgpt_topics <- chatgpt_topics %>% mutate(chatgpt_query = paste(query_start, Representation, query_end, sep = ""))
 
 
 # Test ChatGPT Query with Sample ---------------------------------------------------------------

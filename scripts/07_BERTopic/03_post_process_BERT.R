@@ -2,7 +2,13 @@
 # Prepare Topic Probability Data ---------------------------------------------------------------
 
 # Load Topics
-topics <- read.csv(here("scripts", "07_BERTopic", "BERT_data", "temp", "topic_info.csv"), header = T)
+topics <- read.csv(here("scripts", "07_BERTopic", "BERT_data", "temp_01", "topic_info.csv"),
+                   header = T)
+
+# Load Doc Info
+doc_info <- read.csv(here("scripts", "07_BERTopic", "BERT_data", "temp_01", "doc_info.csv"),
+                     header = T,
+                     colClasses = c("BusinessShortNumber" = "character"))
 
 # Remove outlier topic (Topic: "-1")
 topics <- topics %>% dplyr::filter(Topic != -1)
@@ -11,7 +17,7 @@ topics <- topics %>% dplyr::filter(Topic != -1)
 topics_count <- nrow(topics)
 
 # Load Topic Probabilities, use BusinessShortNumber as row name
-topic_probs <- read.csv(here("scripts", "07_BERTopic", "BERT_data", "temp", "probs.csv"),
+topic_probs <- read.csv(here("scripts", "07_BERTopic", "BERT_data", "temp_01", "probs.csv"),
                         header = T,
                         colClasses = c("BusinessShortNumber" = "character"),
                         row.names = "BusinessShortNumber")

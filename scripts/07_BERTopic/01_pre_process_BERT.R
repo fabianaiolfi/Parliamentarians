@@ -4,7 +4,7 @@
 
 # Load Businesses ---------------------------------------------------------------
 
-load(here("data", "all_businesses_summaries_clean_tags.RData"))
+#load(here("data", "all_businesses_summaries_clean_tags.RData"))
 
 
 # Add Main Tag ---------------------------------------------------------------
@@ -18,12 +18,12 @@ all_businesses <- all_businesses %>%
 # Clean Data ---------------------------------------------------------------
 
 # Remove any rows containing NAs in relevant columns
-all_businesses <- all_businesses %>% drop_na(InitialSituation_clean,
-                                             main_tag,
-                                             chatgpt_tags_clean,
-                                             chatgpt_summaries)
-
-all_businesses <- all_businesses %>% dplyr::filter(chatgpt_tags_clean != "NA")
+# all_businesses <- all_businesses %>% drop_na(InitialSituation_clean,
+#                                              main_tag,
+#                                              chatgpt_tags_clean,
+#                                              chatgpt_summary)
+# 
+# all_businesses <- all_businesses %>% dplyr::filter(chatgpt_tags_clean != "NA")
 
 
 # Export Data ---------------------------------------------------------------
@@ -32,12 +32,17 @@ all_businesses <- all_businesses %>% dplyr::filter(chatgpt_tags_clean != "NA")
 all_businesses_export <- all_businesses %>% 
   select(BusinessShortNumber,
          Title,
-         chatgpt_summaries,
+         chatgpt_summary,
          main_tag,
          chatgpt_tags_clean,
          InitialSituation_clean,
          ResponsibleDepartmentName,
          TagNames)
+
+# Fake DF for testing
+all_businesses_export <- all_businesses_export %>% uncount(20)
+all_businesses_export <- all_businesses_export %>% mutate(across(everything(), sample))
+#all_businesses_export$BusinessShortNumber <- 1:nrow(all_businesses_export)
 
 # Keep TagNames in seperate column for semi-supervised modelling
 all_businesses_export <- all_businesses_export %>% unite("all", -BusinessShortNumber, -TagNames, sep = " ", remove = T, na.rm = T)
