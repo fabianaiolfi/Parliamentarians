@@ -2,15 +2,18 @@
 
 ## v230820
 
-ChatGPT
-gpt-3.5-turbo-0301
+**Sumaries**
+ChatGPT gpt-3.5-turbo-0301
 
-Pre-processing for BERTopic
+**Tags**
+ChatGPT gpt-3.5-turbo-0613
+
+**Pre-processing for BERTopic**
 `all_businesses_and_tags_230703.RData`
 `all_businesses_and_clean_tags_230703.RData`
 `all_businesses_and_summaries.RData`
 
-BERTopic Modelling
+**BERTopic Modelling**
 ```
 # https://maartengr.github.io/BERTopic/getting_started/parameter%20tuning/parametertuning.html#hdbscan
 hdbscan_model = HDBSCAN(
@@ -33,7 +36,7 @@ topic_model = BERTopic(
     embedding_model = "paraphrase-multilingual-mpnet-base-v2").fit(docs, y = categories) # perform supervised topic modeling, we simply use all categories
 ```
 
-Topic Names
+**Topic Names**
 - Generated using “Representation” (top_n_words?) produced by BERTopic
 
 Automated Document Intrusion Detection
