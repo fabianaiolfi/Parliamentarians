@@ -1,7 +1,7 @@
 
 # Cleaning (post processing) for embedding
 
-load(here("data", "all_businesses_and_tags_230703.RData"))
+# load(here("data", "all_businesses_and_tags_230703.RData"))
 # ud_model <- udpipe_load_model(here("models", "german-gsd-ud-2.5-191206.udpipe"))
 custom_stopwords <- scan(here("data", "custom_stopwords.txt"), character(), sep = "\n")
 tag_stopwords <- scan(here("data", "tag_stopwords.txt"), character(), sep = "\n")
@@ -56,21 +56,21 @@ all_businesses$chatgpt_tags_clean <- gsub('^$', 'NA', all_businesses$chatgpt_tag
 
 #save(all_businesses, file = here("data", "all_businesses_and_clean_tags_230703.RData"))
 
-# Short Evaluation ----------------------------------------------------
-# Adjust stopword choice based on this
-
-# # Combine all the text into a single character vector
-all_tags <- paste(all_businesses$chatgpt_tags_clean, collapse = " ")
-
-# Split the combined text into individual words
-all_tags <- gsub('\n', ' ', all_tags) # remove \n
-words <- unlist(strsplit(all_tags, "\\d+\\s\\.\\s"))
-words <- gsub('\\s$', '', words) # remove trailing whitespace
-
-# Count the occurrences of each word
-word_counts <- table(words)
-word_counts <- as.data.frame(word_counts)
-word_counts %>% arrange(-Freq) %>% select(words) %>% head(n = 100) %>% print(row.names = FALSE)
+# # Short Evaluation ----------------------------------------------------
+# # Adjust stopword choice based on this
+# 
+# # # Combine all the text into a single character vector
+# all_tags <- paste(all_businesses$chatgpt_tags_clean, collapse = " ")
+# 
+# # Split the combined text into individual words
+# all_tags <- gsub('\n', ' ', all_tags) # remove \n
+# words <- unlist(strsplit(all_tags, "\\d+\\s\\.\\s"))
+# words <- gsub('\\s$', '', words) # remove trailing whitespace
+# 
+# # Count the occurrences of each word
+# word_counts <- table(words)
+# word_counts <- as.data.frame(word_counts)
+# word_counts %>% arrange(-Freq) %>% select(words) %>% head(n = 100) %>% print(row.names = FALSE)
 
 
 # Prepare for Fasttext ----------------------------------------------------
@@ -79,6 +79,6 @@ word_counts %>% arrange(-Freq) %>% select(words) %>% head(n = 100) %>% print(row
 all_businesses <- all_businesses %>% mutate_at(vars(chatgpt_tags_clean), ~ gsub("\n", " ", .))
 
 # Add </s> at end of strings
-all_businesses <- all_businesses %>% mutate_at(vars(chatgpt_tags_clean), ~ paste0(., "</s>"))
+# all_businesses <- all_businesses %>% mutate_at(vars(chatgpt_tags_clean), ~ paste0(., "</s>"))
 
-all_businesses$chatgpt_tags_clean[1]
+# all_businesses$chatgpt_tags_clean[1]

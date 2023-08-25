@@ -15,12 +15,13 @@ timestamp <- Sys.time()
 formatted_timestamp <- format(timestamp, "%Y%m%d_%H%M%S")
 
 # Query
-chatgpt_output <- chatgpt(prompt_role_var = all_businesses_long$role,
-                          prompt_content_var = all_businesses_long$query,
-                          id_var = all_businesses_long$id,
-                          param_max_tokens = 100,
-                          param_n = 1,
-                          param_temperature = 0)
+# chatgpt_output <- chatgpt(prompt_role_var = all_businesses_long$role,
+#                           prompt_content_var = all_businesses_long$query,
+#                           id_var = all_businesses_long$id,
+#                           param_max_tokens = 100,
+#                           param_n = 1,
+#                           param_temperature = 0,
+#                           param_model = "gpt-4")
  
-file_name <- paste0("chatgpt_output_", formatted_timestamp, ".RData")
-save(chatgpt_output, file = here("data", file_name))
+# file_name <- paste0("chatgpt_output_", formatted_timestamp, ".RData")
+# save(chatgpt_output, file = here("data", file_name))

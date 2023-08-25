@@ -18,37 +18,20 @@ delete_bold_tags <- function(input_string) {
 }
 
 
-# Clean Data ---------------------------------------------------------------
-# Remove bold tags
-#all_businesses$InitialSituation_clean <- delete_bold_tags(all_businesses$InitialSituation)
-
-# Remove all HTML tags
-all_businesses$InitialSituation_clean <- strip_html(all_businesses$InitialSituation)
-
-# Remove double whitespaces (Source: ChatGPT)
-all_businesses$InitialSituation_clean <- gsub(" {2,}", " ", all_businesses$InitialSituation_clean)
-
-# Remove whitespace at beginning
-all_businesses$InitialSituation_clean <- gsub("^\\s+", "", all_businesses$InitialSituation_clean)
-
-
 # Create ChatGPT Query String ---------------------------------------------------------------
 # Setup query as string
-query_central_stmnt <- "Hier ist ein Dokument mit einem Titel. Gib dem Dokument 5 bis 10 Kategorien. Jede Kategorie muss 1 bis 3 Wörter umfassen. Gib nur die Kategorien zurück:\n"
+query_tags <- "Hier ist ein Dokument mit einem Titel. Gib dem Dokument 5 bis 10 Kategorien. Jede Kategorie muss 1 bis 3 Wörter umfassen. Gib nur die Kategorien zurück:\n"
 
 # Merge ChatGPT query string with description text
 all_businesses <- all_businesses %>% 
-  mutate(chatgpt_query_central_stmnt = paste(query_central_stmnt, "Titel:", Title, "\nInhalt:", InitialSituation_clean, sep = "\n"))
+  mutate(chatgpt_query_tags = paste(query_tags, "Titel:", Title, "\nInhalt:", InitialSituation_clean, sep = "\n"))
 
 
 # Wide to Long Table ---------------------------------------------------------------
 all_businesses_long <- all_businesses %>% 
-  select(BusinessShortNumber, chatgpt_query_central_stmnt) %>% #, chatgpt_query_smartspider_precise) %>% 
-  gather(key = "query_type", value = "query", chatgpt_query_central_stmnt) %>% #, chatgpt_query_smartspider_precise) %>% 
+  select(BusinessShortNumber, chatgpt_query_tags) %>%
+  gather(key = "query_type", value = "query", chatgpt_query_tags) %>%
   mutate(id = paste(BusinessShortNumber, query_type, sep = "-"), .keep = c("unused"))
 
 # ChatGPT wrapper requires `prompt_role_var` to be its own column in the dataframe
 all_businesses_long$role <- "user"
-
-# Check
-cat(all_businesses_long$query[670])
