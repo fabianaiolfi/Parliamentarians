@@ -26,6 +26,13 @@ token_sum <- round(sum(all_businesses$chatgpt_answer_n_tokens, na.rm = T)) + (su
 round(token_sum / 1000 * 0.04, 2) # Queries will cost about $30 in total
 
 
+# Summary Length Check -----------------------------------------------------
+len_check <- all_businesses_long %>% mutate(length = nchar(query) / 2.6)
+summary(len_check$length)
+# How long should Sys.sleep() be?
+60/(10000/2000) # 15 sec
+(15*672)/60/60 # 3h for summaries
+
 # gpt-3.5 vs gpt-4 -----------------------------------------------------
 # Is gpt-4 really that much better than gpt-3.5?
 set.seed(42)
