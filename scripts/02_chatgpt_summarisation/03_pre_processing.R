@@ -38,7 +38,7 @@ query_summary <- "Welche zentrale Aussage soll ein:e Wähler:in von diesem Text 
 
 # Merge ChatGPT query string with description text
 all_businesses <- all_businesses %>% 
-  mutate(chatgpt_query_summary = paste(query_summary, InitialSituation_clean, sep = ""))
+  mutate(chatgpt_query_summary = paste(query_summary, "Titel: ", Title, "\n", "Text: ", InitialSituation_clean, sep = ""))
 
 
 # Wide to Long Table ---------------------------------------------------------------
