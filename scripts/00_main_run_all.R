@@ -8,6 +8,7 @@ rm(list=ls())
 
 # source(here("scripts", "01_get_parl_data.R"))
 source(here("scripts", "02_load_parl_data.R"))
+source(here("scripts", "03_sample_all_businesses.R")) # Create sample for testing
 rm(list = setdiff(ls(), c("all_businesses")))
 
 
