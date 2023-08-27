@@ -27,14 +27,17 @@ round(token_sum / 1000 * 0.04, 2) # Queries will cost about $30 in total
 
 
 # Summary Length Check -----------------------------------------------------
-len_check <- all_businesses_long %>% mutate(length = nchar(query) / 2.6)
+len_check <- chatgpt_intruder_query %>% mutate(length = nchar(query) / 2.6)
 summary(len_check$length)
 # How long should Sys.sleep() be?
-60/(10000/2000) # 15 sec
+60/(10000/1200) # 15 sec
 (15*672)/60/60 # 3h for summaries
+(7*180)/60 # 21min for topic name generation
+98/3
 
 sum(len_check$length)
-787256.9 / 1000 * 0.04 # ~32$
+787256.9 / 1000 * 0.04 # ~32$ for summaries
+60510.77 / 1000 * 0.035 # ~2.1$
 
 cat(all_businesses_long$query[584])
 
