@@ -1,6 +1,8 @@
 
 # Evaluation: Automatic Document Intrusion Detection ----------------------
 
+# Load ChatGPT Data
+load(here("data", "chatgpt_output_df_20230827_173715.RData"))
 
 # Setup DF with Intruders ----------------------
 
@@ -79,14 +81,12 @@ chatgpt_intruder_query$role <- "user"
 # Remove Topic -1
 chatgpt_intruder_query <- chatgpt_intruder_query %>% dplyr::filter(topic_value != -1)
 
-cat(chatgpt_intruder_query$query[55])
-
 
 # Test ChatGPT Query with Sample ---------------------------------------------------------------
 
-# set.seed(42)
-# test_sample <- sample(0:topics_count-1, 5, replace = F)
-# chatgpt_intruder_query <- chatgpt_intruder_query %>% dplyr::filter(topic_value %in% test_sample)
+set.seed(42)
+test_sample <- sample(0:topics_count-1, 5, replace = F)
+chatgpt_intruder_query <- chatgpt_intruder_query %>% dplyr::filter(topic_value %in% test_sample)
 
 
 # Query ChatGPT ---------------------------------------------------------------

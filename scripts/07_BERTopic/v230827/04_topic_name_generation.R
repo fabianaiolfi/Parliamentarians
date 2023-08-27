@@ -71,30 +71,3 @@ topics_by_title_summary <- topics_by_title_summary %>% mutate(chatgpt_query = pa
 # 
 # file_name <- paste0("chatgpt_output_df_", formatted_timestamp, ".RData")
 # save(chatgpt_output_df, file = here("data", file_name))
-
-
-# Clean ChatGPT Output ---------------------------------------------------------------
-
-# Load ChatGPT Data
-load(here("data", "chatgpt_output_df_20230827_173715.RData"))
-
-# # Convert to DF
-# chatgpt_output_topics <- do.call(
-#   rbind,
-#   Map(data.frame,
-#       Topic = chatgpt_output_topics[[1]][["id"]],
-#       chatgpt_topic = chatgpt_output_topics[[1]][["chatgpt_content"]]))
-# 
-# # # Merge and clean
-# chatgpt_topics <- chatgpt_output_topics %>%
-#   #left_join(chatgpt_output_topics, by = "Topic") %>%
-#   select(Topic, chatgpt_topic) %>% # Representation
-#   mutate(chatgpt_topic = gsub('"', '', chatgpt_topic))
-
-
-# Housekeeping ---------------------------------------------------------------
-
-# Prepare for 05_evaluation.R
-#chatgpt_topics <- chatgpt_output_df
-#rm(chatgpt_output_df)
-#rm(chatgpt_output_topics)
