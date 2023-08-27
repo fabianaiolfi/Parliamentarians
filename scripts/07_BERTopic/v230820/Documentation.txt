@@ -13,6 +13,26 @@ ChatGPT gpt-3.5-turbo-0613
 `all_businesses_and_clean_tags_230703.RData`
 `all_businesses_and_summaries.RData`
 
+**Cutoff** 03_post_process_BERT.R
+```
+# Multiple topics per Business Item ---------------------------------------------------------------
+
+top_topics <- topic_probs %>%
+  select(index, top_3_topics, prob_1, prob_2, prob_3) %>% 
+  separate(top_3_topics, into = c("topic_1", "topic_2", "topic_3"), sep = ",") %>%
+  mutate_at(vars(topic_1:topic_3), ~as.integer(sub("V", "", .))) %>% 
+  # Re-align topic numbers with topic number generated in BERTopic (topic nr 1 -> topic nr 0)
+  mutate(topic_1 = topic_1 - 1) %>% mutate(topic_2 = topic_2 - 1) %>% mutate(topic_3 = topic_3 - 1) %>% 
+  mutate(topic_2 = case_when(prob_2 < 0.001 ~ NA,
+                             prob_2 >= 0.001 ~ topic_2)) %>% 
+  mutate(topic_3 = case_when(is.na(topic_2) == TRUE ~ NA,
+                             is.na(topic_2) == FALSE ~ topic_3)) %>% 
+  mutate(prob_2 = case_when(prob_2 < 0.001 ~ NA,
+                             prob_2 >= 0.001 ~ prob_2)) %>% 
+  mutate(prob_3 = case_when(is.na(prob_2) == TRUE ~ NA,
+                             is.na(prob_2) == FALSE ~ prob_3))
+```
+
 **BERTopic Modelling**
 ```
 # https://maartengr.github.io/BERTopic/getting_started/parameter%20tuning/parametertuning.html#hdbscan

@@ -11,6 +11,26 @@ No tags!
 **Pre-processing for BERTopic**
 …?
 
+**Cutoff** 03_post_process_BERT.R
+```
+# Multiple topics per Business Item ---------------------------------------------------------------
+
+top_topics <- topic_probs %>%
+  select(top_3_topics, prob_1, prob_2, prob_3) %>% 
+  separate(top_3_topics, into = c("topic_1", "topic_2", "topic_3"), sep = ",") %>%
+  mutate_at(vars(topic_1:topic_3), ~as.integer(sub("X", "", .))) %>% 
+  # Re-align topic numbers with topic number generated in BERTopic (topic nr 1 -> topic nr 0)
+  mutate(topic_1 = topic_1 - 1) %>% mutate(topic_2 = topic_2 - 1) %>% mutate(topic_3 = topic_3 - 1) %>% 
+  mutate(topic_2 = case_when(prob_2 < 0.001 ~ NA,
+                             prob_2 >= 0.001 ~ topic_2)) %>% 
+  mutate(topic_3 = case_when(is.na(topic_2) == TRUE ~ NA,
+                             is.na(topic_2) == FALSE ~ topic_3)) %>% 
+  mutate(prob_2 = case_when(prob_2 < 0.001 ~ NA,
+                             prob_2 >= 0.001 ~ prob_2)) %>% 
+  mutate(prob_3 = case_when(is.na(prob_2) == TRUE ~ NA,
+                             is.na(prob_2) == FALSE ~ prob_3))
+```
+
 **BERTopic Modelling**
 ```
 # https://maartengr.github.io/BERTopic/getting_started/parameter%20tuning/parametertuning.html#hdbscan
@@ -41,7 +61,7 @@ topic_model = BERTopic(
 - Generated using Title and summaries produced by BERTopic
 
 Automated Document Intrusion Detection
-[1] "Accuracy:  
-[1] "Precision (Mean over all Topics): 
-[1] "Recall (Mean over all Topics):
-[1] "F1 Score (Mean over all Topics):
+[1] "Accuracy:  0.607"
+[1] "Precision (Mean over all Topics):  0.72"
+[1] "Recall (Mean over all Topics):  0.655"
+[1] "F1 Score (Mean over all Topics):  0.686"
