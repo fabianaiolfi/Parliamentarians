@@ -154,9 +154,12 @@ chatgpt_intruder_query <- chatgpt_intruder_query %>%
 # Create the confusion matrix using table()
 confusion_matrix <- table(chatgpt_intruder_query$intruder_doc, chatgpt_intruder_query$chatgpt_intruder_guess)
 
-# Create an empty 4x4 matrix
+# Create an empty matrix
 true_topics <- sort(unique(chatgpt_intruder_query$intruder_doc))
-full_matrix <- matrix(0, nrow = length(true_topics), ncol = length(true_topics), dimnames = list(true_topics, true_topics))
+pred_topics <- sort(unique(chatgpt_intruder_query$chatgpt_intruder_guess))
+all_topics <- c(true_topics, pred_topics)
+all_topics <- sort(unique(all_topics)) # Make sure all topics appear in full_matrix
+full_matrix <- matrix(0, nrow = length(all_topics), ncol = length(all_topics), dimnames = list(all_topics, all_topics))
 
 # Populate the full matrix with values from confusion_matrix
 for (i in rownames(confusion_matrix)) {
