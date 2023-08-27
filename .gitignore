@@ -43,3 +43,4 @@ vec_files/
 *.npy
 *.json
 *.safetensors
+*.webloc
