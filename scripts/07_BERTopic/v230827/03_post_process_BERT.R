@@ -2,11 +2,11 @@
 # Prepare Topic Probability Data ---------------------------------------------------------------
 
 # Load Topics
-topics <- read.csv(here("scripts", "07_BERTopic", "BERT_data", "v230827", "topic_info.csv"),
+topics <- read.csv(here("scripts", "07_BERTopic", "v230827", "BERT_data", "topic_info.csv"),
                    header = T)
 
 # Load Doc Info
-doc_info <- read.csv(here("scripts", "07_BERTopic", "BERT_data", "v230827", "doc_info.csv"),
+doc_info <- read.csv(here("scripts", "07_BERTopic", "v230827", "BERT_data", "doc_info.csv"),
                      header = T,
                      colClasses = c("BusinessShortNumber" = "character"))
 
@@ -17,7 +17,7 @@ topics <- topics %>% dplyr::filter(Topic != -1)
 topics_count <- nrow(topics)
 
 # Load Topic Probabilities, use BusinessShortNumber as row name
-topic_probs <- read.csv(here("scripts", "07_BERTopic", "BERT_data", "v230827", "probs.csv"),
+topic_probs <- read.csv(here("scripts", "07_BERTopic", "v230827", "BERT_data", "probs.csv"),
                         header = T,
                         colClasses = c("BusinessShortNumber" = "character"),
                         row.names = "BusinessShortNumber")
