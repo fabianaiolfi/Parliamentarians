@@ -70,8 +70,3 @@ write.table(all_businesses_export,
             sep = "\t",
             here("scripts", "07_BERTopic", "data", "all_businesses.tsv"),
             row.names = F, col.names = T, quote = F)
-
-
-# Clean Up Environment ---------------------------------------------------------------
-
-rm(list=setdiff(ls(), "all_businesses"))

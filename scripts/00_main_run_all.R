@@ -37,8 +37,13 @@ rm(list = setdiff(ls(), c("all_businesses")))
 
 # 07 BERTopic ------------------------------------------
 
-source(here("scripts", "07_BERTopic", "01_pre_process_BERT.R"))
+# Pick pipeline
+version <- "v230820"
+#version <- "v230827"
+
+source(here("scripts", "07_BERTopic", version, "01_pre_process_BERT.R"))
+rm(list = setdiff(ls(), c("all_businesses", "version")))
 # 02_BERTopic.ipynb
-source(here("scripts", "07_BERTopic", "03_post_process_BERT.R"))
-source(here("scripts", "07_BERTopic", "04_topic_name_generation.R"))
-source(here("scripts", "07_BERTopic", "05_evaluation.R"))
+source(here("scripts", "07_BERTopic", version, "03_post_process_BERT.R"))
+source(here("scripts", "07_BERTopic", version, "04_topic_name_generation.R"))
+source(here("scripts", "07_BERTopic", version, "05_evaluation.R"))
