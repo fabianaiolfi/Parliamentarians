@@ -33,6 +33,12 @@ summary(len_check$length)
 60/(10000/2000) # 15 sec
 (15*672)/60/60 # 3h for summaries
 
+sum(len_check$length)
+787256.9 / 1000 * 0.04 # ~32$
+
+cat(all_businesses_long$query[584])
+
+
 # gpt-3.5 vs gpt-4 -----------------------------------------------------
 # Is gpt-4 really that much better than gpt-3.5?
 set.seed(42)

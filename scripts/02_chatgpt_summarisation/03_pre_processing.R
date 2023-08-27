@@ -34,11 +34,13 @@ all_businesses$InitialSituation_clean <- gsub("^\\s+", "", all_businesses$Initia
 
 # Create ChatGPT Query String ---------------------------------------------------------------
 # Setup query as string
-query_summary <- "Welche zentrale Aussage soll ein:e Wähler:in von diesem Text mitnehmen? Verwende Einfache Sprache, maximal 15 Wörter und maximal 1 Satz.\n\n"
+query_start <- "Das ist ein Parlamentsgeschäft:\n\n"
+query_end <- "\n\nBeantworte diese 2 Fragen. Verwende dabei Einfache Sprache, maximal 15 Wörter und maximal 1 Satz.\n\n1. Welche zentrale Aussage soll ein:e Wähler:in von diesem Text mitnehmen?\n\n2. Vervollständige diesen Satz, damit er zum Geschäft passt: '[Politiker X] stimmt für … '"
 
 # Merge ChatGPT query string with description text
 all_businesses <- all_businesses %>% 
-  mutate(chatgpt_query_summary = paste(query_summary, "Titel: ", Title, "\n", "Text: ", InitialSituation_clean, sep = ""))
+  #mutate(chatgpt_query_summary = paste(query_summary, "Titel: ", Title, "\n", "Text: ", InitialSituation_clean, sep = ""))
+  mutate(chatgpt_query_summary = paste(query_start, "Titel: ", Title, "\n", "Text: ", InitialSituation_clean, query_end, sep = ""))
 
 
 # Wide to Long Table ---------------------------------------------------------------
