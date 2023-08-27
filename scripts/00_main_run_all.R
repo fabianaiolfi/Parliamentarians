@@ -38,8 +38,8 @@ rm(list = setdiff(ls(), c("all_businesses")))
 # 07 BERTopic ------------------------------------------
 
 # Pick pipeline
-version <- "v230820"
-#version <- "v230827"
+#version <- "v230820"
+version <- "v230827"
 
 source(here("scripts", "07_BERTopic", version, "01_pre_process_BERT.R"))
 rm(list = setdiff(ls(), c("all_businesses", "version")))
