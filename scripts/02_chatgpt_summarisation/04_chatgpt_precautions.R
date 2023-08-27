@@ -38,6 +38,7 @@ summary(len_check$length)
 sum(len_check$length)
 787256.9 / 1000 * 0.04 # ~32$ for summaries
 60510.77 / 1000 * 0.035 # ~2.1$
+91968.08 / 1000 * 0.035 # ~3.2$
 
 cat(all_businesses_long$query[584])
 
