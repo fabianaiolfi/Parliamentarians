@@ -84,14 +84,14 @@ chatgpt_intruder_query <- chatgpt_intruder_query %>% dplyr::filter(topic_value !
 
 # Test ChatGPT Query with Sample ---------------------------------------------------------------
 
-set.seed(42)
-test_sample <- sample(0:topics_count-1, 5, replace = F)
-chatgpt_intruder_query <- chatgpt_intruder_query %>% dplyr::filter(topic_value %in% test_sample)
+# set.seed(42)
+# test_sample <- sample(0:topics_count-1, 5, replace = F)
+# chatgpt_intruder_query <- chatgpt_intruder_query %>% dplyr::filter(topic_value %in% test_sample)
 
 
 # Query ChatGPT ---------------------------------------------------------------
 
-# Connect to ChatGPT
+# # Connect to ChatGPT
 # gpt3_authenticate("ChatGPT_API_Key.txt")
 # 
 # # Get and format the current timestamp to prevent overwriting files when saving RData locally
@@ -124,7 +124,7 @@ chatgpt_intruder_query <- chatgpt_intruder_query %>% dplyr::filter(topic_value %
 #   print(i)
 # 
 #   # Pause
-#   Sys.sleep(20)
+#   Sys.sleep(30)
 # }
 # 
 # file_name <- paste0("chatgpt_output_intruder_", formatted_timestamp, ".RData")
@@ -134,7 +134,7 @@ chatgpt_intruder_query <- chatgpt_intruder_query %>% dplyr::filter(topic_value %
 # Clean ChatGPT Output ---------------------------------------------------------------
 
 # Load ChatGPT Data
-load(here("data", "chatgpt_output_intruder_20230827_182704.RData"))
+load(here("data", "chatgpt_output_intruder_20230827_212146.RData"))
 
 # Merge and clean
 chatgpt_intruder_query <- chatgpt_intruder_query %>% 
@@ -148,11 +148,22 @@ chatgpt_intruder_query <- chatgpt_intruder_query %>%
 # Precision: Of the documents that were predicted as 'intruders', how many were actually 'intruders'?
 # Recall (Sensitivity): Of all the actual 'intruder' documents, how many were correctly predicted by the model? (Correctly identified Topic n docs / Total actual Topic n docs)
 
+# Clean ChatGPT output
 chatgpt_intruder_query <- chatgpt_intruder_query %>% 
-  mutate(chatgpt_intruder_guess = gsub("Dokument", "", chatgpt_intruder_guess)) %>% 
-  mutate(chatgpt_intruder_guess = as.numeric(chatgpt_intruder_guess)) %>% 
-  mutate(intruder_doc = gsub("Dokument", "", intruder_doc)) %>% 
-  mutate(intruder_doc = as.numeric(intruder_doc))
+  mutate(intruder_doc = gsub("Dokument ", "", intruder_doc)) %>% 
+  mutate(intruder_doc = as.numeric(intruder_doc)) %>% 
+  mutate(chatgpt_intruder_guess = gsub("Dokument ", "", chatgpt_intruder_guess))
+# Function to check if a string contains only digits
+is_numeric_string <- function(x) {
+  grepl("^\\d+$", x)
+}
+# Identify non-numeric strings in the 'my_col' column
+non_numeric_strings <- !sapply(chatgpt_intruder_query$chatgpt_intruder_guess, is_numeric_string)
+# Replace those entries with NA
+chatgpt_intruder_query$chatgpt_intruder_guess[non_numeric_strings] <- NA
+# Convert the entire column to numeric
+chatgpt_intruder_query$chatgpt_intruder_guess <- as.numeric(chatgpt_intruder_query$chatgpt_intruder_guess)
+
 
 # Create the confusion matrix using table()
 confusion_matrix <- table(chatgpt_intruder_query$intruder_doc, chatgpt_intruder_query$chatgpt_intruder_guess)
