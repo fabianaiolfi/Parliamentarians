@@ -1,0 +1,47 @@
+# Model Documentation
+
+## v230827
+
+**Sumaries**
+ChatGPT gpt-4
+
+**Tags**
+No tags!
+
+**Pre-processing for BERTopic**
+…?
+
+**BERTopic Modelling**
+```
+# https://maartengr.github.io/BERTopic/getting_started/parameter%20tuning/parametertuning.html#hdbscan
+hdbscan_model = HDBSCAN(
+    min_cluster_size = 2,
+    min_samples = 1,
+    metric = 'euclidean',
+    prediction_data = True)
+
+# BERTopic German model
+# Parameter tuning: https://maartengr.github.io/BERTopic/getting_started/parameter%20tuning/parametertuning.html#bertopic
+topic_model = BERTopic(
+    language = "multilingual",
+    min_topic_size = 4, # minimum number of documents in a topic; 2-3 leads to around 180 topics
+    nr_topics = 100, # number of topics; theyworkforyou.com have around 90-100 topics for each MP
+    verbose = True,
+    top_n_words = 10,
+    n_gram_range = (1, 3),
+    hdbscan_model = hdbscan_model,
+    calculate_probabilities = True,
+     # https://www.sbert.net/docs/pretrained_models.html
+     # Probably saved somewhere here: /Users/aiolf1/anaconda3/envs/BERTopic/lib/python3.11/site-packages
+    embedding_model = "paraphrase-multilingual-mpnet-base-v2").fit(docs['all'], y = categories) # perform supervised topic modeling, we simply use all categories
+    #embedding_model = SentenceTransformer("intfloat/multilingual-e5-base")).fit(docs, y = categories) # perform supervised topic modeling, we simply use all categories
+```
+
+**Topic Names**
+- Generated using Title and summaries produced by BERTopic
+
+Automated Document Intrusion Detection
+[1] "Accuracy:  
+[1] "Precision (Mean over all Topics): 
+[1] "Recall (Mean over all Topics):
+[1] "F1 Score (Mean over all Topics):

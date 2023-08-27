@@ -34,14 +34,14 @@ all_businesses_export <- all_businesses %>%
          Title,
          chatgpt_summary,
          main_tag,
-         chatgpt_tags_clean,
+         #chatgpt_tags_clean,
          InitialSituation_clean,
          ResponsibleDepartmentName,
          TagNames)
 
 # Fake DF for testing
-all_businesses_export <- all_businesses_export %>% uncount(20)
-all_businesses_export <- all_businesses_export %>% mutate(across(everything(), sample))
+#all_businesses_export <- all_businesses_export %>% uncount(20)
+#all_businesses_export <- all_businesses_export %>% mutate(across(everything(), sample))
 #all_businesses_export$BusinessShortNumber <- 1:nrow(all_businesses_export)
 
 # Keep TagNames in seperate column for semi-supervised modelling
@@ -49,7 +49,7 @@ all_businesses_export <- all_businesses_export %>% unite("all", -BusinessShortNu
 
 write.table(all_businesses_export,
             sep = "\t",
-            here("scripts", "07_BERTopic", "data", "all_businesses_sample.tsv"),
+            here("scripts", "07_BERTopic", "data", "all_businesses.tsv"),
             row.names = F, col.names = T, quote = F)
 
 

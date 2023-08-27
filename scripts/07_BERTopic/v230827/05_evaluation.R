@@ -43,7 +43,7 @@ df_with_intruders <- df_with_intruders %>% sample_frac(1)
 
 #rm(chatgpt_intruder_query)
 chatgpt_intruder_query <- df_with_intruders %>% 
-  select(BusinessShortNumber, Title, chatgpt_summaries, topic_value, intruder) %>% 
+  select(BusinessShortNumber, Title, chatgpt_summary, topic_value, intruder) %>% 
   # Add index for each group
   group_by(topic_value) %>%
   mutate(in_topic_index = row_number()) %>%
@@ -51,12 +51,11 @@ chatgpt_intruder_query <- df_with_intruders %>%
   # Prepare strings for query
   mutate(in_topic_index = paste("Dokument", in_topic_index, sep = " ")) %>% 
   mutate(Title = paste("Titel:", Title, sep = " ")) %>% 
-  mutate(chatgpt_summaries = paste("Text:", chatgpt_summaries, sep = " ")) %>% 
-  mutate(query_docs = paste(in_topic_index, Title, chatgpt_summaries, sep = "\n")) %>% 
+  mutate(chatgpt_summary = paste("Text:", chatgpt_summary, sep = " ")) %>% 
+  mutate(query_docs = paste(in_topic_index, Title, chatgpt_summary, sep = "\n")) %>% 
   drop_na(topic_value) %>% 
   # Add topic names to each group
-  left_join(chatgpt_topics, by = c("topic_value" = "Topic")) %>% 
-  select(-Representation)
+  left_join(chatgpt_output_df, by = c("topic_value" = "Topic"))
 
 intruder_doc_number <- chatgpt_intruder_query %>% 
   dplyr::filter(intruder == T) %>% 
@@ -69,14 +68,18 @@ chatgpt_intruder_query <- chatgpt_intruder_query %>%
   summarise(query = paste(query_docs, collapse = "\n\n")) %>%
   ungroup() %>% 
   left_join(intruder_doc_number, by = "topic_value") %>% 
-  left_join(chatgpt_topics, by = c("topic_value" = "Topic")) %>% 
-  select(-Representation) %>% 
-  mutate(prompt = paste("Welches Dokument passt nicht in diese Gruppe? Das Thema der Gruppe ist '", chatgpt_topic_title, "'. Gib nur die Dokumentennummer zurück und nichts anderes:\n\n", sep = "")) %>% 
+  left_join(chatgpt_output_df, by = c("topic_value" = "Topic")) %>% 
+  mutate(prompt = paste("Welches Dokument passt nicht in diese Gruppe? Das Thema der Gruppe ist '", chatgpt_topic, "'. Gib nur die Dokumentennummer zurück und nichts anderes:\n\n", sep = "")) %>% 
   mutate(query = paste0(prompt, query)) %>% 
   select(topic_value, query, intruder_doc)
 
 # ChatGPT wrapper requires `prompt_role_var` to be its own column in the dataframe
 chatgpt_intruder_query$role <- "user"
+
+# Remove Topic -1
+chatgpt_intruder_query <- chatgpt_intruder_query %>% dplyr::filter(topic_value != -1)
+
+cat(chatgpt_intruder_query$query[55])
 
 
 # Test ChatGPT Query with Sample ---------------------------------------------------------------
@@ -88,7 +91,7 @@ chatgpt_intruder_query$role <- "user"
 
 # Query ChatGPT ---------------------------------------------------------------
 
-# # Connect to ChatGPT
+# Connect to ChatGPT
 # gpt3_authenticate("ChatGPT_API_Key.txt")
 # 
 # # Get and format the current timestamp to prevent overwriting files when saving RData locally
@@ -113,13 +116,13 @@ chatgpt_intruder_query$role <- "user"
 #     Map(data.frame,
 #         topic_value = chatgpt_output_intruder[[1]][["id"]],
 #         chatgpt_intruder_guess = chatgpt_output_intruder[[1]][["chatgpt_content"]]))
-#   
+# 
 #   # Add to main output DF
 #   chatgpt_output_intruder_all <- rbind(chatgpt_output_intruder_all, chatgpt_output_intruder)
-#   
+# 
 #   # Print counter
 #   print(i)
-#   
+# 
 #   # Pause
 #   Sys.sleep(20)
 # }
@@ -131,7 +134,7 @@ chatgpt_intruder_query$role <- "user"
 # Clean ChatGPT Output ---------------------------------------------------------------
 
 # Load ChatGPT Data
-load(here("data", "chatgpt_output_intruder_20230822_151009.RData"))
+load(here("data", "chatgpt_output_intruder_20230827_182704.RData"))
 
 # Merge and clean
 chatgpt_intruder_query <- chatgpt_intruder_query %>% 
@@ -154,9 +157,12 @@ chatgpt_intruder_query <- chatgpt_intruder_query %>%
 # Create the confusion matrix using table()
 confusion_matrix <- table(chatgpt_intruder_query$intruder_doc, chatgpt_intruder_query$chatgpt_intruder_guess)
 
-# Create an empty 4x4 matrix
+# Create an empty matrix
 true_topics <- sort(unique(chatgpt_intruder_query$intruder_doc))
-full_matrix <- matrix(0, nrow = length(true_topics), ncol = length(true_topics), dimnames = list(true_topics, true_topics))
+pred_topics <- sort(unique(chatgpt_intruder_query$chatgpt_intruder_guess))
+all_topics <- c(true_topics, pred_topics)
+all_topics <- sort(unique(all_topics)) # Make sure all topics appear in full_matrix
+full_matrix <- matrix(0, nrow = length(all_topics), ncol = length(all_topics), dimnames = list(all_topics, all_topics))
 
 # Populate the full matrix with values from confusion_matrix
 for (i in rownames(confusion_matrix)) {
@@ -188,6 +194,6 @@ print(paste("F1 Score (Mean over all Topics): ", round(f1_score, 3)))
 # Eyeball Evaluation ---------------------------------------------------------------
 
 eyeball_eval <- all_businesses %>% 
-  select(BusinessShortNumber, Title, chatgpt_summaries, TagNames, ResponsibleDepartmentName, InitialSituation_clean) %>% 
+  select(BusinessShortNumber, Title, chatgpt_summary, TagNames, ResponsibleDepartmentName, InitialSituation_clean) %>% 
   left_join(top_topics %>% select(BusinessShortNumber, topic_1), by = "BusinessShortNumber") %>% 
-  left_join(chatgpt_topics %>% select(Topic, chatgpt_topic_title), by = c("topic_1" = "Topic"))
+  left_join(chatgpt_output_df %>% select(Topic, chatgpt_topic), by = c("topic_1" = "Topic"))
