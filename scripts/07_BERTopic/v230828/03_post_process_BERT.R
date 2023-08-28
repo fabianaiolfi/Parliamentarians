@@ -56,14 +56,14 @@ topic_probs <- topic_probs %>% select(max_col, top_3_topics, prob_1, prob_2, pro
 
 # Multiple topics per Business Item ---------------------------------------------------------------
 
-cutoff <- 0.01
+cutoff <- 0.015
 
 top_topics <- topic_probs %>%
   select(top_3_topics, prob_1, prob_2, prob_3) %>% 
   separate(top_3_topics, into = c("topic_1", "topic_2", "topic_3"), sep = ",") %>%
   mutate_at(vars(topic_1:topic_3), ~as.integer(sub("X", "", .))) %>% 
   # Re-align topic numbers with topic number generated in BERTopic (topic nr 1 -> topic nr 0)
-  mutate(topic_1 = topic_1 - 1) %>% mutate(topic_2 = topic_2 - 1) %>% mutate(topic_3 = topic_3 - 1) %>% 
+  #mutate(topic_1 = topic_1 - 1) %>% mutate(topic_2 = topic_2 - 1) %>% mutate(topic_3 = topic_3 - 1) %>% 
   mutate(topic_2 = case_when(prob_2 < cutoff ~ NA,
                              prob_2 >= cutoff ~ topic_2)) %>% 
   mutate(topic_3 = case_when(is.na(topic_2) == TRUE ~ NA,

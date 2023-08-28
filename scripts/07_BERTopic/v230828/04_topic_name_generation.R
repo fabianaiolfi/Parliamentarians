@@ -34,40 +34,40 @@ topics_by_title_summary <- topics_by_title_summary %>% mutate(chatgpt_query = pa
 # Query ChatGPT ---------------------------------------------------------------
 
 # Connect to ChatGPT 
-# gpt3_authenticate("ChatGPT_API_Key.txt")
-# 
-# # Get and format the current timestamp to prevent overwriting files when saving RData locally
-# timestamp <- Sys.time()
-# formatted_timestamp <- format(timestamp, "%Y%m%d_%H%M%S")
-# 
-# # Create empty DF to fill up with ChatGPT output
-# chatgpt_output_df <- data.frame(id = character(0), chatgpt_topics = character(0))
-# 
-# # ChatGPT API Query in sleep loop to prevent reaching tokens-per-minute limit of 10'000
-# for(i in 1:nrow(topics_by_title_summary)) {
-#   chatgpt_output_topics <- chatgpt(prompt_role_var = topics_by_title_summary$role[i],
-#                                     prompt_content_var = topics_by_title_summary$chatgpt_query[i],
-#                                     id_var = topics_by_title_summary$Topic[i],
-#                                     param_max_tokens = 100,
-#                                     param_n = 1,
-#                                     param_temperature = 0,
-#                                     param_model = "gpt-4")
-#   # Convert to DF
-#   chatgpt_output_topics <- do.call(
-#     rbind,
-#     Map(data.frame,
-#         Topic = chatgpt_output_topics[[1]][["id"]],
-#         chatgpt_topic = chatgpt_output_topics[[1]][["chatgpt_content"]]))
-#   
-#   # Add to main output DF
-#   chatgpt_output_df <- rbind(chatgpt_output_df, chatgpt_output_topics)
-#   
-#   # Print counter
-#   print(i)
-#   
-#   # Pause
-#   Sys.sleep(12)
-# }
-# 
-# file_name <- paste0("chatgpt_output_df_", formatted_timestamp, ".RData")
-# save(chatgpt_output_df, file = here("data", file_name))
+gpt3_authenticate("ChatGPT_API_Key.txt")
+
+# Get and format the current timestamp to prevent overwriting files when saving RData locally
+timestamp <- Sys.time()
+formatted_timestamp <- format(timestamp, "%Y%m%d_%H%M%S")
+
+# Create empty DF to fill up with ChatGPT output
+chatgpt_output_df <- data.frame(id = character(0), chatgpt_topics = character(0))
+
+# ChatGPT API Query in sleep loop to prevent reaching tokens-per-minute limit of 10'000
+for(i in 1:nrow(topics_by_title_summary)) {
+  chatgpt_output_topics <- chatgpt(prompt_role_var = topics_by_title_summary$role[i],
+                                    prompt_content_var = topics_by_title_summary$chatgpt_query[i],
+                                    id_var = topics_by_title_summary$Topic[i],
+                                    param_max_tokens = 100,
+                                    param_n = 1,
+                                    param_temperature = 0,
+                                    param_model = "gpt-4")
+  # Convert to DF
+  chatgpt_output_topics <- do.call(
+    rbind,
+    Map(data.frame,
+        Topic = chatgpt_output_topics[[1]][["id"]],
+        chatgpt_topic = chatgpt_output_topics[[1]][["chatgpt_content"]]))
+
+  # Add to main output DF
+  chatgpt_output_df <- rbind(chatgpt_output_df, chatgpt_output_topics)
+
+  # Print counter
+  print(i)
+
+  # Pause
+  Sys.sleep(12)
+}
+
+file_name <- paste0("chatgpt_output_df_", formatted_timestamp, ".RData")
+save(chatgpt_output_df, file = here("data", file_name))

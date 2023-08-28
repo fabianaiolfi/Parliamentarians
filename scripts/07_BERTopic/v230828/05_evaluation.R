@@ -2,7 +2,7 @@
 # Evaluation: Automatic Document Intrusion Detection ----------------------
 
 # Load ChatGPT Data
-load(here("data", "chatgpt_output_df_20230827_173715.RData"))
+load(here("data", "chatgpt_output_df_20230828_140010.RData"))
 
 # Setup DF with Intruders ----------------------
 
@@ -91,7 +91,7 @@ chatgpt_intruder_query <- chatgpt_intruder_query %>% dplyr::filter(topic_value !
 
 # Query ChatGPT ---------------------------------------------------------------
 
-# # Connect to ChatGPT
+# Connect to ChatGPT
 # gpt3_authenticate("ChatGPT_API_Key.txt")
 # 
 # # Get and format the current timestamp to prevent overwriting files when saving RData locally
@@ -102,10 +102,10 @@ chatgpt_intruder_query <- chatgpt_intruder_query %>% dplyr::filter(topic_value !
 # chatgpt_output_intruder_all <- data.frame(topic_value = numeric(0), chatgpt_intruder_guess = numeric(0))
 # 
 # # ChatGPT API Query in sleep loop to prevent reaching tokens-per-minute limit of 10'000
-# for(i in 1:nrow(chatgpt_intruder_query)) {
-#   chatgpt_output_intruder <- chatgpt(prompt_role_var = chatgpt_intruder_query$role[i],
-#                                      prompt_content_var = chatgpt_intruder_query$query[i],
-#                                      id_var = chatgpt_intruder_query$topic_value[i],
+# for(i in 1:nrow(missed_topics)) {
+#   chatgpt_output_intruder <- chatgpt(prompt_role_var = missed_topics$role[i],
+#                                      prompt_content_var = missed_topics$query[i],
+#                                      id_var = missed_topics$topic_value[i],
 #                                      param_max_tokens = 100,
 #                                      param_n = 1,
 #                                      param_temperature = 0,
@@ -131,10 +131,31 @@ chatgpt_intruder_query <- chatgpt_intruder_query %>% dplyr::filter(topic_value !
 # save(chatgpt_output_intruder_all, file = here("data", file_name))
 
 
+# Fix ChatGPT Error ---------------------------------------------------------------
+# Request completed with error. Code: 503, message: The server had an error while processing your request. Sorry about that! #
+# Fill in missing items of business
+
+# Get missing topics
+# missed_topics <- chatgpt_intruder_query %>% 
+#   select(topic_value) %>% 
+#   left_join(chatgpt_output_intruder_all, by = "topic_value") %>% 
+#   dplyr::filter(is.na(chatgpt_intruder_guess) == T) %>% 
+#   select(topic_value) %>% 
+#   left_join(chatgpt_intruder_query, by = "topic_value")
+# Then run ChatGPT query above, replacing `chatgpt_intruder_query` with `missed_topics`
+
+
 # Clean ChatGPT Output ---------------------------------------------------------------
 
 # Load ChatGPT Data
-load(here("data", "chatgpt_output_intruder_20230827_212146.RData"))
+load(here("data", "chatgpt_output_intruder_20230828_161226.RData"))
+chatgpt_output_intruder_all_1 <- chatgpt_output_intruder_all
+rm(chatgpt_output_intruder_all)
+load(here("data", "chatgpt_output_intruder_20230828_200635.RData"))
+chatgpt_output_intruder_all_2 <- chatgpt_output_intruder_all
+rm(chatgpt_output_intruder_all)
+chatgpt_output_intruder_all <- rbind(chatgpt_output_intruder_all_1, chatgpt_output_intruder_all_2)
+rm(chatgpt_output_intruder_all_1, chatgpt_output_intruder_all_2)
 
 # Merge and clean
 chatgpt_intruder_query <- chatgpt_intruder_query %>% 
