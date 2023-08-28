@@ -2,7 +2,7 @@
 
 
 # Load ChatGPT Data -------------------------------------------------------
-load(here("data", "chatgpt_output_df_20230825_133800.RData"))
+load(here("data", "chatgpt_output_df_20230828_091153.RData"))
 
 
 # Split business short number and query type -------------------------------------------------------

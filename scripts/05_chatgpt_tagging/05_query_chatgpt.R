@@ -40,8 +40,22 @@ for(i in 1:nrow(all_businesses_long)) {
   print(i)
   
   # Pause
-  Sys.sleep(20)
+  Sys.sleep(15)
 }
+
+
+# Add Manual Output -----------------------------------------------------
+# One item of business failed to produce an output due to an error on ChatGPT's side
+
+# Create a new row as a data frame
+new_row <- data.frame(id = "09.437-chatgpt_query_tags",
+                      chatgpt_tags = "1. Fraktionsfinanzierung\n2. Gesetzliche Grundlagen\n3. Beitragserhöhung\n4. Mehrkosten\n5. Verantwortlichkeiten\n6. Bundesrat-Stellungnahme\n7. Zweckbindung der Gelder\n8. Finanzpolitische Abwägungen\n9. Parlamentsbetrieb\n10. Verwaltungsdelegation\n")
+
+# Add the new row to the original data frame
+chatgpt_output_df <- rbind(chatgpt_output_df, new_row)
+
+
+# Save to File -----------------------------------------------------
 
 file_name <- paste0("chatgpt_output_df_", formatted_timestamp, ".RData")
 save(chatgpt_output_df, file = here("data", file_name))

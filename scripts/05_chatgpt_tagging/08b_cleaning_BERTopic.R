@@ -1,8 +1,8 @@
 
-# Cleaning (post processing) for BERTopic
+# Cleaning (post processing) for BERTopic ------------------------------------------------------
 
 custom_stopwords <- scan(here("data", "custom_stopwords.txt"), character(), sep = "\n")
-tag_stopwords <- scan(here("data", "tag_stopwords.txt"), character(), sep = "\n")
+tag_stopwords <- scan(here("data", "tag_stopwords_v230828.txt"), character(), sep = "\n")
 
 
 # Clean Text ------------------------------------------------------
@@ -33,14 +33,3 @@ all_businesses$chatgpt_tags_clean <- gsub('\\|\\|+', '|', all_businesses$chatgpt
 
 # Remove first |
 all_businesses$chatgpt_tags_clean <- gsub('^\\|\\s', '', all_businesses$chatgpt_tags_clean)
-
-
-# Deal with rows with empty strings
-# Some rows don't have any tags. Replace empty strings with the string NA. May have to deal with this later
-all_businesses$chatgpt_tags_clean <- gsub('^$', NA, all_businesses$chatgpt_tags_clean)
-all_businesses$chatgpt_tags_clean <- gsub('NA', NA, all_businesses$chatgpt_tags_clean)
-
-
-# Export ------------------------------------------------------
-
-save(all_businesses, file = here("data", "all_businesses_summaries_clean_tags.RData"))
