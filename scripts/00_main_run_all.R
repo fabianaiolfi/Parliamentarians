@@ -46,4 +46,5 @@ rm(list = setdiff(ls(), c("all_businesses", "version")))
 # 02_BERTopic.ipynb
 source(here("scripts", "07_BERTopic", version, "03_post_process_BERT.R"))
 # source(here("scripts", "07_BERTopic", version, "04_topic_name_generation.R"))
-source(here("scripts", "07_BERTopic", version, "05_evaluation.R"))
+#source(here("scripts", "07_BERTopic", version, "05_evaluation.R"))
+source(here("scripts", "07_BERTopic", version, "06_topic_consolidation.R"))
