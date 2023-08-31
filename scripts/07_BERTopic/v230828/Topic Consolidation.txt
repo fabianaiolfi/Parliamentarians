@@ -1,0 +1,103 @@
+## Topic Consolidation
+
+**Identical Topics**
+100 Bildungs- und Innovationsförderung
+129 Bildungs- und Forschungsförderung
+
+13 Covid-19-Gesetzgebung
+116 COVID-19-Gesetzgebung
+
+19 Doppelbesteuerungsabkommen
+21 Doppelbesteuerungsabkommen
+23 Doppelbesteuerungsabkommen
+34 Doppelbesteuerungsabkommen
+58 Doppelbesteuerungsabkommen
+68 Doppelbesteuerungsabkommen
+69 Doppelbesteuerungsabkommen
+76 Doppelbesteuerungsabkommen
+143 Doppelbesteuerungsabkommen
+151 Doppelbesteuerungsabkommen
+161 Doppelbesteuerungsabkommen
+
+46 Internationale Kriminalitätsbekämpfung
+153 Internationale Kriminalitätsbekämpfung
+
+81 Konkursrecht
+114 Konkursrecht
+
+117 Krankenversicherungsgesetzgebung
+135 Krankenversicherungsgesetzgebung
+
+92 Militärreformen
+113 Militärreformen
+
+67 Schweizer Gesetzgebung
+77 Schweizer Gesetzgebung
+105 Schweizer Gesetzgebung
+148 Schweizer Gesetzgebung
+
+49 Schweizer Rechtssystem
+85 Schweizer Rechtssystem
+
+24 Sozialversicherungsreformen
+82 Sozialversicherungsreformen
+
+16 Steuerrecht
+138 Steuerrecht
+
+136 Verkehrsgesetze
+162 Verkehrsgesetze
+
+106 Versicherungsrecht
+121 Versicherungsrecht
+
+**Double Check**
+152 Energiegesetzgebung
+14 Energiepolitik
+45 Energiepolitik Schweiz
+
+86 Finanzgesetze
+73 Finanzgesetzgebung
+
+84 Familien- und Partnerschaftsschutzgesetze
+1 Familienpolitik
+35 Gesetze zur Familienform und Partnerschaft
+
+26 Finanz- und Verwaltungsgesetze
+88 Finanz- und Währungspolitik der Schweiz
+86 Finanzgesetze
+73 Finanzgesetzgebung
+90 Finanzrechtliche Dokumente
+
+30 Gesetzesänderungen
+53 Gesetzesänderungen
+65 Gesetzesänderungen
+103 Gesetzesänderungen
+126 Gesetzesänderungen
+146 Gesetzesänderungen
+155 Gesetzesänderungen
+
+142 Medien und Kommunikation
+18 Medienpolitik
+
+139 Migration und Asylrecht
+141 Migration und Ausländerrecht
+7 Migrationspolitik der Schweiz
+
+108 Parlamentarische Finanzen
+74 Parlamentarische Gesetzesinitiativen
+43 Parlamentarische Gesetzgebung
+
+60 Schweizer Finanzgesetze
+156 Schweizer Finanzgesetzgebung
+134 Schweizer Finanzpolitik
+
+**Further Searching / Mergings**
+Gentechnik Genetik
+Gesundheit (sgesetzgebung)
+Landwirtschaft
+Renten
+EU
+Bildung
+Steuer
+Verkehr
