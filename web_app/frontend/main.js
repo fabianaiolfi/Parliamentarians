@@ -30,8 +30,8 @@ function displayBusinessItems(data) {
             const cards = items.map(item => {
                 const card = document.createElement('div');
                 card.className = 'business-item-card';
-                // card.textContent = item.chatgpt_summary;
-                card.textContent = item.chatgpt_vote_yes;
+                // card.textContent = item.chatgpt_vote_yes;
+                card.textContent = item.vote_statement;
                 return card;
             });
 
