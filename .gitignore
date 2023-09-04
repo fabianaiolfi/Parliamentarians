@@ -44,3 +44,4 @@ vec_files/
 *.json
 *.safetensors
 *.webloc
+*.png
