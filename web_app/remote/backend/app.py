@@ -14,8 +14,8 @@ def load_json_data(file_path):
         return json.load(f)
 
 # Load the JSON data into Python dictionaries
-all_businesses_web = load_json_data('../../data/web/all_businesses_web.json')
-voting_all_periods = load_json_data('../../data/web/voting_all_periods.json')
+all_businesses_web = load_json_data('../data/all_businesses_web.json')
+voting_all_periods = load_json_data('../data/voting_all_periods.json')
 
 # Assume the data is loaded as 'voting_all_periods'
 
