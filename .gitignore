@@ -45,3 +45,5 @@ vec_files/
 *.safetensors
 *.webloc
 *.png
+*/SSH_Keys
+*run.txt
