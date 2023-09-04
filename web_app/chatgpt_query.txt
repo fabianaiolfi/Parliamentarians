@@ -1,0 +1,24 @@
+I need you to help me build a web app. I know very little about web app development, so you’re going to have to explain it in a very basic and step by step manner.
+
+I have attached a wireframe of the web app’s interface
+
+I have two R dataframes with these columns:
+
+all_businesses_web: Contains all items of business
+- BusinessShortNumber
+- chatgpt_summary
+- chatgpt_vote_yes
+- chatgpt_topic
+
+voting_all_periods: Contains voting record of every person
+- PersonNumber
+- FirstName
+- LastName
+- DecisionText
+- BusinessShortNumber
+
+I can convert the dataframes into whatever file or database format you deem sensible.
+
+There is a dropdown at the top. The user can select a person from the dropdown. The content of the dropdown is defined by the unique values in `voting_all_periods$PersonNumber` and displays the corresponding `FirstName` and `LastName`.
+
+Picking a person in the dropdown loads all the `BusinessShortNumber` associated with that person. This is then combined with the data from `all_businesses_web`. Every item of business associated with the person in the dropdown is displayed and grouped by `chatgpt_topic`. Within each `chatgpt_topic`, items are grouped by `DecisionText`.
