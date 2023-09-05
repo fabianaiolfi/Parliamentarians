@@ -36,3 +36,33 @@
     transform: rotate(360deg);
   }
 }
+
+/* Copied from previous styles.css */
+/* Style for the person selector */
+#person-selector {
+  margin: 20px;
+  font-size: 18px;
+}
+
+/* Style for the business items container */
+#business-items-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 20px;
+}
+
+/* Style for each business item card */
+.business-item-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px;
+  width: calc(33.333% - 32px);
+  box-sizing: border-box;
+}
+
+/* Style for topic and decision text headings */
+.topic-heading, .decision-heading {
+  font-weight: bold;
+  margin-top: 20px;
+}
