@@ -8,16 +8,6 @@ const selectedName = ref(names.value[0])
 
 import business_items from './businessItems.json'
 
-// const names = ref(['Anna', 'Beda', 'Carl'])
-// const selectedName = ref('Anna')
-
-// const names_sbn = {
-//   Anna: ['00.405', '00.456', '01.044'],
-//   Beda: ['00.459', '00.405', '00.461'],
-//   Carl: ['00.456', '00.461', '00.456', '00.459', '01.044']
-// }
-
-
 const selectedBusinessItems = computed(() => {
   const sbns = names_sbn[selectedName.value]
   return sbns.map(sbn => business_items[sbn]).flat()
@@ -47,7 +37,7 @@ const selectedBusinessItems = computed(() => {
       <div v-for="item in selectedBusinessItems" :key="item.BusinessShortNumber">
         <a-card :title="item.Statement" :bordered="false" style="width: 100%">
           <p><b>{{ item.Title }}</b><br>{{ item.Summary }}</p>
-          <small>{{ item.BusinessShortNumber }}</small>
+          <small>{{ item.BusinessShortNumber_card }}</small>
         </a-card>
       </div>
     </a-space>
