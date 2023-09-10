@@ -48,3 +48,10 @@ source(here("scripts", "07_BERTopic", version, "03_post_process_BERT.R"))
 # source(here("scripts", "07_BERTopic", version, "04_topic_name_generation.R"))
 #source(here("scripts", "07_BERTopic", version, "05_evaluation.R"))
 source(here("scripts", "07_BERTopic", version, "06_topic_consolidation.R"))
+
+
+# 10 Web Data ------------------------------------------
+
+source(here("scripts", "10_web_data", "01_load_data.R"))
+source(here("scripts", "10_web_data", "02_preprocessing.R"))
+source(here("scripts", "10_web_data", "03_export.R"))
