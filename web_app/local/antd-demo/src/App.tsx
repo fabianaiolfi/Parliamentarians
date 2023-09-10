@@ -1,6 +1,3 @@
-import { Button } from 'antd';
-import React from 'react';
-import React, { useState } from 'react';
 import React, { useState, useEffect } from 'react';
 import { Card } from 'antd';
 
@@ -12,60 +9,85 @@ import { Card } from 'antd';
 // );
 
 async function fetchPersons() {
-  return [
-      { PersonNumber: '1', FirstName: 'John', LastName: 'Doe' },
-      { PersonNumber: '2', FirstName: 'Jane', LastName: 'Doe' },
-      // Add more persons here
-  ];
+  try {
+      // const response = await fetch('/api/persons');
+      const response = await fetch('http://localhost:5000/api/persons');
+      if (!response.ok) {
+          throw new Error(`HTTP error ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error('Failed to fetch persons:', error);
+      return [];
+  }
 }
 
-async function fetchBusinessItems(personNumber) {
-  // Replace this with actual fetching logic later
-  return [
-      { BusinessShortNumber: '1', Summary: 'Business 1' },
-      { BusinessShortNumber: '2', Summary: 'Business 2' },
-      // Add more business items here
-  ];
-}
 
+async function fetchBusinessItems(personNumber: number | null) {
+  // const response = await fetch(`/api/business_items/${personNumber}`);
+  const response = await fetch(`http://localhost:5000/api/business_items/${personNumber}`);
+  const data = await response.json();
+  return data;
+}
 
 
 function App() {
+
+  interface BusinessItem {
+    chatgpt_topic: string;
+    DecisionText: string;
+    BusinessShortNumber: string;
+    Summary: string;
+    // ... other properties
+  }
+
+  // Define an interface for the person object
+interface Person {
+  PersonNumber: number;  
+  FirstName: string;
+  LastName: string;
+  // ... other fields
+}
   
-  const [persons, setPersons] = useState([]);  // For storing the list of persons
-  const [selectedPerson, setSelectedPerson] = useState(null);  // For storing the selected person
-  const [businessItems, setBusinessItems] = useState([]);  // For storing business items
+  const [persons, setPersons] = useState<Person[]>([]);  // For storing the list of persons
+  const [selectedPerson, setSelectedPerson] = useState<string | null>(null);  // For storing the selected person
+  //const [businessItems, setBusinessItems] = useState([]);  // For storing business items
+  const [businessItems, setBusinessItems] = useState<BusinessItem[]>([]);
   const uniqueTopics = [...new Set(businessItems.map(item => item.chatgpt_topic))];
+  
 
-  const groupedBusinessItems = uniqueTopics.map(topic => {
+
+  const groupedBusinessItems = uniqueTopics.map((topic) => {
     // Filter items for this topic
-    const itemsInTopic = businessItems.filter(item => item.chatgpt_topic === topic);
-
+    const itemsInTopic = businessItems.filter((item) => item.chatgpt_topic === topic);
+  
     // Find unique decisions within this topic
-    const uniqueDecisions = [...new Set(itemsInTopic.map(item => item.DecisionText))];
-
+    const uniqueDecisions = [...new Set(itemsInTopic.map((item) => item.DecisionText))];
+  
     return (
-        <div key={topic}>
-            <h2>{topic}</h2>
-            {uniqueDecisions.map(decision => {
-                // Filter items for this decision within this topic
-                const itemsInDecision = itemsInTopic.filter(item => item.DecisionText === decision);
-
-                return (
-                    <div key={decision}>
-                        <h3>{decision}</h3>
-                        {itemsInDecision.map(item => (
-                            <div key={item.BusinessShortNumber}>
-                                {/* Your item display logic here */}
-                                {item.Summary}
-                            </div>
-                        ))}
-                    </div>
-                );
-            })}
-        </div>
+      <div key={topic}>
+        <h2>{topic}</h2>
+        {uniqueDecisions.map((decision) => {
+          // Filter items for this decision within the topic
+          const itemsInDecision = itemsInTopic.filter((item) => item.DecisionText === decision);
+  
+          return (
+            <div key={decision}>
+              <h3>{decision}</h3>
+              {itemsInDecision.map((item) => (
+                <Card key={item.BusinessShortNumber} title={item.BusinessShortNumber}>
+                  {/* Your item display logic here */}
+                  {item.Summary}
+                </Card>
+              ))}
+            </div>
+          );
+        })}
+      </div>
     );
-});
+  });
+  
 
 
   useEffect(() => {
@@ -79,7 +101,7 @@ function App() {
 useEffect(() => {
   if (selectedPerson !== null) {
       async function fetchData() {
-          const fetchedItems = await fetchBusinessItems(selectedPerson);
+          const fetchedItems = await fetchBusinessItems(Number(selectedPerson));
           setBusinessItems(fetchedItems);
       }
       fetchData();
@@ -125,12 +147,12 @@ useEffect(() => {
         {/* Business items will be populated dynamically */}
     {/* </div> */}
 
-    {itemsInDecision.map(item => (
-    <Card key={item.BusinessShortNumber} title={item.BusinessShortNumber}>
+    {/* {itemsInDecision.map(item => ( */}
+    {/* <Card key={item.BusinessShortNumber} title={item.BusinessShortNumber}> */}
         {/* Your item display logic here */}
-        {item.Summary}
-    </Card>
-))}
+        {/* {item.Summary} */}
+    {/* </Card> */}
+{/* ))} */}
 
     
     </div>
