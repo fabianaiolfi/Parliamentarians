@@ -34,10 +34,10 @@ voting_all_periods_vue <- voting_all_periods_edit %>%
 
 # First, rename and select the relevant columns to match the desired output
 all_businesses_vue <- all_businesses_web %>% 
-  rename(#Title = chatgpt_topic, 
-         Summary = chatgpt_summary, 
+  rename(Summary = chatgpt_summary, 
          Statement = vote_statement) %>% 
-  select(BusinessShortNumber, Summary, Statement)
+  mutate(BusinessShortNumber_card = BusinessShortNumber) %>% 
+  select(BusinessShortNumber, BusinessShortNumber_card, Title, Summary, Statement)
 
 # Next, group by BusinessShortNumber and create a list column containing the relevant rows
 all_businesses_vue <- all_businesses_vue %>%
