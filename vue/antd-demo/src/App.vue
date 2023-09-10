@@ -27,7 +27,7 @@
       </div>
     </a-layout-content>
     <a-layout-footer style="text-align: center">
-      Footer
+
     </a-layout-footer>
   </a-layout>
 </template>
