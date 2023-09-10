@@ -2,16 +2,21 @@
 
 import { ref, computed } from 'vue'
 
-const names = ref(['Anna', 'Beda', 'Carl'])
-const selectedName = ref('Anna')
+import names_sbn from './namesSBN.json'
+const names = ref(Object.keys(names_sbn));
+const selectedName = ref(names.value[0])
 
 import business_items from './businessItems.json'
 
-const names_sbn = {
-  Anna: ['00.405', '00.456', '01.044'],
-  Beda: ['00.459', '00.405', '00.461'],
-  Carl: ['00.456', '00.461', '00.456', '00.459', '01.044']
-}
+// const names = ref(['Anna', 'Beda', 'Carl'])
+// const selectedName = ref('Anna')
+
+// const names_sbn = {
+//   Anna: ['00.405', '00.456', '01.044'],
+//   Beda: ['00.459', '00.405', '00.461'],
+//   Carl: ['00.456', '00.461', '00.456', '00.459', '01.044']
+// }
+
 
 const selectedBusinessItems = computed(() => {
   const sbns = names_sbn[selectedName.value]
@@ -27,7 +32,7 @@ const selectedBusinessItems = computed(() => {
   <div style="width: 100%;">  <!-- Adjust the width to your liking -->
     <!-- Dropdown -->
     <div style="text-align: left; margin-bottom: 20px;">
-      <a-select v-model:value="selectedName" style="width: 200px;">
+      <a-select v-model:value="selectedName" style="width: 400px;">
         <a-select-option
           v-for="name in names"
           :key="name"
