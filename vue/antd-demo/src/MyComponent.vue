@@ -5,13 +5,6 @@ import { ref, computed } from 'vue'
 const names = ref(['Anna', 'Beda', 'Carl'])
 const selectedName = ref('Anna')
 
-// const business_items = {
-//   '01': [{'Bsn': 'Nr. 01', 'Title': 'More taxes' } ],
-//   '02': [{'Bsn': 'Nr. 02', 'Title': 'Less immigration' } ], 
-//   '03': [{'Bsn': 'Nr. 03', 'Title': 'Public Transport' } ], 
-//   '04': [{'Bsn': 'Nr. 04', 'Title': 'Pension Fund' } ] 
-// }
-
 import business_items from './businessItems.json'
 
 const names_sbn = {
@@ -29,9 +22,9 @@ const selectedBusinessItems = computed(() => {
 
 <template>
 
-<div style="background: #F5F5F5; padding: 0px; display: flex; flex-direction: column; align-items: center;">
+<div style="background: #F5F5F5; padding: 0px; display: flex; flex-direction: column;">
   <!-- Wrapper for alignment -->
-  <div style="width: 80%;">  <!-- Adjust the width to your liking -->
+  <div style="width: 100%;">  <!-- Adjust the width to your liking -->
     <!-- Dropdown -->
     <div style="text-align: left; margin-bottom: 20px;">
       <a-select v-model:value="selectedName" style="width: 200px;">
@@ -45,11 +38,11 @@ const selectedBusinessItems = computed(() => {
     </div>
 
     <!-- Cards -->
-    <a-space direction="vertical">
+    <a-space direction="vertical" style="width: 100%;">
       <div v-for="item in selectedBusinessItems" :key="item.BusinessShortNumber">
         <a-card :title="item.Statement" :bordered="false" style="width: 100%">
           <p><b>{{ item.Title }}</b><br>{{ item.Summary }}</p>
-          <small>Business Short Number: {{ item.BusinessShortNumber }}</small>
+          <small>{{ item.BusinessShortNumber }}</small>
         </a-card>
       </div>
     </a-space>
