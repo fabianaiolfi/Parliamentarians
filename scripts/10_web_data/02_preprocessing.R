@@ -20,7 +20,7 @@ voting_all_periods_edit <- voting_all_periods %>%
                                   DecisionText == "Die Präsidentin/der Präsident stimmt nicht" ~ "Nahm nicht teil an "))
 
 
-# Process DF for vue.js ------------------------------
+# Process DF for vue.js JSON ------------------------------
 
 voting_all_periods_vue <- voting_all_periods_edit %>% 
   select(-DecisionText) %>% 
@@ -29,6 +29,7 @@ voting_all_periods_vue <- voting_all_periods_edit %>%
   mutate(full_name = paste0(FirstName, " ", LastName, " (", CantonName, ")")) %>% 
   ungroup() %>% 
   select(full_name, BusinessShortNumbers) %>% 
+  mutate(full_name = tolower(full_name)) %>% 
   rename(key = full_name,
          value = BusinessShortNumbers)
 
@@ -43,3 +44,13 @@ all_businesses_vue <- all_businesses_web %>%
 all_businesses_vue <- all_businesses_vue %>%
   group_by(BusinessShortNumber) %>%
   summarise(data = list(as.data.frame(cur_data())))
+
+# Create name list for Select Dropdown with Search Field
+names_search_select <- voting_all_periods_edit %>% 
+  distinct(PersonNumber, .keep_all = T) %>% 
+  select(FirstName, LastName, CantonName) %>% 
+  mutate(full_name_label = paste0(FirstName, " ", LastName, " (", CantonName, ")")) %>% 
+  mutate(full_name_value = tolower(full_name_label)) %>% 
+  select(full_name_value, full_name_label) %>% 
+  rename(value = full_name_value,
+         label = full_name_label)

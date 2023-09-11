@@ -3,35 +3,28 @@
 import { ref, computed } from 'vue'
 
 import names_sbn from './namesSBN.json'
-const names = ref(Object.keys(names_sbn));
+const names = ref(Object.keys(names_sbn))
 const selectedName = ref(names.value[0])
 
 import business_items from './businessItems.json'
 
 const selectedBusinessItems = computed(() => {
   const sbns = names_sbn[selectedName.value]
+  // console.log("sbns:", sbns);
+  // console.log("selectedName.value:", selectedName.value);
+  // console.log("names_sbn:", names_sbn);
+  // return sbns ? sbns.map(sbn => business_items[sbn]).flat() : [];
   return sbns.map(sbn => business_items[sbn]).flat()
 })
 
 // New Dropdown
+import NamesSearchSelect from './names_search_select.json'
+const options = ref(NamesSearchSelect)
+const value = selectedName; // Select first name on load
 
-const options = ref([
-  {
-    value: 'jack',
-    label: 'Jack',
-  },
-  {
-    value: 'lucy',
-    label: 'Lucy',
-  },
-  {
-    value: 'tom',
-    label: 'Tom',
-  },
-]);
-const handleChange = value => {
-  console.log(`selected ${value}`);
-};
+function handleChange(newValue) {
+  selectedName.value = newValue;  // Update selectedName whenever the dropdown changes
+}
 const handleBlur = () => {
   console.log('blur');
 };
@@ -41,8 +34,6 @@ const handleFocus = () => {
 const filterOption = (input, option) => {
   return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 };
-const value = ref(undefined);
-
 </script>
 
 <template>
@@ -56,7 +47,7 @@ const value = ref(undefined);
         v-model:value="value"
         show-search
         placeholder="Select a person"
-        style="width: 200px"
+        style="width: 400px"
         :options="options"
         :filter-option="filterOption"
         @focus="handleFocus"
@@ -66,7 +57,7 @@ const value = ref(undefined);
     </div>
     
     <!-- Old Dropdown -->
-    <div style="text-align: left; margin-bottom: 20px;">
+    <!-- <div style="text-align: left; margin-bottom: 20px;">
       <a-select v-model:value="selectedName" style="width: 400px;">
         <a-select-option
           v-for="name in names"
@@ -75,7 +66,7 @@ const value = ref(undefined);
           {{ name }}
         </a-select-option>
       </a-select>
-    </div>
+    </div> -->
 
     <!-- Cards -->
     <a-space direction="vertical" style="width: 100%;">
