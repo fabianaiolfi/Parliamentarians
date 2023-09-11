@@ -13,6 +13,15 @@ const selectedVoteStatement = computed(() => {
   return voteStatement[selectedName.value] || []
 })
 
+// Function to assign a priority based on the starting text of vote_statement
+function assignPriority(statement) {
+  if (statement.startsWith("Stimmte für")) return 1;
+  if (statement.startsWith("Stimmte gegen")) return 2;
+  if (statement.startsWith("Enthielt sich")) return 3;
+  if (statement.startsWith("Keine Teilnahme")) return 4;
+  return 5; // Default priority for unrecognized statements
+}
+
 // Computed property to group cards by topic
 const groupedByTopic = computed(() => {
   const grouped = {};
@@ -24,6 +33,11 @@ const groupedByTopic = computed(() => {
     }
     grouped[topic].push(item);
   });
+  // Sort the cards within each group based on priority
+for (const topic of Object.keys(grouped)) {
+  grouped[topic].sort((a, b) => assignPriority(a.vote_statement) - assignPriority(b.vote_statement));
+}
+
   return grouped;
 });
 
