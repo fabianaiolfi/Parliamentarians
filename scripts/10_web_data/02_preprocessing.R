@@ -13,11 +13,11 @@ all_businesses_web <- all_businesses_web %>%
 voting_all_periods_edit <- voting_all_periods %>% 
   mutate(DecisionText = case_when(DecisionText == "Ja" ~ "Stimmte für ",
                                   DecisionText == "Nein" ~ "Stimmte gegen ",
-                                  DecisionText == "Hat nicht teilgenommen" ~ "Nahm nicht teil an ",
-                                  DecisionText == "Enthaltung" ~ "Enthielt sich zu ",
-                                  DecisionText == "Entschuldigt gemäss Art. 57 Abs. 4" ~ "Nahm nicht teil an ",
-                                  DecisionText == "Demissioniert" ~ "Nahm nicht teil an ",
-                                  DecisionText == "Die Präsidentin/der Präsident stimmt nicht" ~ "Nahm nicht teil an "))
+                                  DecisionText == "Hat nicht teilgenommen" ~ "Keine Teilnahme in Bezug auf ",
+                                  DecisionText == "Enthaltung" ~ "Enthielt sich in Bezug auf ",
+                                  DecisionText == "Entschuldigt gemäss Art. 57 Abs. 4" ~ "Keine Teilnahme in Bezug auf ",
+                                  DecisionText == "Demissioniert" ~ "Keine Teilnahme in Bezug auf ",
+                                  DecisionText == "Die Präsidentin/der Präsident stimmt nicht" ~ "Keine Teilnahme in Bezug auf "))
 
 
 # Process DF for vue.js JSON ------------------------------
@@ -54,3 +54,42 @@ names_search_select <- voting_all_periods_edit %>%
   select(full_name_value, full_name_label) %>% 
   rename(value = full_name_value,
          label = full_name_label)
+
+
+# Create JSON for vote statement
+vote_statement_vue <- voting_all_periods_edit %>% 
+  select(-PersonNumber) %>%
+  mutate(full_name = paste0(FirstName, " ", LastName, " (", CantonName, ")")) %>% 
+  mutate(full_name = tolower(full_name)) %>%
+  select(full_name, DecisionText, BusinessShortNumber)
+
+vote_statement_vue <- vote_statement_vue %>% 
+  left_join(select(all_businesses_web, BusinessShortNumber, vote_statement), by = "BusinessShortNumber") %>% 
+  mutate(vote_statement = paste0(DecisionText, vote_statement)) %>% 
+  select(-DecisionText)
+
+
+
+#cat(glimpse(json_data))
+
+# first try
+
+# # Step 1: Group the dataframe by 'full_name'
+# grouped_df <- vote_statement_vue %>% 
+#   group_by(full_name)
+# 
+# # Step 2 & 3: Create a list that holds named lists for each 'full_name'
+# final_list <- list()
+# grouped_df %>% 
+#   group_walk(~{
+#     name <- unique(.x$full_name)
+#     inner_list <- setNames(.x$vote_statement, .x$BusinessShortNumber)
+#     final_list[[name]] <- inner_list
+#   })
+# 
+# # Convert the named list to JSON
+# json_output <- toJSON(final_list, auto_unbox = TRUE, pretty = TRUE)
+# 
+# # Optionally, write to a file
+# write(json_output, here("vue", "antd-demo", "src", "output.json"))
+# 
