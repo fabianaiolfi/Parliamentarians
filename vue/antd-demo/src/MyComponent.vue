@@ -2,28 +2,25 @@
 
 import { ref, computed } from 'vue'
 
-// Importing the old JSON files
+// Importing the JSON files
 import names_sbn from './namesSBN.json'
 const names = ref(Object.keys(names_sbn))
 const selectedName = ref(names.value[0])
 import business_items from './businessItems.json'
+import voteStatement from './vote_statement.json'
 
-
-// Importing the new JSON file
-import newBusinessItems from './vote_statement.json'
-
-// Computed property for selectedBusinessItems based on the old JSON
+// Computed property for selectedBusinessItems based on namesSBN.json
 const selectedBusinessItems = computed(() => {
   const sbns = names_sbn[selectedName.value]
   return sbns.map(sbn => business_items[sbn]).flat()
 })
 
-// Computed property for selectedBusinessItems based on the new JSON
-const selectedBusinessItemsNew = computed(() => {
-  return newBusinessItems[selectedName.value] || []
+// Computed property for selectedBusinessItems based on vote_statement.json
+const selectedVoteStatement = computed(() => {
+  return voteStatement[selectedName.value] || []
 })
 
-// New Dropdown
+// Select Search Dropdown
 import NamesSearchSelect from './names_search_select.json'
 const options = ref(NamesSearchSelect)
 const value = selectedName; // Select first name on load
@@ -61,28 +58,17 @@ const filterOption = (input, option) => {
         @change="handleChange"
       ></a-select>
     </div>
-    
-  <!-- Cards based on old JSON -->
-  <!-- <a-space direction="vertical" style="width: 100%;">
-      <div v-for="item in selectedBusinessItems" :key="item.BusinessShortNumber">
-        <a-card :title="item.Statement" :bordered="false" style="width: 100%">
-          <p><b>{{ item.Title }}</b><br>{{ item.Summary }}</p>
-          <small>BSN: {{ item.BusinessShortNumber_card }}</small>
+
+    <!-- Cards -->
+    <a-space direction="vertical" style="width: 100%;">
+      <div v-for="item in selectedVoteStatement" :key="item.BusinessShortNumber">
+        <a-card :title="item.vote_statement" :bordered="false" style="width: 100%">
+          <p><b>{{ item.Title || 'Title not available' }}</b><br>{{ item.chatgpt_summary || 'Summary not available' }}</p>
+          <small>BSN: {{ item.BusinessShortNumber }}</small>
         </a-card>
       </div>
-    </a-space> -->
-  
-
-   <!-- Cards based on new JSON -->
-   <a-space direction="vertical" style="width: 100%;">
-    <div v-for="item in selectedBusinessItemsNew" :key="item.BusinessShortNumber">
-      <a-card :title="item.vote_statement" :bordered="false" style="width: 100%">
-        <p><b>Title</b><br>Summary</p>
-        <small>BSN: {{ item.BusinessShortNumber }}</small>
-      </a-card>
-    </div>
-  </a-space>
-</div>
+    </a-space>
+  </div>
 </div>
 
 </template>

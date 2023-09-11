@@ -64,7 +64,7 @@ vote_statement_vue <- voting_all_periods_edit %>%
   select(full_name, DecisionText, BusinessShortNumber)
 
 vote_statement_vue <- vote_statement_vue %>% 
-  left_join(select(all_businesses_web, BusinessShortNumber, vote_statement), by = "BusinessShortNumber") %>% 
+  left_join(select(all_businesses_web, BusinessShortNumber, vote_statement, Title, chatgpt_summary), by = "BusinessShortNumber") %>% 
   mutate(vote_statement = paste0(DecisionText, vote_statement)) %>% 
   select(-DecisionText)
 
