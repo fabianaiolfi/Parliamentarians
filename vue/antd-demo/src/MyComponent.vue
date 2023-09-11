@@ -13,6 +13,36 @@ const selectedBusinessItems = computed(() => {
   return sbns.map(sbn => business_items[sbn]).flat()
 })
 
+// New Dropdown
+
+const options = ref([
+  {
+    value: 'jack',
+    label: 'Jack',
+  },
+  {
+    value: 'lucy',
+    label: 'Lucy',
+  },
+  {
+    value: 'tom',
+    label: 'Tom',
+  },
+]);
+const handleChange = value => {
+  console.log(`selected ${value}`);
+};
+const handleBlur = () => {
+  console.log('blur');
+};
+const handleFocus = () => {
+  console.log('focus');
+};
+const filterOption = (input, option) => {
+  return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+};
+const value = ref(undefined);
+
 </script>
 
 <template>
@@ -20,7 +50,22 @@ const selectedBusinessItems = computed(() => {
 <div style="background: #F5F5F5; padding: 0px; display: flex; flex-direction: column;">
   <!-- Wrapper for alignment -->
   <div style="width: 100%;">  <!-- Adjust the width to your liking -->
-    <!-- Dropdown -->
+    <!-- New Dropdown -->
+    <div style="text-align: left; margin-bottom: 20px;">
+      <a-select
+        v-model:value="value"
+        show-search
+        placeholder="Select a person"
+        style="width: 200px"
+        :options="options"
+        :filter-option="filterOption"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        @change="handleChange"
+      ></a-select>
+    </div>
+    
+    <!-- Old Dropdown -->
     <div style="text-align: left; margin-bottom: 20px;">
       <a-select v-model:value="selectedName" style="width: 400px;">
         <a-select-option
@@ -45,4 +90,3 @@ const selectedBusinessItems = computed(() => {
 </div>
 
 </template>
-
