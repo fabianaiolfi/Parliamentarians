@@ -44,6 +44,16 @@ const handleFocus = () => {
 const filterOption = (input, option) => {
   return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 };
+
+// Make parliamentarian name nice in topic group title above cards
+function formatName(name) {
+  // Remove brackets and words within brackets
+  const cleanedName = name.replace(/\(.*?\)/g, '').trim();
+  // Upper case the first letter of every word
+  return cleanedName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
+const formattedSelectedName = computed(() => formatName(selectedName.value));
+
 </script>
 
 <template>
@@ -69,7 +79,7 @@ const filterOption = (input, option) => {
     <!-- Grouped Cards based on new JSON -->
     <div v-for="(group, topic) in groupedByTopic" :key="topic">
       <div style="margin-bottom: 20px; margin-top: 40px;">
-        <h3>Wie {{ selectedName }} über <b>{{ topic }}</b> abgestimmt hat</h3>
+        <h3>Wie {{ formattedSelectedName }} über <b>{{ topic }}</b> abgestimmt hat</h3>
       </div>
       <a-space direction="vertical" style="width: 100%;">
         <div v-for="item in group" :key="item.BusinessShortNumber" >
