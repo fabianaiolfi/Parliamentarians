@@ -97,7 +97,14 @@ function getIconForStatement(statement) {
   return null;  // Default, no icon
 }
 
+// collapse element stuff
+const activeKey = ref(null);
+function setActiveKey(key) {
+  activeKey.value = activeKey.value === key ? null : key;
+}
+
 </script>
+
 
 <template>
 
@@ -118,28 +125,32 @@ function getIconForStatement(statement) {
         @change="handleChange"
       ></a-select>
     </div>
-
-    <!-- Grouped Cards based on new JSON -->
+    
+    <!-- Grouped Collapse -->
     <div v-for="(group, topic) in groupedByTopic" :key="topic">
-      <div style="margin-bottom: 20px; margin-top: 40px;">
-        <h3>Wie {{ formattedSelectedName }} über <b>{{ topic }}</b> abgestimmt hat</h3>
-      </div>
-      <a-space direction="vertical" style="width: 100%;">
-        <div v-for="item in group" :key="item.BusinessShortNumber" >
-          <a-card :bordered="false" style="width: 100%" >
+    <div style="margin-bottom: 20px; margin-top: 40px;">
+      <h3>Wie {{ formattedSelectedName }} über <b>{{ topic }}</b> abgestimmt hat</h3>
+    </div>
+    <a-space direction="vertical" style="width: 100%;">
+      <div v-for="item in group" :key="item.BusinessShortNumber">
+        <a-collapse :active-key="activeKey === item.BusinessShortNumber ? [item.BusinessShortNumber] : []" @change="() => setActiveKey(item.BusinessShortNumber)">
+          <a-collapse-panel :key="item.BusinessShortNumber">
             <!-- Custom title with dynamic icon -->
-              <template #title>
-                <component
-                  :is="getIconForStatement(item.vote_statement)"
-                  :two-tone-color="iconColors[getStatementStart(item.vote_statement)]"
-                /> {{ item.vote_statement }}
-              </template>
+            <template #header>
+              <component
+                :is="getIconForStatement(item.vote_statement)"
+                :two-tone-color="iconColors[getStatementStart(item.vote_statement)]"
+              /> {{ item.vote_statement }}
+            </template>
             <p><b>{{ item.Title || 'Title not available' }}</b><br>{{ item.chatgpt_summary || 'Summary not available' }}</p>
             <small>BSN: {{ item.BusinessShortNumber }}</small>
-          </a-card>
-        </div>
-      </a-space>
-    </div>
+          </a-collapse-panel>
+        </a-collapse>
+      </div>
+    </a-space>
+  </div>
+
+
   </div>
 </div>
 
