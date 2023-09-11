@@ -1,7 +1,7 @@
 <script setup>
 
 import { ref, computed } from 'vue'
-import { CheckCircleTwoTone } from '@ant-design/icons-vue';  // Import the icon
+import { CheckCircleTwoTone, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';  // Import the icon
 
 // Importing the JSON files
 import names_sbn from './namesSBN.json'
@@ -69,6 +69,34 @@ function formatName(name) {
 }
 const formattedSelectedName = computed(() => formatName(selectedName.value));
 
+// get the appropriate icon and its color based on the vote_statement
+const icons = {
+  CheckCircleTwoTone,
+  CloseCircleTwoTone,
+  QuestionCircleTwoTone,
+  FrownTwoTone
+};
+const iconColors = {
+  'Stimmte für': '#52c41a',
+  'Stimmte gegen': '#eb2f96',
+  'Enthielt sich': '#b4b4b4',
+  'Keine Teilnahme': '#b4b4b4'
+};
+function getStatementStart(statement) {
+  if (statement.startsWith("Stimmte für")) return 'Stimmte für';
+  if (statement.startsWith("Stimmte gegen")) return 'Stimmte gegen';
+  if (statement.startsWith("Enthielt sich")) return 'Enthielt sich';
+  if (statement.startsWith("Keine Teilnahme")) return 'Keine Teilnahme';
+  return null;
+}
+function getIconForStatement(statement) {
+  if (statement.startsWith("Stimmte für")) return icons.CheckCircleTwoTone;
+  if (statement.startsWith("Stimmte gegen")) return icons.CloseCircleTwoTone;
+  if (statement.startsWith("Enthielt sich")) return icons.QuestionCircleTwoTone;
+  if (statement.startsWith("Keine Teilnahme")) return icons.FrownTwoTone;
+  return null;  // Default, no icon
+}
+
 </script>
 
 <template>
@@ -99,9 +127,12 @@ const formattedSelectedName = computed(() => formatName(selectedName.value));
       <a-space direction="vertical" style="width: 100%;">
         <div v-for="item in group" :key="item.BusinessShortNumber" >
           <a-card :bordered="false" style="width: 100%" >
-            <!-- Custom title with icon -->
+            <!-- Custom title with dynamic icon -->
               <template #title>
-                <CheckCircleTwoTone two-tone-color="#52c41a"/> {{ item.vote_statement }}
+                <component
+                  :is="getIconForStatement(item.vote_statement)"
+                  :two-tone-color="iconColors[getStatementStart(item.vote_statement)]"
+                /> {{ item.vote_statement }}
               </template>
             <p><b>{{ item.Title || 'Title not available' }}</b><br>{{ item.chatgpt_summary || 'Summary not available' }}</p>
             <small>BSN: {{ item.BusinessShortNumber }}</small>
