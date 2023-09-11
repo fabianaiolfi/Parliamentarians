@@ -1,6 +1,7 @@
 <script setup>
 
 import { ref, computed } from 'vue'
+import { CheckCircleTwoTone } from '@ant-design/icons-vue';  // Import the icon
 
 // Importing the JSON files
 import names_sbn from './namesSBN.json'
@@ -97,7 +98,11 @@ const formattedSelectedName = computed(() => formatName(selectedName.value));
       </div>
       <a-space direction="vertical" style="width: 100%;">
         <div v-for="item in group" :key="item.BusinessShortNumber" >
-          <a-card :title="item.vote_statement" :bordered="false" style="width: 100%" >
+          <a-card :bordered="false" style="width: 100%" >
+            <!-- Custom title with icon -->
+              <template #title>
+                <CheckCircleTwoTone two-tone-color="#52c41a"/> {{ item.vote_statement }}
+              </template>
             <p><b>{{ item.Title || 'Title not available' }}</b><br>{{ item.chatgpt_summary || 'Summary not available' }}</p>
             <small>BSN: {{ item.BusinessShortNumber }}</small>
           </a-card>
