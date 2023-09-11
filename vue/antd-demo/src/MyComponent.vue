@@ -8,6 +8,7 @@ import names_sbn from './namesSBN.json'
 const names = ref(Object.keys(names_sbn))
 const selectedName = ref(names.value[0])
 import voteStatement from './vote_statement.json'
+import bsnURL from './bsn_url.json'
 
 // Computed property for selectedBusinessItems based on vote_statement.json
 const selectedVoteStatement = computed(() => {
@@ -143,7 +144,8 @@ function setActiveKey(key) {
               /> {{ item.vote_statement }}
             </template>
             <p><b>{{ item.Title || 'Title not available' }}</b><br>{{ item.chatgpt_summary || 'Summary not available' }}</p>
-            <small>BSN: {{ item.BusinessShortNumber }}</small>
+            <!-- <small>BSN: {{ item.BusinessShortNumber }}</small> -->
+            <small>Details: <a :href="bsnURL[item.BusinessShortNumber]" target="_blank">parlament.ch <i class="material-icons" style="font-size: 0.8rem; vertical-align: -2.6px">open_in_new</i></a></small>
           </a-collapse-panel>
         </a-collapse>
       </div>
@@ -154,3 +156,5 @@ function setActiveKey(key) {
 </div>
 
 </template>
+
+

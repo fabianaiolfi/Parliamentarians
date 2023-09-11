@@ -69,27 +69,9 @@ vote_statement_vue <- vote_statement_vue %>%
   select(-DecisionText)
 
 
+# BusinessShortNumber URLs ------------------------------
 
-#cat(glimpse(json_data))
-
-# first try
-
-# # Step 1: Group the dataframe by 'full_name'
-# grouped_df <- vote_statement_vue %>% 
-#   group_by(full_name)
-# 
-# # Step 2 & 3: Create a list that holds named lists for each 'full_name'
-# final_list <- list()
-# grouped_df %>% 
-#   group_walk(~{
-#     name <- unique(.x$full_name)
-#     inner_list <- setNames(.x$vote_statement, .x$BusinessShortNumber)
-#     final_list[[name]] <- inner_list
-#   })
-# 
-# # Convert the named list to JSON
-# json_output <- toJSON(final_list, auto_unbox = TRUE, pretty = TRUE)
-# 
-# # Optionally, write to a file
-# write(json_output, here("vue", "antd-demo", "src", "output.json"))
-# 
+bsn_url <- all_businesses %>%
+  select(ID, BusinessShortNumber) %>% 
+  mutate(url = paste0('https://www.parlament.ch/de/ratsbetrieb/suche-curia-vista/geschaeft?AffairId=', ID)) %>% 
+  select(-ID)
