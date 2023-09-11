@@ -133,8 +133,8 @@ function setActiveKey(key) {
     </div>
     <a-space direction="vertical" style="width: 100%;">
       <div v-for="item in group" :key="item.BusinessShortNumber">
-        <a-collapse :active-key="activeKey === item.BusinessShortNumber ? [item.BusinessShortNumber] : []" @change="() => setActiveKey(item.BusinessShortNumber)">
-          <a-collapse-panel :key="item.BusinessShortNumber">
+        <a-collapse :style="{ backgroundColor: 'white' }" :active-key="activeKey === item.BusinessShortNumber ? [item.BusinessShortNumber] : []" @change="() => setActiveKey(item.BusinessShortNumber)">
+          <a-collapse-panel :key="item.BusinessShortNumber" :show-arrow="false">
             <!-- Custom title with dynamic icon -->
             <template #header>
               <component
@@ -149,7 +149,6 @@ function setActiveKey(key) {
       </div>
     </a-space>
   </div>
-
 
   </div>
 </div>
