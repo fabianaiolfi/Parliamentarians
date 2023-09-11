@@ -13,6 +13,20 @@ const selectedVoteStatement = computed(() => {
   return voteStatement[selectedName.value] || []
 })
 
+// Computed property to group cards by topic
+const groupedByTopic = computed(() => {
+  const grouped = {};
+  const items = selectedVoteStatement.value;
+  items.forEach(item => {
+    const topic = item.chatgpt_topic || 'Unknown Topic';  // Replace 'Topic' with the actual key for the topic in your JSON
+    if (!grouped[topic]) {
+      grouped[topic] = [];
+    }
+    grouped[topic].push(item);
+  });
+  return grouped;
+});
+
 // Select Search Dropdown
 import NamesSearchSelect from './names_search_select.json'
 const options = ref(NamesSearchSelect)
@@ -52,15 +66,20 @@ const filterOption = (input, option) => {
       ></a-select>
     </div>
 
-    <!-- Cards -->
-    <a-space direction="vertical" style="width: 100%;">
-      <div v-for="item in selectedVoteStatement" :key="item.BusinessShortNumber">
-        <a-card :title="item.vote_statement" :bordered="false" style="width: 100%">
-          <p><b>{{ item.Title || 'Title not available' }}</b><br>{{ item.chatgpt_summary || 'Summary not available' }}</p>
-          <small>BSN: {{ item.BusinessShortNumber }}</small>
-        </a-card>
+    <!-- Grouped Cards based on new JSON -->
+    <div v-for="(group, topic) in groupedByTopic" :key="topic">
+      <div style="margin-bottom: 20px; margin-top: 40px;">
+        <h3>Wie {{ selectedName }} über <b>{{ topic }}</b> abgestimmt hat</h3>
       </div>
-    </a-space>
+      <a-space direction="vertical" style="width: 100%;">
+        <div v-for="item in group" :key="item.BusinessShortNumber" >
+          <a-card :title="item.vote_statement" :bordered="false" style="width: 100%" >
+            <p><b>{{ item.Title || 'Title not available' }}</b><br>{{ item.chatgpt_summary || 'Summary not available' }}</p>
+            <small>BSN: {{ item.BusinessShortNumber }}</small>
+          </a-card>
+        </div>
+      </a-space>
+    </div>
   </div>
 </div>
 
