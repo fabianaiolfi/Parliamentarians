@@ -10,10 +10,6 @@ import business_items from './businessItems.json'
 
 const selectedBusinessItems = computed(() => {
   const sbns = names_sbn[selectedName.value]
-  // console.log("sbns:", sbns);
-  // console.log("selectedName.value:", selectedName.value);
-  // console.log("names_sbn:", names_sbn);
-  // return sbns ? sbns.map(sbn => business_items[sbn]).flat() : [];
   return sbns.map(sbn => business_items[sbn]).flat()
 })
 
@@ -56,24 +52,12 @@ const filterOption = (input, option) => {
       ></a-select>
     </div>
     
-    <!-- Old Dropdown -->
-    <!-- <div style="text-align: left; margin-bottom: 20px;">
-      <a-select v-model:value="selectedName" style="width: 400px;">
-        <a-select-option
-          v-for="name in names"
-          :key="name"
-          :value="name">
-          {{ name }}
-        </a-select-option>
-      </a-select>
-    </div> -->
-
     <!-- Cards -->
     <a-space direction="vertical" style="width: 100%;">
       <div v-for="item in selectedBusinessItems" :key="item.BusinessShortNumber">
         <a-card :title="item.Statement" :bordered="false" style="width: 100%">
           <p><b>{{ item.Title }}</b><br>{{ item.Summary }}</p>
-          <small>{{ item.BusinessShortNumber_card }}</small>
+          <small>BSN: {{ item.BusinessShortNumber_card }}</small>
         </a-card>
       </div>
     </a-space>
