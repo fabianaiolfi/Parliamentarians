@@ -6,14 +6,7 @@ import { ref, computed } from 'vue'
 import names_sbn from './namesSBN.json'
 const names = ref(Object.keys(names_sbn))
 const selectedName = ref(names.value[0])
-import business_items from './businessItems.json'
 import voteStatement from './vote_statement.json'
-
-// Computed property for selectedBusinessItems based on namesSBN.json
-const selectedBusinessItems = computed(() => {
-  const sbns = names_sbn[selectedName.value]
-  return sbns.map(sbn => business_items[sbn]).flat()
-})
 
 // Computed property for selectedBusinessItems based on vote_statement.json
 const selectedVoteStatement = computed(() => {
