@@ -112,6 +112,7 @@ function setActiveKey(key) {
 <div style="background: #F5F5F5; padding: 0px; display: flex; flex-direction: column;">
   <!-- Wrapper for alignment -->
   <div style="width: 100%;">  <!-- Adjust the width to your liking -->
+    <h3>Wähle eine:n Parlamentarier:in</h3>
     <!-- New Dropdown -->
     <div style="text-align: left; margin-bottom: 20px;">
       <a-select
@@ -121,6 +122,7 @@ function setActiveKey(key) {
         style="width: 400px"
         :options="options"
         :filter-option="filterOption"
+        size="large"
         @focus="handleFocus"
         @blur="handleBlur"
         @change="handleChange"

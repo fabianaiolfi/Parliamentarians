@@ -34,6 +34,8 @@ The output of this sub-project are two Shiny web apps: - [Abstimmungsverhalten N
 
 ## UI To Dos
 
+- [x] Increase main dropdown size
+- [ ] Speed up switching between parliamentarians
 - [ ] Add Table of Contents to top of page
 - [ ] Make site responsive
 - [ ] See also Issues tagged `enhancement`
