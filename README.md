@@ -29,3 +29,11 @@ The output of this sub-project are two Shiny web apps: - [Abstimmungsverhalten N
 - 07_BERTopic: …
 - 08_main_tag_cluster: Create hierarchical clusters **within** main tag groups
 - Futher options: Plain LDA
+
+------------------------------------------------------------------------
+
+## UI To Dos
+
+- [ ] Add Table of Contents to top of page
+- [ ] Make site responsive
+- [ ] See also Issues tagged `enhancement`
