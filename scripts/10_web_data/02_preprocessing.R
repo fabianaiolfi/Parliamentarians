@@ -19,6 +19,10 @@ voting_all_periods_edit <- voting_all_periods %>%
                                   DecisionText == "Demissioniert" ~ "Keine Teilnahme in Bezug auf ",
                                   DecisionText == "Die Präsidentin/der Präsident stimmt nicht" ~ "Keine Teilnahme in Bezug auf "))
 
+# Add main topic
+voting_all_periods_edit <- voting_all_periods_edit %>% 
+  left_join(select(all_businesses, BusinessShortNumber, main_topic), by = "BusinessShortNumber")
+
 
 # Process DF for vue.js JSON ------------------------------
 
@@ -38,7 +42,7 @@ all_businesses_vue <- all_businesses_web %>%
   rename(Summary = chatgpt_summary, 
          Statement = vote_statement) %>% 
   mutate(BusinessShortNumber_card = BusinessShortNumber) %>% 
-  select(BusinessShortNumber, BusinessShortNumber_card, Title, Summary, Statement)
+  select(BusinessShortNumber, BusinessShortNumber_card, Title, Summary, Statement, main_topic)
 
 # Next, group by BusinessShortNumber and create a list column containing the relevant rows
 all_businesses_vue <- all_businesses_vue %>%
@@ -61,7 +65,7 @@ vote_statement_vue <- voting_all_periods_edit %>%
   select(-PersonNumber) %>%
   mutate(full_name = paste0(FirstName, " ", LastName, " (", CantonName, ")")) %>% 
   mutate(full_name = tolower(full_name)) %>%
-  select(full_name, DecisionText, BusinessShortNumber)
+  select(full_name, DecisionText, BusinessShortNumber, main_topic)
 
 vote_statement_vue <- vote_statement_vue %>% 
   left_join(select(all_businesses_web, BusinessShortNumber, vote_statement, Title, chatgpt_summary, chatgpt_topic), by = "BusinessShortNumber") %>% 

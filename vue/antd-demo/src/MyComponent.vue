@@ -10,10 +10,21 @@ const selectedName = ref(names.value[0])
 import voteStatement from './vote_statement.json'
 import bsnURL from './bsn_url.json'
 
+// MainTopic Dropdown
+const selectedMainTopic = ref('Alle Themen');  // Initialize to 'Alle Themen' or any default value
+
 // Computed property for selectedBusinessItems based on vote_statement.json
 const selectedVoteStatement = computed(() => {
   return voteStatement[selectedName.value] || []
 })
+
+// Add this computed property to extract unique main_topic values
+const uniqueMainTopics = computed(() => {
+  const allTopics = selectedVoteStatement.value.map(item => item.main_topic);
+  const uniqueTopics = [...new Set(allTopics.filter(Boolean))];
+  return uniqueTopics;
+});
+
 
 // Function to assign a priority based on the starting text of vote_statement
 function assignPriority(statement) {
@@ -24,10 +35,19 @@ function assignPriority(statement) {
   return 5; // Default priority for unrecognized statements
 }
 
+// computed property that filters selectedVoteStatement based on the main_topic
+const filteredByMainTopic = computed(() => {
+  if (selectedMainTopic.value === 'Alle Themen') {
+    return selectedVoteStatement.value;  // Return all items if 'Alle Themen' is selected
+  }
+  return selectedVoteStatement.value.filter(item => item.main_topic === selectedMainTopic.value);
+});
+
+
 // Computed property to group cards by topic
 const groupedByTopic = computed(() => {
   const grouped = {};
-  const items = selectedVoteStatement.value;
+  const items = filteredByMainTopic.value;
   items.forEach(item => {
     const topic = item.chatgpt_topic || 'Unknown Topic';  // Replace 'Topic' with the actual key for the topic in your JSON
     if (!grouped[topic]) {
@@ -104,8 +124,12 @@ function setActiveKey(key) {
   activeKey.value = activeKey.value === key ? null : key;
 }
 
-</script>
+// Main Topic Dropdown
+function handleMainTopicChange(newValue) {
+  selectedMainTopic.value = newValue;
+}
 
+</script>
 
 <template>
 
@@ -113,7 +137,7 @@ function setActiveKey(key) {
   <!-- Wrapper for alignment -->
   <div style="width: 100%;">  <!-- Adjust the width to your liking -->
     <h3>Wähle eine:n Parlamentarier:in</h3>
-    <!-- New Dropdown -->
+    <!-- Select Parliamentarian Dropdown -->
     <div style="text-align: left; margin-bottom: 20px;">
       <a-select
         v-model:value="value"
@@ -128,6 +152,18 @@ function setActiveKey(key) {
         @change="handleChange"
       ></a-select>
     </div>
+
+    <!-- Main Topic Dropdown -->
+    <h4>Wähle ein Themengebiet</h4>
+    <a-select
+      @change="handleMainTopicChange"
+      style="width: 300px"
+      placeholder="Alle Themen">
+      <a-select-option value="Alle Themen">Alle Themen</a-select-option>
+      <a-select-option v-for="topic in uniqueMainTopics" :key="topic" :value="topic">
+        {{ topic }}
+      </a-select-option>
+    </a-select>
     
     <!-- Grouped Collapse -->
     <div v-for="(group, topic) in groupedByTopic" :key="topic">
@@ -158,5 +194,3 @@ function setActiveKey(key) {
 </div>
 
 </template>
-
-
