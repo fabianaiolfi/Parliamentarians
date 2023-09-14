@@ -307,9 +307,8 @@ all_businesses$query_central_stmnt[5]
 
 
 
+###########################
 
 
-
-
-
-
+unique(all_businesses$main_tag)
+unique(all_businesses_web$chatgpt_topic)
