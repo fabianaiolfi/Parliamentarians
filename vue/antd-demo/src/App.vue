@@ -1,6 +1,3 @@
-<script setup> 
-  import MyComponent from './MyComponent.vue'
-  </script>
 
 <template>
   <a-layout class="layout">
@@ -11,8 +8,10 @@
         mode="horizontal"
         :style="{ lineHeight: '64px' }"
       >
-        <a-menu-item key="1">Parlamentarier:innen</a-menu-item>
-        <a-menu-item key="2">Info</a-menu-item>
+      <a-menu-item key="1"><router-link to="/parlamentarier">Parlamentarier:innen</router-link></a-menu-item>
+      <a-menu-item key="2"><router-link to="/info">Info</router-link></a-menu-item>
+        <!-- <a-menu-item key="1">Parlamentarier:innen</a-menu-item> -->
+        <!-- <a-menu-item key="2">Info</a-menu-item> -->
         <!-- <a-menu-item key="3">nav 3</a-menu-item> -->
       </a-menu>
     </a-layout-header>
@@ -23,7 +22,7 @@
         <!-- <a-breadcrumb-item>App</a-breadcrumb-item> -->
       </a-breadcrumb>
       <div :style="{ background: '#F5F5F5', padding: '24px', minHeight: '280px' }">
-          <MyComponent />
+        <router-view />
       </div>
     </a-layout-content>
     <a-layout-footer style="text-align: center">
