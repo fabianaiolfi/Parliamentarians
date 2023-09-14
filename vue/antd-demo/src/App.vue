@@ -32,6 +32,11 @@
 </template>
 
 <style scoped>
+::v-deep .ant-menu-item-selected {
+  color: #ffffff !important;
+  background-color: #001529 !important;
+}
+
 .site-layout-content {
   min-height: 280px;
   padding: 24px;
