@@ -46,6 +46,3 @@ The output of this sub-project are two Shiny web apps: - [Abstimmungsverhalten N
 - [ ] Speed up switching between parliamentarians
 - [ ] Make site responsive
 - [ ] See also Issues tagged `enhancement`
-
-asd
-
