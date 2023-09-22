@@ -32,8 +32,12 @@ The output of this sub-project are two Shiny web apps: - [Abstimmungsverhalten N
 
 ------------------------------------------------------------------------
 
-## UI To Dos
+## To Dos
 
+### NLP
+- [ ] Setup further ChatGPT prompts that summarise a parliamentarian's voting behaviour; Summarise sets of votes, e.g. economic votes or specific policy dimensions. In short, make the items of business more accessible to users
+
+### UI
 - [ ] Group existing topics into larger über-topics
   - [ ] Either use tags provided by the parliament or topics in the [Worry Barometer](https://www.credit-suisse.com/about-us/en/reports-research/studies-publications/worry-barometer/download-center.html)
   - [ ] Maybe place über-topics into (another) dropdown, so to only ever display one über-topic at once
