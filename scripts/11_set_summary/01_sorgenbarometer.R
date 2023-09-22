@@ -15,26 +15,27 @@ ahv <- c("AHV", "Altersvorsorge") # AHV / Altersvorsorge
 energiefragen <- c("Energiefragen", "Kernenergie", "AKW", "Kernkraftwerk", "Energie") # Energiefragen / Kernenergie
 europa <- c("EU", "Rahmenabkommen", "Europäisch", "Lissabon", "FADO") # Beziehung zu Europa, EU, Rahmenabkommen, Zugang zum europäischen Markt
 inflation <- c("Inflation", "Geldentwertung", "Teuerung") # Inflation / Geldentwertung / Teuerung
-gesundheitsfragen <- c("Gesundheitsfragen", "Krankenkasse", "Prämien", "Gesundheit", "Krankenversicherung", "Arzneimitteln", "Arzt") # Gesundheitsfragen / Krankenkasse / Prämien
+gesundheitsfragen <- c("Gesundheitsfragen", "Krankenkasse", "Prämien", "Gesundheit", "Krankenversicherung", "Arzneimitteln", "Arzt", "Medikament", "Generika") # Gesundheitsfragen / Krankenkasse / Prämien
 versorgungssicherheit <- c("Versorgungssicherheit", "Versorgung") # Versorgungssicherheit (Energie, Medikamente, Nahrungsmittel)
 ukraine <- c("Ukraine") # Der Krieg in der Ukraine
-auslaender <- c("Ausländer", "Personenfreizügigkeit", "Zuwanderung", "Einwanderung", "Schengen", "Dublin") # Ausländerinnen und Ausländer / Personenfreizügigkeit / Zuwanderung
-fluechtlinge <- c("Flüchtlinge", "Asylfragen", "Asyl", "Einwanderung") # Flüchtlinge / Asylfragen
+auslaender <- c("Ausländer", "Personenfreizügigkeit", "Zuwanderung", "Einwanderung", "Schengen", "Dublin", "Grenzgänger", "Einbürgerung") # Ausländerinnen und Ausländer / Personenfreizügigkeit / Zuwanderung
+fluechtlinge <- c("Flüchtlinge", "Asylfragen", "Asyl", "Einwanderung", "Integration", "Ausschaffung") # Flüchtlinge / Asylfragen
 benzinpreis <- c("Benzinpreis", "Erdölpreis", "Diesel") # Benzin- / Erdölpreis
 arbeitslosigkeit <- c("Arbeitslosigkeit", "Jugendarbeitslosigkeit", "Arbeitslos", "Arbeitslosenversicherung") # Arbeitslosigkeit / Jugendarbeitslosigkeit
-globalisierung <- c("Globalisierung", "Global") # weltweite, globale Abhängigkeiten Wirtschaft / Globalisierung
+globalisierung <- c("Globalisierung", "Global", "Marktöffnung", "Informationsaustausch", "Bilateral") # weltweite, globale Abhängigkeiten Wirtschaft / Globalisierung
 neutralitaet <- c("Neutralität", "Neutral") # Verlust der Neutralität
 wohnkosten <- c("Wohnkosten", "Mietpreise", "Miete", "Grundstück") # erhöhte Wohnkosten, Anstieg Mietpreise
 corona <- c("Corona", "Pandemie", "covid", "COVID", "covid-19", "COVID-19") # Corona-Pandemie und ihre Folgen
-sozial <- c("Sozialwerke", "sozial", "Familienzulagen", "Familie", "Jugendschutz", "Jugend", "Mutter", "Vater") # soziale Sicherheit / Sicherung der Sozialwerke
+sozial <- c("Sozialwerke", "sozial", "Familienzulagen", "Familie", "Jugendschutz", "Jugend", "Mutter", "Vater", "Arbeitsgesetz", "Arbeitnehmerrechte", "Arbeitnehmerschutz", "Entlasten") # soziale Sicherheit / Sicherung der Sozialwerke
 armut <- c("Armut") # neue Armut / Armut jüngerer Generationen
 weltordnung <- c("Weltordnung") # neue Weltordnung, Aufstieg Chinas, der Westen unter Druck
-zusammenleben <- c("Zusammenleben", "Toleranz") # Zusammenleben in der Schweiz / Toleranz
+zusammenleben <- c("Zusammenleben", "Toleranz", "Partnerschaft", "Polarisierung", "Gleichstellung") # Zusammenleben in der Schweiz / Toleranz
 
 # Weitere Themen
-# arbeitnehmerschutz
-# gleichstellung
-# 
+# sicherheit: militär, polizei, stabilität, nato, waffen, munition
+# kriminalität: geldwäscherei, 
+# verkehr: strassen, flugsicherheit, stau, autobahn, sbb, 
+# löhne?
 
 
 # Function to check if any of the terms from a vector are substrings of chatgpt_tags_clean
