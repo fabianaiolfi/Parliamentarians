@@ -312,3 +312,124 @@ all_businesses$query_central_stmnt[5]
 
 unique(all_businesses$main_tag)
 unique(all_businesses_web$chatgpt_topic)
+
+
+load(here("scripts", "05_chatgpt_tagging", "chatgpt_tagging_output", "all_businesses_eval.RData"))
+
+
+unique(all_businesses$main_topic)
+
+
+
+################################
+
+
+df <- data.frame(tags = c("Internationale Währungshilfe | Rechtsgrundlage", 
+                          "Rechtsgrundlage | Währungszusammenarbeit", 
+                          "apple | banana", 
+                          "date | egg"))
+
+vector1 <- c("apple", "banana", "cherry", "Internationale Währungshilfe")
+vector2 <- c("date", "egg", "Rechtsgrundlage")
+vector3 <- c("fig", "grape", "honey", "Währungszusammenarbeit")
+
+# Function to check if any of the terms from a vector are substrings of a tag string
+is_in_vector <- function(tags_str, vec) {
+  any(sapply(vec, function(v) str_detect(tags_str, fixed(v))))
+}
+
+df <- df %>%
+  rowwise() %>%
+  mutate(
+    vector1_flag = if_else(is_in_vector(tags, vector1), "vector1", ""),
+    vector2_flag = if_else(is_in_vector(tags, vector2), "vector2", ""),
+    vector3_flag = if_else(is_in_vector(tags, vector3), "vector3", ""),
+    vector_name = paste(vector1_flag, vector2_flag, vector3_flag, sep = "|")
+  ) %>%
+  mutate(vector_name = if_else(vector_name == "||", NA_character_, vector_name))
+
+# Optionally, you can remove the flag columns if you want
+df <- df %>% select(-vector1_flag, -vector2_flag, -vector3_flag)
+
+print(df)
+
+
+all_businesses_ahv <- all_businesses_sorgen %>% 
+  dplyr::filter(ahv == T) %>% 
+  select(BusinessShortNumber)
+
+all_businesses_ahv <- all_businesses_ahv %>% 
+  left_join(all_businesses_web, by = "BusinessShortNumber")
+
+my_table <- as.data.frame(table(voting_all_periods$PersonNumber))
+
+pfister <- voting_all_periods %>% 
+  dplyr::filter(PersonNumber == 1109) %>% 
+  select(BusinessShortNumber, DecisionText)
+
+pfister_ahv <- all_businesses_ahv %>% 
+  left_join(pfister, by = "BusinessShortNumber")
+
+pfister_ahv %>% select(DecisionText)
+
+schwander <- voting_all_periods %>% 
+  dplyr::filter(PersonNumber == 1159) %>% 
+  select(BusinessShortNumber, DecisionText)
+
+schwander_ahv <- all_businesses_ahv %>% 
+  left_join(schwander, by = "BusinessShortNumber")
+
+schwander_ahv %>% select(DecisionText)
+
+
+
+voting_all_periods
+
+# Filter rows where all columns (except ID) are FALSE
+df <- all_businesses_sorgen %>%
+  select(1, 7:33)
+
+df <- df %>% 
+  rowwise() %>%
+  mutate(any_sorgen = any(c_across(-BusinessShortNumber), na.rm=TRUE))
+
+df <- df %>% 
+  dplyr::filter(any_sorgen == F) %>% 
+  select(BusinessShortNumber) %>% 
+  left_join(all_businesses_web, by = "BusinessShortNumber") %>% 
+  left_join(select(all_businesses_eval, BusinessShortNumber, chatgpt_tags_clean), by = "BusinessShortNumber")
+
+# 238 items of business without any Sorgen
+
+# create new df with a single tag per row - 2222 obs
+tag_df <- df %>%
+  # Separate tags into individual rows
+  tidyr::separate_rows(chatgpt_tags_clean, sep = " \\| ") %>%
+  # Remove any residual "</s>" strings
+  mutate(chatgpt_tags_clean = gsub("</s>", "", chatgpt_tags_clean)) %>%
+  # Count the occurrences of each tag
+  group_by(chatgpt_tags_clean) %>%
+  summarize(count = n())
+
+
+
+
+### chatgpt costs
+length(unique(voting_all_periods$PersonNumber))
+
+# 580 tokens
+
+(534*20*580) / 1000 * 0.03 # $180 for set summaries
+
+
+
+
+
+
+
+
+
+
+
+
+
