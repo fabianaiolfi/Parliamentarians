@@ -16,7 +16,7 @@ auslaender <- c("Ausländer", "Personenfreizügigkeit", "Zuwanderung", "Einwande
 fluechtlinge <- c("Flüchtlinge", "Asylfragen", "Asyl", "Einwanderung", "Integration", "Ausschaffung") # Flüchtlinge / Asylfragen
 benzinpreis <- c("Benzinpreis", "Erdölpreis", "Diesel") # Benzin- / Erdölpreis
 arbeitslosigkeit <- c("Arbeitslosigkeit", "Jugendarbeitslosigkeit", "Arbeitslos", "Arbeitslosenversicherung", "Arbeitsplätze") # Arbeitslosigkeit / Jugendarbeitslosigkeit
-globalisierung <- c("Globalisierung", "Global", "Marktöffnung", "Informationsaustausch", "Bilateral", "International") # weltweite, globale Abhängigkeiten Wirtschaft / Globalisierung
+globalisierung <- c("Globalisierung", "Global", "Marktöffnung", "Informationsaustausch", "Bilateral") # weltweite, globale Abhängigkeiten Wirtschaft / Globalisierung
 neutralitaet <- c("Neutralität", "Neutral") # Verlust der Neutralität
 wohnkosten <- c("Wohnkosten", "Mietpreise", "Miete", "Grundstück", "Referenzzins") # erhöhte Wohnkosten, Anstieg Mietpreise
 corona <- c("Corona", "Pandemie", "covid", "COVID", "covid-19", "COVID-19") # Corona-Pandemie und ihre Folgen
