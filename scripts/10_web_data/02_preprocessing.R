@@ -32,7 +32,7 @@ voting_all_periods_vue <- voting_all_periods_edit %>%
   summarise(BusinessShortNumbers = list(BusinessShortNumber)) %>% 
   mutate(full_name = paste0(FirstName, " ", LastName, " (", CantonName, ")")) %>% 
   ungroup() %>% 
-  select(full_name, BusinessShortNumbers) %>% 
+  select(PersonNumber, full_name, BusinessShortNumbers) %>% 
   mutate(full_name = tolower(full_name)) %>% 
   rename(key = full_name,
          value = BusinessShortNumbers)
@@ -62,10 +62,9 @@ names_search_select <- voting_all_periods_edit %>%
 
 # Create JSON for vote statement
 vote_statement_vue <- voting_all_periods_edit %>% 
-  select(-PersonNumber) %>%
   mutate(full_name = paste0(FirstName, " ", LastName, " (", CantonName, ")")) %>% 
   mutate(full_name = tolower(full_name)) %>%
-  select(full_name, DecisionText, BusinessShortNumber, main_topic)
+  select(PersonNumber, full_name, DecisionText, BusinessShortNumber, main_topic)
 
 vote_statement_vue <- vote_statement_vue %>% 
   left_join(select(all_businesses_web, BusinessShortNumber, vote_statement, Title, chatgpt_summary, chatgpt_topic), by = "BusinessShortNumber") %>% 
