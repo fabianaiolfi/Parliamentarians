@@ -95,4 +95,21 @@ vote_statement <- vote_statement %>%
   dplyr::filter(value) %>%
   select(-value)
 
+# Create Prompt for each person and topic
+
+test <- vote_statement %>% 
+  select(-BusinessShortNumber) %>% 
+  mutate(vote_statement = paste0("- ", vote_statement)) %>% # Add bullet point infront of each vote statement
+  group_by(PersonNumber, sorge) %>% 
+  mutate(Prompt = paste(vote_statement, collapse = "\n")) %>%
+  ungroup() %>% 
+  select(-vote_statement) %>% 
+  distinct(PersonNumber, sorge, .keep_all = T)
+
+
+# group_by(PersonNumber, sorge) %>%
+#   mutate(Prompt = paste(vote_statement, collapse = " ")) %>%
+#   ungroup()
+
+
 
