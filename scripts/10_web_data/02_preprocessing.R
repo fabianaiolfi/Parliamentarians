@@ -78,3 +78,10 @@ bsn_url <- all_businesses %>%
   select(ID, BusinessShortNumber) %>% 
   mutate(url = paste0('https://www.parlament.ch/de/ratsbetrieb/suche-curia-vista/geschaeft?AffairId=', ID)) %>% 
   select(-ID)
+
+
+# Person Number Index ------------------------------
+
+person_number_index <- voting_all_periods %>% 
+  select(PersonNumber, FirstName, LastName, CantonName) %>% 
+  distinct(PersonNumber, .keep_all = T)
