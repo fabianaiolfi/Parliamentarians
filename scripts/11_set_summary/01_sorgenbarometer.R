@@ -24,7 +24,7 @@ benzinpreis <- c("Benzinpreis", "Erdölpreis", "Diesel") # Benzin- / Erdölpreis
 arbeitslosigkeit <- c("Arbeitslosigkeit", "Jugendarbeitslosigkeit", "Arbeitslos", "Arbeitslosenversicherung", "Arbeitsplätze") # Arbeitslosigkeit / Jugendarbeitslosigkeit
 globalisierung <- c("Globalisierung", "Global", "Marktöffnung", "Informationsaustausch", "Bilateral", "International") # weltweite, globale Abhängigkeiten Wirtschaft / Globalisierung
 neutralitaet <- c("Neutralität", "Neutral") # Verlust der Neutralität
-wohnkosten <- c("Wohnkosten", "Mietpreise", "Miete", "Grundstück") # erhöhte Wohnkosten, Anstieg Mietpreise
+wohnkosten <- c("Wohnkosten", "Mietpreise", "Miete", "Grundstück", "Referenzzins") # erhöhte Wohnkosten, Anstieg Mietpreise
 corona <- c("Corona", "Pandemie", "covid", "COVID", "covid-19", "COVID-19") # Corona-Pandemie und ihre Folgen
 sozial <- c("Sozialwerke", "sozial", "Familienzulagen", "Familie", "Jugendschutz", "Jugend", "Mutter", "Vater", "Arbeitsgesetz", "Arbeitnehmerrechte", "Arbeitnehmerschutz", "Entlasten", "Soziale Sicherheit", "Frauen") # soziale Sicherheit / Sicherung der Sozialwerke
 armut <- c("Armut", "Mindestlohn", "Löhne") # neue Armut / Armut jüngerer Generationen
@@ -79,3 +79,20 @@ all_businesses_sorgen <- all_businesses_eval %>%
          bildung = if_else(is_in_vector(chatgpt_tags_clean, bildung), T, F),
          menschenrechte = if_else(is_in_vector(chatgpt_tags_clean, menschenrechte), T, F),
          medien = if_else(is_in_vector(chatgpt_tags_clean, medien), T, F))
+
+
+# Add Vote Statement and Sorge to the same dataframe
+vote_statement <- vote_statement_vue %>% select(PersonNumber, BusinessShortNumber, vote_statement)
+
+all_businesses_sorgen_merge <- all_businesses_sorgen %>% 
+  select(-Title, -InitialSituation_clean, -TagNames, -chatgpt_summaries, -chatgpt_tags_clean)
+
+vote_statement <- vote_statement %>% 
+  left_join(all_businesses_sorgen_merge, by = "BusinessShortNumber")
+
+vote_statement <- vote_statement %>%
+  pivot_longer(cols = c(-PersonNumber, -BusinessShortNumber, -vote_statement), names_to = "sorge", values_to = "value") %>%
+  dplyr::filter(value) %>%
+  select(-value)
+
+
