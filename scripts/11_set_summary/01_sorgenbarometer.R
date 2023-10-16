@@ -40,7 +40,6 @@ bildung <- c("Bildung", "Bildungsförderung", "Forschungsförderung", "Forschung
 menschenrechte <- c("Völkerrecht", "Kriegsverbrechen", "Zwangsarbeit")
 medien <- c("Service Public", "Radio", "Fernsehen", "TV", "SRG", "Empfangsgebühr", "Presse", "Zeitungen", "Zeitschriften")
 
-
 # Function to check if any of the terms from a vector are substrings of chatgpt_tags_clean
 is_in_vector <- function(tags_str, vec) {
   any(sapply(vec, function(v) str_detect(tags_str, fixed(v))))
@@ -81,7 +80,7 @@ all_businesses_sorgen <- all_businesses_eval %>%
          medien = if_else(is_in_vector(chatgpt_tags_clean, medien), T, F))
 
 
-# Add Vote Statement and Sorge to the same dataframe
+# Add Vote Statement and Sorge to the same dataframe; Each vote_statement is associated with a sorge
 vote_statement <- vote_statement_vue %>% select(PersonNumber, BusinessShortNumber, vote_statement)
 
 all_businesses_sorgen_merge <- all_businesses_sorgen %>% 
@@ -95,21 +94,44 @@ vote_statement <- vote_statement %>%
   dplyr::filter(value) %>%
   select(-value)
 
-# Create Prompt for each person and topic
+# Create prompt for each person and for each topic
 
-test <- vote_statement %>% 
+prompt_vote_statement_sorge <- vote_statement %>% 
   select(-BusinessShortNumber) %>% 
   mutate(vote_statement = paste0("- ", vote_statement)) %>% # Add bullet point infront of each vote statement
   group_by(PersonNumber, sorge) %>% 
-  mutate(Prompt = paste(vote_statement, collapse = "\n")) %>%
+  mutate(prompt = paste(vote_statement, collapse = "\n")) %>%
   ungroup() %>% 
   select(-vote_statement) %>% 
-  distinct(PersonNumber, sorge, .keep_all = T)
-
-
-# group_by(PersonNumber, sorge) %>%
-#   mutate(Prompt = paste(vote_statement, collapse = " ")) %>%
-#   ungroup()
-
-
-
+  distinct(PersonNumber, sorge, .keep_all = T) %>% 
+  left_join(person_number_index, by = "PersonNumber") %>% 
+  mutate(sorge_long = case_when(sorge == "zusammenleben" ~ "Zusammenleben in der Schweiz / Toleranz",
+                                sorge == "globalisierung" ~ "weltweite, globale Abhängigkeiten Wirtschaft / Globalisierung",
+                                sorge == "sicherheit" ~ "Sicherheit",
+                                sorge == "menschenrechte" ~ "Menschenrechte",
+                                sorge == "sozial" ~ "Soziale Sicherheit / Sicherung der Sozialwerke",
+                                sorge == "bildung" ~ "Bildung",
+                                sorge == "verkehr" ~ "Verkehr",
+                                sorge == "kriminalitaet" ~ "Kriminalität",
+                                sorge == "europa" ~ "Beziehung zu Europa, EU, Rahmenabkommen, Zugang zum europäischen Markt",
+                                sorge == "auslaender" ~ "Ausländerinnen und Ausländer / Personenfreizügigkeit / Zuwanderung",
+                                sorge == "fluechtlinge" ~ "Flüchtlinge / Asylfragen",
+                                sorge == "umwelt" ~ "Umweltschutz / Klimawandel / Umweltkatastrophen",
+                                sorge == "wohnkosten" ~ "erhöhte Wohnkosten, Anstieg Mietpreise",
+                                sorge == "datenschutz" ~ "Datenschutz",
+                                sorge == "gesundheitsfragen" ~ "Gesundheitsfragen / Krankenkasse / Prämien",
+                                sorge == "ahv" ~ "AHV / Altersvorsorge",
+                                sorge == "inflation" ~ "Inflation / Geldentwertung / Teuerung",
+                                sorge == "energiefragen" ~ "Energiefragen / Kernenergie",
+                                sorge == "versorgungssicherheit" ~ "Versorgungssicherheit (Energie, Medikamente, Nahrungsmittel)",
+                                sorge == "medien" ~ "Medien",
+                                sorge == "arbeitslosigkeit" ~ "Arbeitslosigkeit / Jugendarbeitslosigkeit",
+                                sorge == "neutralitaet" ~ "Verlust der Neutralität",
+                                sorge == "armut" ~ "Neue Armut / Armut jüngerer Generationen",
+                                sorge == "corona" ~ "Corona-Pandemie und ihre Folgen",
+                                sorge == "ukraine" ~ "Der Krieg in der Ukraine")) %>% 
+  mutate(prompt = paste0("Verwende 1 bis 2 Sätze und Einfache Sprache, um das Abstimmungsverhalten von ", 
+                         FirstName, " ", LastName, 
+                         " zum Thema «", sorge_long, 
+                         "» zusammen zu fassen. Alle Punkte habe einen Bezug zum Thema:\n",
+                         prompt))
