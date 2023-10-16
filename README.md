@@ -28,6 +28,7 @@ The output of this sub-project are two Shiny web apps: - [Abstimmungsverhalten N
 - 06_all_features: Combine all features (including chatgpt summaries and chatgpt tags) into a single embedding and then cluster
 - 07_BERTopic: …
 - 08_main_tag_cluster: Create hierarchical clusters **within** main tag groups
+- 11_chatgpt_sorgenbarometer: Use the [Worry Barometer](https://www.credit-suisse.com/about-us/en/reports-research/studies-publications/worry-barometer/download-center.html) to group items of business. Then get ChatGPT summaries of voting record based on these groups.
 - Futher options: Plain LDA
 
 ------------------------------------------------------------------------

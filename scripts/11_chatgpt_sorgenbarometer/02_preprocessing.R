@@ -1,12 +1,6 @@
 
-
-# Import Data -------------------------------------------------------------
-
-# All businesses with ChatGPT tags
-load(here("scripts", "05_chatgpt_tagging", "chatgpt_tagging_output", "all_businesses_eval.RData"))
-
-
 # Sorgen Barometer -------------------------------------------------------------
+
 # Add each item of business to a "Sorge" from the 2022 Sorgenbarometer
 
 # Define terms for each "Sorge"
@@ -80,7 +74,7 @@ all_businesses_sorgen <- all_businesses_eval %>%
          medien = if_else(is_in_vector(chatgpt_tags_clean, medien), T, F))
 
 
-# Add Vote Statement and Sorge to the same dataframe; Each vote_statement is associated with a sorge
+# Add Vote Statement and Sorge to the same dataframe; Each vote_statement is associated with a Sorge
 vote_statement <- vote_statement_vue %>% select(PersonNumber, BusinessShortNumber, vote_statement)
 
 all_businesses_sorgen_merge <- all_businesses_sorgen %>% 
