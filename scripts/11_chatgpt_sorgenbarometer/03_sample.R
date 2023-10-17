@@ -1,11 +1,4 @@
 
-# Subset  ---------------------------------------------------------------------
-# Create a subset of all prompt_vote_statement_sorge
-
-prompt_subset <- prompt_vote_statement_sorge %>%
-  dplyr::filter(bullet_count >= 4 & bullet_count <= 8) # Keeps 22 Sorgen and 530 Parliamentarians
-
-
 # Sample  ---------------------------------------------------------------------
 # Create sample for testing purposes
 
