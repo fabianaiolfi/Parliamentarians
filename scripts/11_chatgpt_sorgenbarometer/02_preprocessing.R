@@ -20,7 +20,7 @@ globalisierung <- c("Globalisierung", "Global", "Marktöffnung", "Informationsau
 neutralitaet <- c("Neutralität", "Neutral") # Verlust der Neutralität
 wohnkosten <- c("Wohnkosten", "Mietpreise", "Miete", "Grundstück", "Referenzzins") # erhöhte Wohnkosten, Anstieg Mietpreise
 corona <- c("Corona", "Pandemie", "covid", "COVID", "covid-19", "COVID-19") # Corona-Pandemie und ihre Folgen
-sozial <- c("Sozialwerke", "sozial", "Familienzulagen", "Familie", "Jugendschutz", "Jugend", "Mutter", "Vater", "Arbeitsgesetz", "Arbeitnehmerrechte", "Arbeitnehmerschutz", "Entlasten", "Soziale Sicherheit", "Frauen", "Einkommensverteilung") # soziale Sicherheit / Sicherung der Sozialwerke
+sozial <- c("Sozialwerke", "sozial", "Familienzulagen", "Familie", "Jugendschutz", "Jugend", "Mutter", "Vater", "Arbeitsgesetz", "Arbeitnehmerrechte", "Arbeitnehmerschutz", "Entlasten", "Soziale Sicherheit", "Frauen", "Einkommensverteilung", "Behinderung") # soziale Sicherheit / Sicherung der Sozialwerke
 armut <- c("Armut", "Mindestlohn", "Löhne") # neue Armut / Armut jüngerer Generationen
 weltordnung <- c("Weltordnung") # neue Weltordnung, Aufstieg Chinas, der Westen unter Druck
 zusammenleben <- c("Zusammenleben", "Toleranz", "Partnerschaft", "Polarisierung", "Gleichstellung") # Zusammenleben in der Schweiz / Toleranz
@@ -82,6 +82,7 @@ all_businesses_sorgen_merge <- all_businesses_sorgen %>%
 
 # Make some manual adjustments, because of NAs in chatgpt_tags_clean
 all_businesses_sorgen_merge$sicherheit[all_businesses_sorgen_merge$BusinessShortNumber == "12.073"] <- TRUE
+all_businesses_sorgen_merge$kriminalitaet[all_businesses_sorgen_merge$BusinessShortNumber == "12.065"] <- TRUE
 
 vote_statement <- vote_statement %>% 
   left_join(all_businesses_sorgen_merge, by = "BusinessShortNumber")
