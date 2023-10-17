@@ -4,12 +4,12 @@
 # Add each item of business to a "Sorge" from the 2022 Sorgenbarometer
 
 # Define terms for each "Sorge"
-umwelt <- c("Umweltschutz", "Klimawandel", "Umweltkatastrophen", "Umwelt", "Landwirtschaft", "CO2", "Netto-Null", "Klima", "Klimaschutz") # Umweltschutz / Klimawandel / Umweltkatastrophen
-ahv <- c("AHV", "Altersvorsorge") # AHV / Altersvorsorge
+umwelt <- c("Umweltschutz", "Klimawandel", "Umweltkatastrophen", "Umwelt", "Landwirtschaft", "CO2", "Netto-Null", "Klima", "Klimaschutz", "Tierschutz", "Gewässer", "Landschaft", "Naturschutz") # Umweltschutz / Klimawandel / Umweltkatastrophen
+ahv <- c("AHV", "Altersvorsorge", "IV") # AHV / Altersvorsorge
 energiefragen <- c("Energiefragen", "Kernenergie", "AKW", "Kernkraftwerk", "Energie", "Strom") # Energiefragen / Kernenergie
 europa <- c("EU", "Rahmenabkommen", "Europäisch", "Lissabon", "FADO") # Beziehung zu Europa, EU, Rahmenabkommen, Zugang zum europäischen Markt
 inflation <- c("Inflation", "Geldentwertung", "Teuerung", "Hochpreisinsel") # Inflation / Geldentwertung / Teuerung
-gesundheitsfragen <- c("Gesundheitsfragen", "Krankenkasse", "Prämien", "Gesundheit", "Krankenversicherung", "Arzneimitteln", "Arzt", "Medikament", "Generika") # Gesundheitsfragen / Krankenkasse / Prämien
+gesundheitsfragen <- c("Gesundheitsfragen", "Krankenkasse", "Prämien", "Gesundheit", "Krankenversicherung", "Arzneimitteln", "Arzt", "Medikament", "Generika", "Drogen") # Gesundheitsfragen / Krankenkasse / Prämien
 versorgungssicherheit <- c("Versorgungssicherheit", "Versorgung") # Versorgungssicherheit (Energie, Medikamente, Nahrungsmittel)
 ukraine <- c("Ukraine") # Der Krieg in der Ukraine
 auslaender <- c("Ausländer", "Personenfreizügigkeit", "Zuwanderung", "Einwanderung", "Schengen", "Dublin", "Grenzgänger", "Einbürgerung", "Migration") # Ausländerinnen und Ausländer / Personenfreizügigkeit / Zuwanderung
@@ -20,14 +20,14 @@ globalisierung <- c("Globalisierung", "Global", "Marktöffnung", "Informationsau
 neutralitaet <- c("Neutralität", "Neutral") # Verlust der Neutralität
 wohnkosten <- c("Wohnkosten", "Mietpreise", "Miete", "Grundstück", "Referenzzins") # erhöhte Wohnkosten, Anstieg Mietpreise
 corona <- c("Corona", "Pandemie", "covid", "COVID", "covid-19", "COVID-19") # Corona-Pandemie und ihre Folgen
-sozial <- c("Sozialwerke", "sozial", "Familienzulagen", "Familie", "Jugendschutz", "Jugend", "Mutter", "Vater", "Arbeitsgesetz", "Arbeitnehmerrechte", "Arbeitnehmerschutz", "Entlasten", "Soziale Sicherheit", "Frauen") # soziale Sicherheit / Sicherung der Sozialwerke
+sozial <- c("Sozialwerke", "sozial", "Familienzulagen", "Familie", "Jugendschutz", "Jugend", "Mutter", "Vater", "Arbeitsgesetz", "Arbeitnehmerrechte", "Arbeitnehmerschutz", "Entlasten", "Soziale Sicherheit", "Frauen", "Einkommensverteilung") # soziale Sicherheit / Sicherung der Sozialwerke
 armut <- c("Armut", "Mindestlohn", "Löhne") # neue Armut / Armut jüngerer Generationen
 weltordnung <- c("Weltordnung") # neue Weltordnung, Aufstieg Chinas, der Westen unter Druck
 zusammenleben <- c("Zusammenleben", "Toleranz", "Partnerschaft", "Polarisierung", "Gleichstellung") # Zusammenleben in der Schweiz / Toleranz
 
 # Further Topics
-sicherheit <- c("Militär", "Armee", "Polizei", "Stabilität", "NATO", "Munition", "Rüstung", "Terrorismus", "Frieden", "Grenzkontrollen", "Militärstrafprozess", "Kampfflugzeug", "Gripen", "Waffen")
-kriminalitaet <- c("Geldwäscherei", "Kriminalität", "Menschenhandel", "Opfer", "Kinderpornografie", "Kinderprostitution", "Kindersextourismus", "Kinderverkauf", "Korruption")
+sicherheit <- c("Militär", "Armee", "Polizei", "Stabilität", "NATO", "Munition", "Rüstung", "Terrorismus", "Frieden", "Grenzkontrollen", "Militärstrafprozess", "Kampfflugzeug", "Gripen", "Waffen", "Terror", "Al-Qaïda", "Kriegsmaterialgesetz")
+kriminalitaet <- c("Geldwäscherei", "Kriminalität", "Menschenhandel", "Opfer", "Kinderpornografie", "Kinderprostitution", "Kindersextourismus", "Kinderverkauf", "Korruption", "Gewalt", "Drogen")
 verkehr <- c("Strassen", "Flugsicherheit", "Stau", "Autobahn", "SBB", "Klebevignette", "Luftfahrtgesetz", "Cargo sous terrain", "E-Vignette", "Autobahnvignette", "Eisenbahn", "Seilbahn", "Flug", "Gotthard", "Tunnel", "NEAT", "Güter", "Strasse", "S-Bahn", "Velo", "Auto", "Fahrrad", "Schiff")
 datenschutz <- c("Datenschutz")
 bildung <- c("Bildung", "Bildungsförderung", "Forschungsförderung", "Forschung", "Innovation", "Innovationsförderung", "CERN", "ETH", "Schule", "Universität", "Innosuisse")
@@ -79,6 +79,9 @@ vote_statement <- vote_statement_vue %>% select(PersonNumber, BusinessShortNumbe
 
 all_businesses_sorgen_merge <- all_businesses_sorgen %>% 
   select(-Title, -InitialSituation_clean, -TagNames, -chatgpt_summaries, -chatgpt_tags_clean)
+
+# Make some manual adjustments, because of NAs in chatgpt_tags_clean
+all_businesses_sorgen_merge$sicherheit[all_businesses_sorgen_merge$BusinessShortNumber == "12.073"] <- TRUE
 
 vote_statement <- vote_statement %>% 
   left_join(all_businesses_sorgen_merge, by = "BusinessShortNumber")
