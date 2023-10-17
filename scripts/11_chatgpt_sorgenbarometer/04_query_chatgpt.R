@@ -1,5 +1,5 @@
-# ChatGPT API Queries
 
+# ChatGPT API Queries -----------------------------------------------------
 
 # Connect to ChatGPT -----------------------------------------------------
 gpt3_authenticate("ChatGPT_API_Key.txt")
@@ -22,10 +22,12 @@ for(i in 1:nrow(sergio_sample)) {
   chatgpt_output_summary <- chatgpt(prompt_role_var = sergio_sample$role[i],
                                     prompt_content_var = sergio_sample$prompt[i],
                                     id_var = sergio_sample$id[i],
-                                    param_max_tokens = 120,
+                                    #param_max_tokens = 120,
+                                    param_max_tokens = 200,
                                     param_n = 1,
                                     param_temperature = 0,
-                                    param_model = "gpt-4")
+                                    #param_model = "gpt-4")
+                                    param_model = "gpt-3.5-turbo")
   # Convert to DF
   chatgpt_output_summary <- do.call(
     rbind,
@@ -40,7 +42,7 @@ for(i in 1:nrow(sergio_sample)) {
   print(i)
 
   # Pause
-  Sys.sleep(8)
+  #Sys.sleep(8)
 }
  
 file_name <- paste0("chatgpt_output_df_", formatted_timestamp, ".RData")
