@@ -22,3 +22,13 @@ summary(prompt_vote_statement_sorge$len)
 ggplot(prompt_vote_statement_sorge, aes(x = bullet_count)) +
   geom_histogram(binwidth = 1) +
   theme_minimal()
+
+# Which items of business have no Sorge?
+# Currently 265 items with no Sorge
+# Continue at row nr 130
+no_sorge <- all_businesses_sorgen_merge %>%
+  rowwise() %>%
+  dplyr::filter(all(c_across(-BusinessShortNumber) == FALSE)) %>%
+  ungroup() %>% 
+  select(BusinessShortNumber) %>% 
+  left_join(all_businesses_eval, by = "BusinessShortNumber")
