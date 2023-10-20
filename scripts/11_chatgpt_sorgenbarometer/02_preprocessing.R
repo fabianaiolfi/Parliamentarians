@@ -1,4 +1,11 @@
 
+# All Businesses Preprocessing ----------------------------------------
+
+# Remove all "Aussenwirtschaftspolitik Berichte"
+all_businesses_eval <- all_businesses_eval %>% 
+  dplyr::filter(!str_detect(Title, "Aussenwirtschaftspolitik"))
+
+
 # Sorgen Barometer -------------------------------------------------------------
 
 # Add each item of business to a "Sorge" from the 2022 Sorgenbarometer
