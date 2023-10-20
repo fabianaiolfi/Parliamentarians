@@ -2,7 +2,7 @@
 # All Businesses Preprocessing ----------------------------------------
 
 # Remove all "Aussenwirtschaftspolitik Berichte"
-all_businesses_eval <- all_businesses_eval %>% 
+all_businesses_eval <- all_businesses_eval %>%
   dplyr::filter(!str_detect(Title, "Aussenwirtschaftspolitik"))
 
 

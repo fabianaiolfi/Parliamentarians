@@ -18,16 +18,15 @@ formatted_timestamp <- format(timestamp, "%Y%m%d_%H%M%S")
 chatgpt_output_df <- data.frame(id = character(0), chatgpt_output = character(0))
 
 # ChatGPT API Query in sleep loop to prevent reaching tokens-per-minute limit of 10'000
-for(i in 1:nrow(sergio_sample)) {
-  chatgpt_output_summary <- chatgpt(prompt_role_var = sergio_sample$role[i],
-                                    prompt_content_var = sergio_sample$prompt[i],
-                                    id_var = sergio_sample$id[i],
+for(i in 1:nrow(prompt_vote_statement_sorge_sample)) {
+  chatgpt_output_summary <- chatgpt(prompt_role_var = prompt_vote_statement_sorge_sample$role[i],
+                                    prompt_content_var = prompt_vote_statement_sorge_sample$prompt[i],
+                                    id_var = prompt_vote_statement_sorge_sample$id[i],
                                     #param_max_tokens = 120,
                                     param_max_tokens = 200,
                                     param_n = 1,
                                     param_temperature = 0,
-                                    #param_model = "gpt-4")
-                                    param_model = "gpt-3.5-turbo")
+                                    param_model = "gpt-4")
   # Convert to DF
   chatgpt_output_summary <- do.call(
     rbind,
@@ -42,7 +41,7 @@ for(i in 1:nrow(sergio_sample)) {
   print(i)
 
   # Pause
-  #Sys.sleep(8)
+  Sys.sleep(11)
 }
  
 file_name <- paste0("chatgpt_output_df_", formatted_timestamp, ".RData")
