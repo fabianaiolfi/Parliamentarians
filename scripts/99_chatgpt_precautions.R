@@ -27,16 +27,16 @@ round(token_sum / 1000 * 0.04, 2) # Queries will cost about $30 in total
 
 
 # Summary Length Check -----------------------------------------------------
-len_check <- sergio_sample %>% mutate(length = nchar(prompt) / 2.6)
+len_check <- prompt_vote_statement_sorge_sample %>% mutate(length = nchar(prompt) / 2.6)
 summary(len_check$length)
 # How long should Sys.sleep() be?
-60/(10000/880) # 15 sec
+60/(10000/1511) # 11 sec
 (15*672)/60/60 # 3h for summaries
 (7*180)/60 # 21min for topic name generation
 98/3
 
 sum(len_check$length)
-32817.69 / 1000 * 0.03 # ~32$ for summaries
+42286.92 / 1000 * 0.03 # ~32$ for summaries
 750296.9 / 1000 * 0.03 # ~22$ for tags
 60510.77 / 1000 * 0.035 # ~2.1$
 91968.08 / 1000 * 0.035 # ~3.2$
