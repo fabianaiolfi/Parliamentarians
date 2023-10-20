@@ -6,7 +6,7 @@ set.seed(42)
 
 sergio_list <- c("von Falkenstein", "Wyss", "Atici", "Arslan", "Christ") # Patricia von Falkenstein, Sarah Wyss, Mustafa Atici, Sibel Arslan und Katja Christ
 
-sergio_sample <- prompt_subset %>% 
+sergio_sample <- prompt_vote_statement_sorge %>% 
   dplyr::filter(CantonName == "Basel-Stadt") %>% 
   dplyr::filter(LastName %in% sergio_list) %>% 
   select(prompt, FirstName, LastName, CantonName, sorge_long) %>% 
