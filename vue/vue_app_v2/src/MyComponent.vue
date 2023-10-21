@@ -7,13 +7,44 @@ import WorryStatement from './worry_statement.json'
 import NamesSearchSelect from './names.json'
 
 // MainTopic Dropdown
-const selectedMainTopic = ref('Alle Themen');  // Initialize to 'Alle Themen' or any default value
+const selectedMainTopic = ref();  // Initialize to 'Alle Themen' or any default value
 
 // Assuming WorryStatement is already imported
 const uniqueMainTopics = ref([]);
 
 const selectedStatements = ref({})
 const options = ref([])  // We'll populate this shortly
+
+const availableTopics = ref([]);
+
+const topicNameMapping = {
+  zusammenleben: "Zusammenleben in der Schweiz / Toleranz",
+  globalisierung: "weltweite, globale Abhängigkeiten Wirtschaft / Globalisierung",
+  sicherheit: "Sicherheit",
+  menschenrechte: "Menschenrechte",
+  sozial: "Soziale Sicherheit / Sicherung der Sozialwerke",
+  bildung: "Bildung",
+  verkehr: "Verkehr",
+  kriminalitaet: "Kriminalität",
+  europa: "Beziehung zu Europa, EU, Rahmenabkommen, Zugang zum europäischen Markt",
+  auslaender: "Ausländerinnen und Ausländer / Personenfreizügigkeit / Zuwanderung",
+  fluechtlinge: "Flüchtlinge / Asylfragen",
+  umwelt: "Umweltschutz / Klimawandel / Umweltkatastrophen",
+  wohnkosten: "erhöhte Wohnkosten, Anstieg Mietpreise",
+  datenschutz: "Datenschutz",
+  gesundheitsfragen: "Gesundheitsfragen / Krankenkasse / Prämien",
+  ahv: "AHV / Altersvorsorge",
+  inflation: "Inflation / Geldentwertung / Teuerung",
+  energiefragen: "Energiefragen / Kernenergie",
+  versorgungssicherheit: "Versorgungssicherheit (Energie, Medikamente, Nahrungsmittel)",
+  medien: "Medien",
+  arbeitslosigkeit: "Arbeitslosigkeit / Jugendarbeitslosigkeit",
+  neutralitaet: "Verlust der Neutralität",
+  armut: "Neue Armut / Armut jüngerer Generationen",
+  corona: "Corona-Pandemie und ihre Folgen",
+  ukraine: "Der Krieg in der Ukraine"
+};
+
 
 // Transform the imported JSON into dropdown options
 for (const personNumber in NamesSearchSelect) {
@@ -32,7 +63,11 @@ function handleMainTopicChange(newValue) {
 
 const handleChange = (value) => {
     selectedStatements.value = WorryStatement[value] ? WorryStatement[value][0] : {};
+
+    // Update available topics for the selected name
+    availableTopics.value = Object.keys(selectedStatements.value);
 }
+
 
 const handleBlur = () => {
   console.log('blur');
@@ -81,28 +116,25 @@ for (const statements of Object.values(WorryStatement)) {
     <h4>Wähle ein Themengebiet</h4>
     <a-select
       @change="handleMainTopicChange"
-      style="width: 300px"
-      placeholder="Alle Themen">
-      <a-select-option value="Alle Themen">Alle Themen</a-select-option>
-      <a-select-option v-for="topic in uniqueMainTopics" :key="topic" :value="topic">
-        {{ topic }}
+      style="width: 400px">
+      <a-select-option v-for="topic in availableTopics" :key="topic" :value="topic">
+        {{ topicNameMapping[topic] || topic }}
       </a-select-option>
     </a-select>
     
-    <div class="spacer" style="height: 30px;"></div>
+    <div class="spacer" style="height: 40px;"></div>
+
+    <h3>Zusammenfassung aller Abstimmungen</h3>
 
     <div v-if="selectedMainTopic !== 'Alle Themen' && selectedStatements[selectedMainTopic]">
-      <a-card style="width: 100%;" :bordered="false">
-        <h3>{{ selectedStatements[selectedMainTopic] }}</h3>
+      <a-card style="width: 75%;" :bordered="false">
+        <h4>{{ selectedStatements[selectedMainTopic] }}</h4>
       </a-card>
     </div>
 
-    <div v-else>
-      <div v-for="(text, key) in selectedStatements" :key="key">
-        <strong>{{ key }}</strong>
-        <p>{{ text }}</p>
-      </div>
-    </div>
+    <div class="spacer" style="height: 30px;"></div>
+
+    <h3>Einzelne Abstimmungen</h3>
   
   </div>
 
