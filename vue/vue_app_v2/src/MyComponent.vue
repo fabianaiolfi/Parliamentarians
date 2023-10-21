@@ -1,76 +1,39 @@
 <script setup>
 
 import { ref, computed } from 'vue'
-import { CheckCircleTwoTone, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';  // Import the icon
 
 // Importing the JSON files
-import names_sbn from './namesSBN.json'
-const names = ref(Object.keys(names_sbn))
-const selectedName = ref(names.value[0])
-import voteStatement from './vote_statement.json'
-import bsnURL from './bsn_url.json'
+import WorryStatement from './worry_statement.json'
+import NamesSearchSelect from './names.json'
 
 // MainTopic Dropdown
 const selectedMainTopic = ref('Alle Themen');  // Initialize to 'Alle Themen' or any default value
 
-// Computed property for selectedBusinessItems based on vote_statement.json
-const selectedVoteStatement = computed(() => {
-  return voteStatement[selectedName.value] || []
-})
+// Assuming WorryStatement is already imported
+const uniqueMainTopics = ref([]);
 
-// Add this computed property to extract unique main_topic values
-const uniqueMainTopics = computed(() => {
-  const allTopics = selectedVoteStatement.value.map(item => item.main_topic);
-  const uniqueTopics = [...new Set(allTopics.filter(Boolean))];
-  return uniqueTopics;
-});
+const selectedStatements = ref({})
+const options = ref([])  // We'll populate this shortly
 
-
-// Function to assign a priority based on the starting text of vote_statement
-function assignPriority(statement) {
-  if (statement.startsWith("Stimmte für")) return 1;
-  if (statement.startsWith("Stimmte gegen")) return 2;
-  if (statement.startsWith("Enthielt sich")) return 3;
-  if (statement.startsWith("Keine Teilnahme")) return 4;
-  return 5; // Default priority for unrecognized statements
+// Transform the imported JSON into dropdown options
+for (const personNumber in NamesSearchSelect) {
+    const person = NamesSearchSelect[personNumber][0]
+    const fullName = `${person.FirstName} ${person.LastName} (${person.CantonName})`
+    options.value.push({
+        label: fullName,
+        value: personNumber
+    })
 }
 
-// computed property that filters selectedVoteStatement based on the main_topic
-const filteredByMainTopic = computed(() => {
-  if (selectedMainTopic.value === 'Alle Themen') {
-    return selectedVoteStatement.value;  // Return all items if 'Alle Themen' is selected
-  }
-  return selectedVoteStatement.value.filter(item => item.main_topic === selectedMainTopic.value);
-});
-
-
-// Computed property to group cards by topic
-const groupedByTopic = computed(() => {
-  const grouped = {};
-  const items = filteredByMainTopic.value;
-  items.forEach(item => {
-    const topic = item.chatgpt_topic || 'Unknown Topic';  // Replace 'Topic' with the actual key for the topic in your JSON
-    if (!grouped[topic]) {
-      grouped[topic] = [];
-    }
-    grouped[topic].push(item);
-  });
-  // Sort the cards within each group based on priority
-for (const topic of Object.keys(grouped)) {
-  grouped[topic].sort((a, b) => assignPriority(a.vote_statement) - assignPriority(b.vote_statement));
+// Main Topic Dropdown
+function handleMainTopicChange(newValue) {
+  selectedMainTopic.value = newValue;
 }
 
-  return grouped;
-});
-
-// Select Search Dropdown
-import NamesSearchSelect from './names_search_select.json'
-const options = ref(NamesSearchSelect)
-const value = selectedName; // Select first name on load
-
-function handleChange(newValue) {
-  selectedName.value = newValue;  // Update selectedName whenever the dropdown changes
+const handleChange = (value) => {
+    selectedStatements.value = WorryStatement[value] ? WorryStatement[value][0] : {};
 }
+
 const handleBlur = () => {
   console.log('blur');
 };
@@ -78,55 +41,16 @@ const handleFocus = () => {
   console.log('focus');
 };
 const filterOption = (input, option) => {
-  return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-};
-
-// Make parliamentarian name nice in topic group title above cards
-function formatName(name) {
-  // Remove brackets and words within brackets
-  const cleanedName = name.replace(/\(.*?\)/g, '').trim();
-  // Upper case the first letter of every word
-  return cleanedName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-}
-const formattedSelectedName = computed(() => formatName(selectedName.value));
-
-// get the appropriate icon and its color based on the vote_statement
-const icons = {
-  CheckCircleTwoTone,
-  CloseCircleTwoTone,
-  QuestionCircleTwoTone,
-  FrownTwoTone
-};
-const iconColors = {
-  'Stimmte für': '#52c41a',
-  'Stimmte gegen': '#eb2f96',
-  'Enthielt sich': '#b4b4b4',
-  'Keine Teilnahme': '#b4b4b4'
-};
-function getStatementStart(statement) {
-  if (statement.startsWith("Stimmte für")) return 'Stimmte für';
-  if (statement.startsWith("Stimmte gegen")) return 'Stimmte gegen';
-  if (statement.startsWith("Enthielt sich")) return 'Enthielt sich';
-  if (statement.startsWith("Keine Teilnahme")) return 'Keine Teilnahme';
-  return null;
-}
-function getIconForStatement(statement) {
-  if (statement.startsWith("Stimmte für")) return icons.CheckCircleTwoTone;
-  if (statement.startsWith("Stimmte gegen")) return icons.CloseCircleTwoTone;
-  if (statement.startsWith("Enthielt sich")) return icons.QuestionCircleTwoTone;
-  if (statement.startsWith("Keine Teilnahme")) return icons.FrownTwoTone;
-  return null;  // Default, no icon
+    return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 }
 
-// collapse element stuff
-const activeKey = ref(null);
-function setActiveKey(key) {
-  activeKey.value = activeKey.value === key ? null : key;
-}
-
-// Main Topic Dropdown
-function handleMainTopicChange(newValue) {
-  selectedMainTopic.value = newValue;
+// Gather all topics
+for (const statements of Object.values(WorryStatement)) {
+    for (const topic of Object.keys(statements[0])) {
+        if (!uniqueMainTopics.value.includes(topic)) {
+            uniqueMainTopics.value.push(topic);
+        }
+    }
 }
 
 </script>
@@ -140,7 +64,7 @@ function handleMainTopicChange(newValue) {
     <!-- Select Parliamentarian Dropdown -->
     <div style="text-align: left; margin-bottom: 20px;">
       <a-select
-        v-model:value="value"
+        v-model:value="selectedPerson"
         show-search
         placeholder="Select a person"
         style="width: 400px"
@@ -165,32 +89,23 @@ function handleMainTopicChange(newValue) {
       </a-select-option>
     </a-select>
     
-    <!-- Grouped Collapse -->
-    <div v-for="(group, topic) in groupedByTopic" :key="topic">
-    <div style="margin-bottom: 20px; margin-top: 40px;">
-      <h3>Wie {{ formattedSelectedName }} über <b>{{ topic }}</b> abgestimmt hat</h3>
+    <div class="spacer" style="height: 30px;"></div>
+
+    <div v-if="selectedMainTopic !== 'Alle Themen' && selectedStatements[selectedMainTopic]">
+      <a-card style="width: 100%;" :bordered="false">
+        <h3>{{ selectedStatements[selectedMainTopic] }}</h3>
+      </a-card>
     </div>
-    <a-space direction="vertical" style="width: 100%;">
-      <div v-for="item in group" :key="item.BusinessShortNumber">
-        <a-collapse :style="{ backgroundColor: 'white' }" :active-key="activeKey === item.BusinessShortNumber ? [item.BusinessShortNumber] : []" @change="() => setActiveKey(item.BusinessShortNumber)">
-          <a-collapse-panel :key="item.BusinessShortNumber" :show-arrow="false">
-            <!-- Custom title with dynamic icon -->
-            <template #header>
-              <component
-                :is="getIconForStatement(item.vote_statement)"
-                :two-tone-color="iconColors[getStatementStart(item.vote_statement)]"
-              /> {{ item.vote_statement }}
-            </template>
-            <p><b>{{ item.Title || 'Title not available' }}</b><br>{{ item.chatgpt_summary || 'Summary not available' }}</p>
-            <!-- <small>BSN: {{ item.BusinessShortNumber }}</small> -->
-            <small>Details: <a :href="bsnURL[item.BusinessShortNumber]" target="_blank">parlament.ch <i class="material-icons" style="font-size: 0.8rem; vertical-align: -2.6px">open_in_new</i></a></small>
-          </a-collapse-panel>
-        </a-collapse>
+
+    <div v-else>
+      <div v-for="(text, key) in selectedStatements" :key="key">
+        <strong>{{ key }}</strong>
+        <p>{{ text }}</p>
       </div>
-    </a-space>
+    </div>
+  
   </div>
 
-  </div>
 </div>
 
 </template>
