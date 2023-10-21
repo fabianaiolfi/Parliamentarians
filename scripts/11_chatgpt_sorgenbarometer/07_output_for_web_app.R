@@ -9,8 +9,8 @@ names <- output_merged %>%
   distinct(PersonNumber, .keep_all = T)
 
 # Convert dataframe to list with PersonNumber as names
-lst <- split(names[-1], names$PersonNumber)
-named_lst <- setNames(lst, names$PersonNumber)
+lst <- split(names[-1], factor(names$PersonNumber, levels = unique(names$PersonNumber)))
+named_lst <- setNames(lst, unique(names$PersonNumber))
 
 # Convert list to JSON
 json_output <- toJSON(named_lst, pretty = TRUE, auto_unbox = TRUE)
