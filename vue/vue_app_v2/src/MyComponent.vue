@@ -174,6 +174,9 @@ function getOrderedValues() {
     return ordered;
 }
 
+// Adjust the expand icon position
+const expandIconPosition = ref('end');
+
 </script>
 
 <template>
@@ -226,8 +229,8 @@ function getOrderedValues() {
       <div v-for="(votes, behavior) in getOrderedValues()" :key="behavior">
         <div v-for="vote in votes" :key="vote">
           <div v-if="BSNStatement[vote]">
-            <a-collapse :style="{ backgroundColor: 'white' }" :active-key="activeKey === vote ? [vote] : []" @change="() => setActiveKey(vote)">
-              <a-collapse-panel :key="vote" :show-arrow="false">
+            <a-collapse :style="{ backgroundColor: 'white' }" :active-key="activeKey === vote ? [vote] : []" @change="() => setActiveKey(vote)" :expand-icon-position="expandIconPosition">
+              <a-collapse-panel :key="vote" :show-arrow="true">
                 <!-- Custom title with dynamic icon -->
                 <template #header>
                   <component
