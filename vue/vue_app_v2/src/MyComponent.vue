@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { CheckCircleTwoTone, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';  // Import the icon
 
 // Importing the JSON files
@@ -158,6 +158,22 @@ for (const statements of Object.values(WorryStatement)) {
     }
 }
 
+// Order the collapse elements in this sequence
+const order = ["Stimmte für ", "Stimmte gegen ", "Enthielt sich in Bezug auf ", "Keine Teilnahme in Bezug auf "];
+function getOrderedValues() {
+    let ordered = {};
+    const resultingData = resultingValues.value; // Access the underlying data here
+
+    console.log("Actual Resulting Values:", resultingData);
+
+    order.forEach(behavior => {
+        if (resultingData[behavior]) {
+            ordered[behavior] = resultingData[behavior];
+        }
+    });
+    return ordered;
+}
+
 </script>
 
 <template>
@@ -206,34 +222,32 @@ for (const statements of Object.values(WorryStatement)) {
 
     <h3>Einzelne Abstimmungen</h3>
 
-    <div v-if="Object.keys(resultingValues).length">
-  <div v-for="(votes, behavior) in resultingValues" :key="behavior">
-    <div v-for="vote in votes" :key="vote">
-      <div v-if="BSNStatement[vote]">
-        <a-collapse :style="{ backgroundColor: 'white' }" :active-key="activeKey === vote ? [vote] : []" @change="() => setActiveKey(vote)">
-          <a-collapse-panel :key="vote" :show-arrow="false">
-            <!-- Custom title with dynamic icon -->
-            <template #header>
-              <component
-                :is="getIconForBehavior(behavior)"
-                :two-tone-color="iconColors[behavior]"
-              /> {{ behavior + BSNStatement[vote][0].vote_statement }}
-            </template>
-            <p><b>{{ BSNStatement[vote][0].Title || 'Title not available' }}</b><br>{{ BSNStatement[vote][0].summary || 'Summary not available' }}</p>
-            <small v-if="bsnURL[vote]">
-            Details: <a :href="bsnURL[vote]" target="_blank">
-              parlament.ch 
-              <i class="material-icons" style="font-size: 0.8rem; vertical-align: -2.6px">open_in_new</i></a>
-          </small>
-          </a-collapse-panel>
-        </a-collapse>
+    <div v-if="Object.keys(getOrderedValues()).length">
+      <div v-for="(votes, behavior) in getOrderedValues()" :key="behavior">
+        <div v-for="vote in votes" :key="vote">
+          <div v-if="BSNStatement[vote]">
+            <a-collapse :style="{ backgroundColor: 'white' }" :active-key="activeKey === vote ? [vote] : []" @change="() => setActiveKey(vote)">
+              <a-collapse-panel :key="vote" :show-arrow="false">
+                <!-- Custom title with dynamic icon -->
+                <template #header>
+                  <component
+                    :is="getIconForBehavior(behavior)"
+                    :two-tone-color="iconColors[behavior]"
+                  /> {{ behavior + BSNStatement[vote][0].vote_statement }}
+                </template>
+                <p><b>{{ BSNStatement[vote][0].Title || 'Title not available' }}</b><br>{{ BSNStatement[vote][0].summary || 'Summary not available' }}</p>
+                <small v-if="bsnURL[vote]">
+                Details: <a :href="bsnURL[vote]" target="_blank">
+                  parlament.ch 
+                  <i class="material-icons" style="font-size: 0.8rem; vertical-align: -2.6px">open_in_new</i></a>
+              </small>
+              </a-collapse-panel>
+            </a-collapse>
+          </div>
+          <div class="spacer" style="height: 10px;"></div>
+        </div>
       </div>
-      <div class="spacer" style="height: 10px;"></div>
     </div>
-  </div>
-</div>
-          
-
 
   </div>
 
