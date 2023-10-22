@@ -22,19 +22,22 @@ watch([selectedPerson, selectedMainTopic], ([newPerson, newTopic]) => {
         const topicValues = SorgenBSN[newTopic] || [];
         const personVotes = PersonBSNVote[newPerson] || {};
         
-        // Filter the votes of the selected person based on the selected topic
-        const filteredVotes = Object.values(personVotes).flat().filter(vote => topicValues.includes(vote));
-
-        const allVotes = Object.values(personVotes).flat();
+        const groupedVotes = {};
         
-        // New filtering logic
-        const matches = allVotes.filter(vote => {
-            return topicValues.some(topicValue => topicValue.split(', ').includes(vote));
-        });
-        resultingValues.value = matches;
+        for (const [behavior, votes] of Object.entries(personVotes)) {
+            const filteredVotes = votes.filter(vote => 
+                topicValues.some(topicValue => topicValue.split(', ').includes(vote))
+            );
+            if (filteredVotes.length) {
+                groupedVotes[behavior] = filteredVotes;
+            }
+        }
 
-      } else {
-        resultingValues.value = [];
+        resultingValues.value = groupedVotes;
+
+        console.log("Grouped votes:", resultingValues.value);
+    } else {
+        resultingValues.value = {};
     }
 });
 
@@ -73,7 +76,6 @@ const topicNameMapping = {
   corona: "Corona-Pandemie und ihre Folgen",
   ukraine: "Der Krieg in der Ukraine"
 };
-
 
 // Transform the imported JSON into dropdown options
 for (const personNumber in NamesSearchSelect) {
@@ -167,11 +169,15 @@ for (const statements of Object.values(WorryStatement)) {
 
     <h3>Einzelne Abstimmungen</h3>
 
-    <div v-if="resultingValues.length">
-      <ul>
-        <li v-for="value in resultingValues" :key="value">{{ value }}</li>
-      </ul>
+    <div v-if="Object.keys(resultingValues).length">
+      <div v-for="(votes, behavior) in resultingValues" :key="behavior">
+        <strong>{{ behavior }}</strong>
+          <ul>
+            <li v-for="vote in votes" :key="vote">{{ vote }}</li>
+        </ul>
+      </div>
     </div>
+
   
   </div>
 
