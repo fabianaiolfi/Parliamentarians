@@ -8,6 +8,10 @@ names <- output_merged %>%
   select(PersonNumber, FirstName, LastName, CantonName) %>% 
   distinct(PersonNumber, .keep_all = T)
 
+# Add party name to each parliamentarian
+here("data", "member_council.RData")
+names <- names %>% left_join(select(member_council, PersonNumber, PartyAbbreviation), by = "PersonNumber")
+
 # Convert dataframe to list with PersonNumber as names
 lst <- split(names[-1], factor(names$PersonNumber, levels = unique(names$PersonNumber)))
 named_lst <- setNames(lst, unique(names$PersonNumber))

@@ -84,7 +84,7 @@ const topicNameMapping = {
 // Transform the imported JSON into dropdown options
 for (const personNumber in NamesSearchSelect) {
     const person = NamesSearchSelect[personNumber][0]
-    const fullName = `${person.FirstName} ${person.LastName} (${person.CantonName})`
+    const fullName = `${person.FirstName} ${person.LastName} (${person.PartyAbbreviation}, ${person.CantonName})`
     options.value.push({
         label: fullName,
         value: personNumber
@@ -191,7 +191,7 @@ const expandIconPosition = ref('end');
         v-model:value="selectedPerson"
         show-search
         placeholder="Select a person"
-        style="width: 400px"
+        style="width: 450px"
         :options="options"
         :filter-option="filterOption"
         size="large"
@@ -205,7 +205,7 @@ const expandIconPosition = ref('end');
     <h4>Wähle ein Themengebiet</h4>
     <a-select
       @change="handleMainTopicChange"
-      style="width: 400px">
+      style="width: 450px">
       <a-select-option v-for="topic in availableTopics" :key="topic" :value="topic">
         {{ topicNameMapping[topic] || topic }}
       </a-select-option>

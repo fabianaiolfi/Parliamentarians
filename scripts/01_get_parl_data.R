@@ -28,6 +28,7 @@ business_legislative_period_50 <- swissparl::get_data("Business",
 
 
 # Parliamentarians casting final votes in a legislative period ------------------------------------------------------
+member_council <- swissparl::get_data("MemberCouncil", Language = "DE") # Filtering in get_data() doesn't seem to work here
 member_council_legislative_period_50 <- swissparl::get_data("MemberCouncil", Language = "DE") # Filtering in get_data() doesn't seem to work here
 member_council_legislative_period_50 <- member_council_legislative_period_50 %>%
   filter(PersonNumber %in% unique(voting_legislative_period_50$PersonNumber))
@@ -41,3 +42,4 @@ length(unique(member_council_legislative_period_50$PersonNumber))
 save(voting_legislative_period_50, file = here("data", "voting_legislative_period_50.RData"))
 save(business_legislative_period_50, file = here("data", "business_legislative_period_50.RData"))
 save(member_council_legislative_period_50, file = here("data", "member_council_legislative_period_50.RData"))
+save(member_council, file = here("data", "member_council.RData"))
