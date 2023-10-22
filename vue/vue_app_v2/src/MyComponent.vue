@@ -213,11 +213,12 @@ const expandIconPosition = ref('end');
     
     <div class="spacer" style="height: 40px;"></div>
 
-    <h3>Zusammenfassung aller Abstimmungen</h3>
+    <!-- <h3>Zusammenfassung aller Abstimmungen zum Thema {{ topicNameMapping[selectedMainTopic] || selectedMainTopic }}</h3> -->
+    <h3>Zusammenfassend</h3>
 
     <div v-if="selectedMainTopic !== 'Alle Themen' && selectedStatements[selectedMainTopic]">
-      <a-card style="width: 75%;" :bordered="false">
-        <h4>{{ selectedStatements[selectedMainTopic] }}</h4>
+      <a-card style="width: 100%;" :bordered="false">
+        <h1>{{ selectedStatements[selectedMainTopic] }}</h1>
       </a-card>
     </div>
 
