@@ -425,7 +425,7 @@ length(unique(voting_all_periods$PersonNumber))
 
 
 
-
+load(here("data", "chatgpt_output_df_20230827_100317.RData"))
 
 
 

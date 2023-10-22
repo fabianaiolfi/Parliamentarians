@@ -81,7 +81,7 @@ write(json_output, here("scripts", "11_chatgpt_sorgenbarometer", "person_bsn_vot
 # DF/JSON with summary and vote statement of each item of business
 
 bsn_summary_statement <- all_businesses_web %>% 
-  select(BusinessShortNumber, Title, chatgpt_summary, vote_statement) %>% 
+  select(BusinessShortNumber, Title, chatgpt_summary, vote_statement) %>% # Some confusion about chatgpt_summary and chatgpt_summaries; chatgpt_summary is GPT4 from chatgpt_output_df_20230827_100317.RData
   rename(summary = chatgpt_summary)
 
 json_data <- toJSON(setNames(lapply(seq_len(nrow(bsn_summary_statement)), function(i) {
