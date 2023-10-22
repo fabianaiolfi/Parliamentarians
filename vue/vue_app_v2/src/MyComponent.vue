@@ -172,15 +172,15 @@ for (const statements of Object.values(WorryStatement)) {
     <h3>Einzelne Abstimmungen</h3>
 
     <div v-if="Object.keys(resultingValues).length">
-  <div v-for="(votes, behavior) in resultingValues" :key="behavior">
-    <strong>{{ behavior }}</strong>
-    <ul>
-      <li v-for="vote in votes" :key="vote">
-        {{ BSNStatement[vote] && BSNStatement[vote][0].vote_statement || vote }}
-      </li>
-    </ul>
-  </div>
-</div>
+      <div v-for="(votes, behavior) in resultingValues" :key="behavior">
+      <strong>{{ behavior }}</strong>
+        <ul>
+          <li v-for="vote in votes" :key="vote">
+          {{ BSNStatement[vote] && BSNStatement[vote][0].vote_statement || vote }}
+          </li>
+        </ul>
+      </div>
+    </div>
 
 
   
