@@ -75,3 +75,19 @@ json_output <- toJSON(nested_data, pretty = TRUE)
 
 # Output
 write(json_output, here("scripts", "11_chatgpt_sorgenbarometer", "person_bsn_vote.json"))
+
+
+## BSNs, summaries and vote statements ----------------------------
+# DF/JSON with summary and vote statement of each item of business
+
+bsn_summary_statement <- all_businesses_web %>% 
+  select(BusinessShortNumber, chatgpt_summary, vote_statement) %>% 
+  rename(summary = chatgpt_summary)
+
+json_data <- toJSON(setNames(lapply(seq_len(nrow(bsn_summary_statement)), function(i) {
+  bsn_summary_statement[i, c("summary", "vote_statement")]
+}), bsn_summary_statement$BusinessShortNumber), pretty = TRUE)
+
+
+# Output
+write(json_data, here("scripts", "11_chatgpt_sorgenbarometer", "bsn_summary_statement.json"))
