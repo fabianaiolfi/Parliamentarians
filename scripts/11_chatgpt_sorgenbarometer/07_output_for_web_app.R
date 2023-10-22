@@ -36,3 +36,42 @@ json_output <- toJSON(lst, pretty = TRUE, auto_unbox = TRUE)
 
 # Output
 write(json_output, here("scripts", "11_chatgpt_sorgenbarometer", "worry_statement.json"))
+
+
+## Sorgen and BSNs ----------------------------
+# Create a JSON that lists every BSN for each Sorge
+
+sorgen_bsn <- all_businesses_sorgen_merge %>%
+  pivot_longer(cols = -BusinessShortNumber, names_to = "topic", values_to = "value") %>%
+  dplyr::filter(value) %>%
+  group_by(topic) %>%
+  summarise(BusinessShortNumber = paste(BusinessShortNumber, collapse = ", "))
+
+# Convert dataframe to named list
+named_list <- setNames(as.list(sorgen_bsn$BusinessShortNumber), sorgen_bsn$topic)
+
+# Convert named list to JSON
+json_output <- toJSON(named_list, pretty = TRUE)
+
+# Output
+write(json_output, here("scripts", "11_chatgpt_sorgenbarometer", "sorgen_bsn.json"))
+
+
+## Parliamentarians and BSNs ----------------------------
+# Which items of business did parliamentarians vote for?
+
+person_bsn_vote <- voting_all_periods_edit %>% 
+  select(PersonNumber, DecisionText, BusinessShortNumber)
+
+nested_data <- person_bsn_vote %>%
+  group_by(PersonNumber, DecisionText) %>%
+  summarise(BusinessShortNumbers = list(BusinessShortNumber)) %>%
+  nest(data = c(DecisionText, BusinessShortNumbers)) %>%
+  mutate(data = map(data, ~setNames(.x$BusinessShortNumbers, .x$DecisionText))) %>%
+  deframe()
+
+# Convert to JSON
+json_output <- toJSON(nested_data, pretty = TRUE)
+
+# Output
+write(json_output, here("scripts", "11_chatgpt_sorgenbarometer", "person_bsn_vote.json"))
