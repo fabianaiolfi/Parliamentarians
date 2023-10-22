@@ -6,9 +6,10 @@ import { CheckCircleTwoTone, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwo
 // Importing the JSON files
 import WorryStatement from './worry_statement.json'
 import NamesSearchSelect from './names.json'
-import SorgenBSN from './sorgen_bsn.json';
-import PersonBSNVote from './person_bsn_vote.json';
-import BSNStatement from './bsn_summary_statement.json';
+import SorgenBSN from './sorgen_bsn.json'
+import PersonBSNVote from './person_bsn_vote.json'
+import BSNStatement from './bsn_summary_statement.json'
+import bsnURL from './bsn_url.json'
 
 
 // Update logic for dropdown selections
@@ -157,9 +158,6 @@ for (const statements of Object.values(WorryStatement)) {
     }
 }
 
-
-
-
 </script>
 
 <template>
@@ -222,6 +220,11 @@ for (const statements of Object.values(WorryStatement)) {
               /> {{ behavior + BSNStatement[vote][0].vote_statement }}
             </template>
             <p><b>{{ BSNStatement[vote][0].Title || 'Title not available' }}</b><br>{{ BSNStatement[vote][0].summary || 'Summary not available' }}</p>
+            <small v-if="bsnURL[vote]">
+            Details: <a :href="bsnURL[vote]" target="_blank">
+              parlament.ch 
+              <i class="material-icons" style="font-size: 0.8rem; vertical-align: -2.6px">open_in_new</i></a>
+          </small>
           </a-collapse-panel>
         </a-collapse>
       </div>
