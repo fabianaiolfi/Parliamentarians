@@ -1,13 +1,42 @@
 <script setup>
 
-import { ref, computed } from 'vue'
+import { ref, watch } from 'vue'
 
 // Importing the JSON files
 import WorryStatement from './worry_statement.json'
 import NamesSearchSelect from './names.json'
+import SorgenBSN from './sorgen_bsn.json';
+import PersonBSNVote from './person_bsn_vote.json';
+
+// Update logic for dropdown selections
+// Set up reactive properties to store the selected person, the selected topic, and the resulting values
+const selectedPerson = ref("");
+const resultingValues = ref([]);
 
 // MainTopic Dropdown
-const selectedMainTopic = ref();  // Initialize to 'Alle Themen' or any default value
+const selectedMainTopic = ref("");  // Initialize to 'Alle Themen' or any default value
+
+// Create a watcher or a method that triggers whenever selectedPerson or selectedMainTopic changes
+watch([selectedPerson, selectedMainTopic], ([newPerson, newTopic]) => {
+    if (newPerson && newTopic) {
+        const topicValues = SorgenBSN[newTopic] || [];
+        const personVotes = PersonBSNVote[newPerson] || {};
+        
+        // Filter the votes of the selected person based on the selected topic
+        const filteredVotes = Object.values(personVotes).flat().filter(vote => topicValues.includes(vote));
+
+        const allVotes = Object.values(personVotes).flat();
+        
+        // New filtering logic
+        const matches = allVotes.filter(vote => {
+            return topicValues.some(topicValue => topicValue.split(', ').includes(vote));
+        });
+        resultingValues.value = matches;
+
+      } else {
+        resultingValues.value = [];
+    }
+});
 
 // Assuming WorryStatement is already imported
 const uniqueMainTopics = ref([]);
@@ -56,10 +85,11 @@ for (const personNumber in NamesSearchSelect) {
     })
 }
 
-// Main Topic Dropdown
-function handleMainTopicChange(newValue) {
-  selectedMainTopic.value = newValue;
+function handleMainTopicChange(topicValue) {
+  console.log("Main Topic Changed:", topicValue);
+  selectedMainTopic.value = topicValue;
 }
+
 
 const handleChange = (value) => {
     selectedStatements.value = WorryStatement[value] ? WorryStatement[value][0] : {};
@@ -87,6 +117,7 @@ for (const statements of Object.values(WorryStatement)) {
         }
     }
 }
+
 
 </script>
 
@@ -135,6 +166,12 @@ for (const statements of Object.values(WorryStatement)) {
     <div class="spacer" style="height: 30px;"></div>
 
     <h3>Einzelne Abstimmungen</h3>
+
+    <div v-if="resultingValues.length">
+      <ul>
+        <li v-for="value in resultingValues" :key="value">{{ value }}</li>
+      </ul>
+    </div>
   
   </div>
 
