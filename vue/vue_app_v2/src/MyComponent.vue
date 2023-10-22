@@ -7,6 +7,8 @@ import WorryStatement from './worry_statement.json'
 import NamesSearchSelect from './names.json'
 import SorgenBSN from './sorgen_bsn.json';
 import PersonBSNVote from './person_bsn_vote.json';
+import BSNStatement from './bsn_summary_statement.json';
+
 
 // Update logic for dropdown selections
 // Set up reactive properties to store the selected person, the selected topic, and the resulting values
@@ -170,13 +172,16 @@ for (const statements of Object.values(WorryStatement)) {
     <h3>Einzelne Abstimmungen</h3>
 
     <div v-if="Object.keys(resultingValues).length">
-      <div v-for="(votes, behavior) in resultingValues" :key="behavior">
-        <strong>{{ behavior }}</strong>
-          <ul>
-            <li v-for="vote in votes" :key="vote">{{ vote }}</li>
-        </ul>
-      </div>
-    </div>
+  <div v-for="(votes, behavior) in resultingValues" :key="behavior">
+    <strong>{{ behavior }}</strong>
+    <ul>
+      <li v-for="vote in votes" :key="vote">
+        {{ BSNStatement[vote] && BSNStatement[vote][0].vote_statement || vote }}
+      </li>
+    </ul>
+  </div>
+</div>
+
 
   
   </div>
