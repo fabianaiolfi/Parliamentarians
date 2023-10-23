@@ -32,3 +32,6 @@ prompt_vote_statement_sorge_sample <- prompt_vote_statement_sorge %>%
 
 # Mini sample for testing API and ChatGPT output
 # prompt_vote_statement_sorge_sample <- sample_n(prompt_vote_statement_sorge_sample, size = 3)
+
+# Super mini sample
+prompt_vote_statement_sorge_sample <- prompt_vote_statement_sorge_sample[63, ]
