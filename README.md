@@ -49,6 +49,7 @@ The output of this sub-project are two Shiny web apps: - [Abstimmungsverhalten N
 
 #### Should
 - [ ] Add Table of Contents to top of profile page
+- [ ] Apply Swiss punctuation and spelling: `ß` > `ss`, `"` > `«`, etc.
 
 #### Want
 - [ ] Speed up switching between parliamentarians
