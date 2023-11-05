@@ -14,13 +14,13 @@ all_businesses_eval <- all_businesses_eval %>%
 umwelt <- c("Umweltschutz", "Klimawandel", "Umweltkatastrophen", "Umwelt", "Landwirtschaft", "CO2", "Netto-Null", "Klima", "Klimaschutz", "Tierschutz", "Gewässer", "Landschaft", "Naturschutz", "Mineralölsteuergesetz", "Gentechnik", "Geschützte Arten", "Jagdgesetz", "Windenergieanlagen") # Umweltschutz / Klimawandel / Umweltkatastrophen
 ahv <- c("AHV", "Altersvorsorge", "IV") # AHV / Altersvorsorge
 energiefragen <- c("Energiefragen", "Kernenergie", "AKW", "Kernkraftwerk", "Energie", "Strom") # Energiefragen / Kernenergie
-europa <- c("EU", "Rahmenabkommen", "Europäisch", "Lissabon", "FADO") # Beziehung zu Europa, EU, Rahmenabkommen, Zugang zum europäischen Markt
+europa <- c("EU", "Rahmenabkommen", "Europäisch", "Lissabon", "FADO", "Europäische Integration") # Beziehung zu Europa, EU, Rahmenabkommen, Zugang zum europäischen Markt
 inflation <- c("Inflation", "Geldentwertung", "Teuerung", "Hochpreisinsel") # Inflation / Geldentwertung / Teuerung
 gesundheitsfragen <- c("Gesundheitsfragen", "Krankenkasse", "Prämien", "Gesundheit", "Krankenversicherung", "Arzneimitteln", "Arzt", "Medikament", "Generika", "Drogen", "Pflegefachpersonen", "Pflegeberufe", "Medizinalcannabis", "Organspende", "Ambulante Grundversorgung") # Gesundheitsfragen / Krankenkasse / Prämien
 versorgungssicherheit <- c("Versorgungssicherheit", "Versorgung", "Ernährungssicherheit") # Versorgungssicherheit (Energie, Medikamente, Nahrungsmittel)
 ukraine <- c("Ukraine") # Der Krieg in der Ukraine
-auslaender <- c("Ausländer", "Personenfreizügigkeit", "Zuwanderung", "Einwanderung", "Schengen", "Dublin", "Grenzgänger", "Einbürgerung", "Migration", "Schwarzarbeit") # Ausländerinnen und Ausländer / Personenfreizügigkeit / Zuwanderung
-fluechtlinge <- c("Flüchtlinge", "Asylfragen", "Asyl", "Einwanderung", "Integration", "Ausschaffung") # Flüchtlinge / Asylfragen
+auslaender <- c("Ausländer", "Personenfreizügigkeit", "Zuwanderung", "Einwanderung", "Schengen", "Dublin", "Grenzgänger", "Einbürgerung", "Migration", "Schwarzarbeit", "Familiennachzug", "Ausländer- Integrationsgesetz") # Ausländerinnen und Ausländer / Personenfreizügigkeit / Zuwanderung
+fluechtlinge <- c("Flüchtlinge", "Asylfragen", "Asyl", "Asylpolitik", "Einwanderung", "Ausschaffung", "Zuwanderung", "Integrationsförderung", "Familiennachzug", "Rückübernahmeabkommen") # Flüchtlinge / Asylfragen
 benzinpreis <- c("Benzinpreis", "Erdölpreis", "Diesel") # Benzin- / Erdölpreis
 arbeitslosigkeit <- c("Arbeitslosigkeit", "Jugendarbeitslosigkeit", "Arbeitslos", "Arbeitslosenversicherung", "Arbeitsplätze") # Arbeitslosigkeit / Jugendarbeitslosigkeit
 globalisierung <- c("Globalisierung", "Global", "Marktöffnung", "Informationsaustausch", "Bilateral") # weltweite, globale Abhängigkeiten Wirtschaft / Globalisierung
@@ -80,6 +80,13 @@ all_businesses_sorgen <- all_businesses_eval %>%
          menschenrechte = if_else(is_in_vector(chatgpt_tags_clean, menschenrechte), T, F),
          medien = if_else(is_in_vector(chatgpt_tags_clean, medien), T, F))
 
+# Some ChatGPT Tags don't match the Worry Barometer Topic, so set these to FALSE
+all_businesses_sorgen <- all_businesses_sorgen %>%
+  mutate(ahv = case_when(str_detect(chatgpt_tags_clean, "AHV-Versichertennummer") ~ F,
+                         T ~ ahv)) %>% 
+  mutate(neutralitaet = case_when(str_detect(chatgpt_tags_clean, "Hausfrauenmodell") ~ F,
+                         T ~ neutralitaet))
+
 
 # Add Vote Statement and Sorge to the same dataframe; Each vote_statement is associated with a Sorge
 vote_statement <- vote_statement_vue %>% select(PersonNumber, BusinessShortNumber, vote_statement)
@@ -116,7 +123,7 @@ prompt_vote_statement_sorge <- vote_statement %>%
                                 sorge == "sicherheit" ~ "Sicherheit",
                                 sorge == "menschenrechte" ~ "Menschenrechte",
                                 sorge == "sozial" ~ "Soziale Sicherheit / Sicherung der Sozialwerke",
-                                sorge == "bildung" ~ "Bildung",
+                                sorge == "bildung" ~ "Bildung und Forschung",
                                 sorge == "verkehr" ~ "Verkehr",
                                 sorge == "kriminalitaet" ~ "Kriminalität",
                                 sorge == "europa" ~ "Beziehung zu Europa, EU, Rahmenabkommen, Zugang zum europäischen Markt",
