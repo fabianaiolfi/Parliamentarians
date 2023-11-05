@@ -73,7 +73,7 @@ df <- df %>%
          associated_word_3 = V3)
 
 
-# 4. Extract string around where the worry appears -------------------------------
+### 4. Extract string around where the worry appears -------------------------------
 
 # Replace periods after 1 or 2-digit numbers
 df <- df %>% 
@@ -107,8 +107,14 @@ for (i in 1:3) {
 
 # Housekeeping and remove duplicate context sentences
 df <- df %>% 
-  select(-InitialSituation_clean_edit) %>% 
+  select(-c(InitialSituation_clean, InitialSituation_clean_edit)) %>% 
   mutate(
     context_2 = ifelse(context_2 == context_1, NA, context_2),
     context_3 = ifelse(context_3 == context_1 | context_3 == context_2, NA, context_3)
   )
+
+
+### 5. Merge with all_businesses_web -------------------------------
+
+all_businesses_web <- all_businesses_web %>% 
+  left_join(df, by = "BusinessShortNumber")

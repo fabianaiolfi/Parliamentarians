@@ -84,14 +84,18 @@ write(json_output, here("scripts", "11_chatgpt_sorgenbarometer", "person_bsn_vot
 ## BSNs, summaries and vote statements ----------------------------
 # DF/JSON with summary and vote statement of each item of business
 
-bsn_summary_statement <- all_businesses_web %>% 
-  select(BusinessShortNumber, Title, chatgpt_summary, vote_statement) %>% # Some confusion about chatgpt_summary and chatgpt_summaries; chatgpt_summary is GPT4 from chatgpt_output_df_20230827_100317.RData
+bsn_summary_statement <- all_businesses_web %>%
+  select(BusinessShortNumber, Title, chatgpt_summary, vote_statement,
+         associated_word_1, associated_word_2, associated_word_3,
+         context_1, context_2, context_3) %>% # Some confusion about chatgpt_summary and chatgpt_summaries; chatgpt_summary is GPT4 from chatgpt_output_df_20230827_100317.RData
   rename(summary = chatgpt_summary)
 
 json_data <- toJSON(setNames(lapply(seq_len(nrow(bsn_summary_statement)), function(i) {
-  bsn_summary_statement[i, c("Title", "summary", "vote_statement")]
+  bsn_summary_statement[i, c("Title", "summary", "vote_statement",
+                             "associated_word_1", "associated_word_2", "associated_word_3",
+                             "context_1", "context_2", "context_3")]
 }), bsn_summary_statement$BusinessShortNumber), pretty = TRUE)
 
 
 # Output
-write(json_data, here("scripts", "11_chatgpt_sorgenbarometer", "bsn_summary_statement.json"))
+write(json_data, here("scripts", "11_chatgpt_sorgenbarometer", "bsn_summary_statement_test.json"))

@@ -8,7 +8,7 @@ import WorryStatement from './worry_statement.json'
 import NamesSearchSelect from './names.json'
 import SorgenBSN from './sorgen_bsn.json'
 import PersonBSNVote from './person_bsn_vote.json'
-import BSNStatement from './bsn_summary_statement.json'
+import BSNStatement from './bsn_summary_statement_test.json'
 import bsnURL from './bsn_url.json'
 
 
@@ -177,7 +177,33 @@ function getOrderedValues() {
 // Adjust the expand icon position
 const expandIconPosition = ref('end');
 
+// Define your method as a standalone function
+const highlightWords = (vote, contextKey, associatedWordKey) => {
+  if (!BSNStatement[vote] || BSNStatement[vote].length === 0) {
+        console.warn("Data not available for vote: ", vote);
+        return '';
+      }
+
+      let context = BSNStatement[vote][0][contextKey];
+      let word = BSNStatement[vote][0][associatedWordKey];
+      if (!context || !word) return context || '';
+
+      let highlighted = context.replace(new RegExp(`\\b${word}\\b`, 'gi'), match => `<span class="highlight">${match}</span>`);
+      return highlighted;
+    }
+
 </script>
+
+
+
+<style>
+.highlight {
+  background-color: yellow;
+  /* You can add more styles here for highlighting */
+}
+</style>
+
+
 
 <template>
 
@@ -229,7 +255,9 @@ const expandIconPosition = ref('end');
     <div v-if="Object.keys(getOrderedValues()).length">
       <div v-for="(votes, behavior) in getOrderedValues()" :key="behavior">
         <div v-for="vote in votes" :key="vote">
-          <div v-if="BSNStatement[vote]">
+          {{ console.log("Current vote: ", vote) }}
+          <!-- <div v-if="BSNStatement[vote]"> -->
+          <div v-if="BSNStatement && BSNStatement[vote] && BSNStatement[vote].length">
             <a-collapse :style="{ backgroundColor: 'white' }" :active-key="activeKey === vote ? [vote] : []" @change="() => setActiveKey(vote)" :expand-icon-position="expandIconPosition">
               <a-collapse-panel :key="vote" :show-arrow="true">
                 <!-- Custom title with dynamic icon -->
@@ -240,6 +268,10 @@ const expandIconPosition = ref('end');
                   /> {{ behavior + BSNStatement[vote][0].vote_statement }}
                 </template>
                 <p><b>{{ BSNStatement[vote][0].Title || 'Title not available' }}</b><br>{{ BSNStatement[vote][0].summary || 'Summary not available' }}</p>
+                <p>Context:</p>
+                <p v-for="index in 3" :key="index">
+                  <span v-html="highlightWords(vote, `context_${index}`, `associated_word_${index}`)"></span>
+                </p>
                 <small v-if="bsnURL[vote]">
                 Details: <a :href="bsnURL[vote]" target="_blank">
                   parlament.ch 
