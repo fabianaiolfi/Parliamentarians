@@ -267,8 +267,11 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
                     :two-tone-color="iconColors[behavior]"
                   /> {{ behavior + BSNStatement[vote][0].vote_statement }}
                 </template>
-                <p><b>{{ BSNStatement[vote][0].Title || 'Title not available' }}</b><br>{{ BSNStatement[vote][0].summary || 'Summary not available' }}</p>
-                <p>Context:</p>
+                <small><strong>TITEL</strong></small>
+                <h3>{{ BSNStatement[vote][0].Title || 'Title not available' }}</h3>
+                <small><strong>ZUSAMMENFASSUNG</strong></small>
+                <p>{{ BSNStatement[vote][0].summary || 'Summary not available' }}</p>
+                <small><strong>KONTEXT</strong></small>
                 <p v-for="index in 3" :key="index">
                   <span v-html="highlightWords(vote, `context_${index}`, `associated_word_${index}`)"></span>
                 </p>
