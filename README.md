@@ -36,14 +36,21 @@ The output of this sub-project are two Shiny web apps: - [Abstimmungsverhalten N
 ## To Dos
 
 ### NLP
-- [ ] Setup further ChatGPT prompts that summarise a parliamentarian's voting behaviour; Summarise sets of votes, e.g. economic votes or specific policy dimensions. In short, make the items of business more accessible to users
+- [x] Setup further ChatGPT prompts that summarise a parliamentarian's voting behaviour; Summarise sets of votes, e.g. economic votes or specific policy dimensions. In short, make the items of business more accessible to users > Done: Grouped by Worry Barometer topics
+- [ ] Group existing topics into larger über-topics
+  - [x] Either use tags provided by the parliament or topics in the [Worry Barometer](https://www.credit-suisse.com/about-us/en/reports-research/studies-publications/worry-barometer/download-center.html)
+  - [ ] Maybe place über-topics into (another) dropdown, so to only ever display one über-topic at once
+  - [ ] [Fix faulty business item categorisations](https://github.com/fabianaiolfi/Parliamentarians/blob/d4864887646ac2d40570d4758eabc19623974aed/documentation/Feedback.txt#L3)
+  - [ ] [Look into strange worry barometer formulations](https://github.com/fabianaiolfi/Parliamentarians/blob/d4864887646ac2d40570d4758eabc19623974aed/documentation/Feedback.txt#L13)
 
 ### UI
-- [ ] Group existing topics into larger über-topics
-  - [ ] Either use tags provided by the parliament or topics in the [Worry Barometer](https://www.credit-suisse.com/about-us/en/reports-research/studies-publications/worry-barometer/download-center.html)
-  - [ ] Maybe place über-topics into (another) dropdown, so to only ever display one über-topic at once
-- [ ] Maybe add Table of Contents to top of page
+#### Must
 - [x] Increase main dropdown size
+
+#### Should
+- [ ] Add Table of Contents to top of profile page
+
+#### Want
 - [ ] Speed up switching between parliamentarians
 - [ ] Make site responsive
 - [ ] See also Issues tagged `enhancement`
