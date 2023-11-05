@@ -2,13 +2,13 @@
 
 ## vue_app_v2 strange tidbits
 231022
-- Johannes Randegger + Bildung: Embryonenforschungsgesetz?!
-- Johannes Randegger + AHV/Altersvorsorge: «Teilrevision des Asylgesetzes» ?!
-- Philipp Kutter + Inflation / Geldentwertung / Teuerung: Hat das einen Einfluss auf die Inflation?
-- Valérie Piller Carrard + Flüchtlinge & Asylfragen: verwendung von «aber» nach dem Komma etwas komisch
-- Hansjörg Knecht + AHV: Altersvorsorge?
-- Hansjörg Knecht + Neutralität: Familieninitiative?
-- Hansjörg Knecht + Flüchtlinge / Asylfragen: Teilrevision des Alkoholgesetzes?
+- [x] Johannes Randegger + Bildung: Embryonenforschungsgesetz?! → Rename “Bildung” to “Forschung und Bildung”
+- [ ] Johannes Randegger + AHV/Altersvorsorge: «Teilrevision des Asylgesetzes» ?! → Display context
+- [ ] Philipp Kutter + Inflation / Geldentwertung / Teuerung: Hat das einen Einfluss auf die Inflation? → Display context
+- [ ] Valérie Piller Carrard + Flüchtlinge & Asylfragen: verwendung von «aber» nach dem Komma etwas komisch
+- [x] Hansjörg Knecht + AHV: Altersvorsorge? → Solved by removing “AHV-Versichertennummer” tag
+- [x] Hansjörg Knecht + Neutralität: Familieninitiative?
+- [x] Hansjörg Knecht + Flüchtlinge / Asylfragen: Teilrevision des Alkoholgesetzes? → Solved by disambiguating “Integration”
 
 ## Strange Worry Barometer formulations
 231022
