@@ -75,29 +75,32 @@ df <- df %>%
 
 # 4. Extract string around where the worry appears -------------------------------
 
-# Function to extract context around a word
-get_context <- function(text, word, context_len = 20) {
+# Replace periods after 1 or 2-digit numbers
+df <- df %>% 
+  mutate(InitialSituation_clean_edit = gsub("\\b(\\d{1,2})\\.", "\\1", InitialSituation_clean))
+
+# Function to extract the sentence around a word
+get_context <- function(text, word) {
   if (is.na(text)) {
     return(NA)
   }
-  pattern <- sprintf('%s', word)
-  match_positions <- gregexpr(pattern, text, ignore.case = TRUE)[[1]]
-  
-  if (match_positions[1] == -1) {
+
+  # Tokenize the text into sentences
+  sentences <- stri_split_boundaries(text, type = "sentence")[[1]]
+
+  # Find the first sentence containing the word
+  matching_sentence <- grep(paste0('\\b', word), sentences, ignore.case = TRUE, value = TRUE)
+
+  if (length(matching_sentence) == 0) {
     return(NA)
   }
-  
-  start_pos <- max(1, match_positions[1] - context_len)
-  end_pos <- min(nchar(text), match_positions[1] + nchar(word) - 1 + context_len)
-  
-  return(substr(text, start_pos, end_pos))
+
+  return(matching_sentence[1])
 }
 
 # Apply the function for each associated word
 for (i in 1:3) {
   word_col <- paste0("associated_word_", i)
   context_col <- paste0("context_", i)
-  df[, context_col] <- mapply(get_context, df$InitialSituation_clean, df[, word_col])
+  df[, context_col] <- mapply(get_context, df$InitialSituation_clean_edit, df[, word_col])
 }
-
-
