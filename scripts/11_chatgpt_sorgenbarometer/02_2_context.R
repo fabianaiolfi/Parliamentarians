@@ -81,20 +81,20 @@ df <- df %>%
 
 # Function to extract the sentence around a word
 get_context <- function(text, word) {
-  if (is.na(text)) {
+  if (is.na(text) || is.na(word)) {
     return(NA)
   }
-
+  
   # Tokenize the text into sentences
   sentences <- stri_split_boundaries(text, type = "sentence")[[1]]
-
-  # Find the first sentence containing the word
-  matching_sentence <- grep(paste0('\\b', word), sentences, ignore.case = TRUE, value = TRUE)
-
+  
+  # Find the first sentence containing the word as a substring
+  matching_sentence <- grep(paste0(word), sentences, ignore.case = TRUE, value = TRUE)
+  
   if (length(matching_sentence) == 0) {
     return(NA)
   }
-
+  
   return(matching_sentence[1])
 }
 
@@ -104,3 +104,11 @@ for (i in 1:3) {
   context_col <- paste0("context_", i)
   df[, context_col] <- mapply(get_context, df$InitialSituation_clean_edit, df[, word_col])
 }
+
+# Housekeeping and remove duplicate context sentences
+df <- df %>% 
+  select(-InitialSituation_clean_edit) %>% 
+  mutate(
+    context_2 = ifelse(context_2 == context_1, NA, context_2),
+    context_3 = ifelse(context_3 == context_1 | context_3 == context_2, NA, context_3)
+  )
