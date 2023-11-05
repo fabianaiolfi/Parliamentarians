@@ -423,9 +423,20 @@ length(unique(voting_all_periods$PersonNumber))
 
 
 
-
-
 load(here("data", "chatgpt_output_df_20230827_100317.RData"))
+
+
+
+
+all_businesses_eval$chatgpt_tags_clean[all_businesses_eval$BusinessShortNumber == "02.060"]
+all_businesses_eval$chatgpt_tags_clean[all_businesses_eval$BusinessShortNumber == "19.076"]
+all_businesses_eval$chatgpt_tags_clean[all_businesses_eval$BusinessShortNumber == "15.034"]
+all_businesses_eval$chatgpt_tags_clean[all_businesses_eval$BusinessShortNumber == "12.068"]
+
+all_businesses_eval$chatgpt_tags_clean[all_businesses_eval$BusinessShortNumber == "01.451"]
+all_businesses_eval$ReasonText[all_businesses_eval$BusinessShortNumber == "01.451"]
+
+############# 
 
 
 
