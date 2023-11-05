@@ -3,15 +3,15 @@
 ## vue_app_v2 strange tidbits
 231022
 - [x] Johannes Randegger + Bildung: Embryonenforschungsgesetz?! → Rename “Bildung” to “Forschung und Bildung”
-- [ ] Johannes Randegger + AHV/Altersvorsorge: «Teilrevision des Asylgesetzes» ?! → Display context
-- [ ] Philipp Kutter + Inflation / Geldentwertung / Teuerung: Hat das einen Einfluss auf die Inflation? → Display context
-- [ ] Valérie Piller Carrard + Flüchtlinge & Asylfragen: verwendung von «aber» nach dem Komma etwas komisch
+- [x] Johannes Randegger + AHV/Altersvorsorge: «Teilrevision des Asylgesetzes» ?! → Display context
+- [x] Philipp Kutter + Inflation / Geldentwertung / Teuerung: Hat das einen Einfluss auf die Inflation? → Display context
 - [x] Hansjörg Knecht + AHV: Altersvorsorge? → Solved by removing “AHV-Versichertennummer” tag
 - [x] Hansjörg Knecht + Neutralität: Familieninitiative?
 - [x] Hansjörg Knecht + Flüchtlinge / Asylfragen: Teilrevision des Alkoholgesetzes? → Solved by disambiguating “Integration”
 
 ## Strange Worry Barometer formulations
 231022
+- [ ] Valérie Piller Carrard + Flüchtlinge & Asylfragen: verwendung von «aber» nach dem Komma etwas komisch
 - for phrases like: die AHV und die Altersvorsorge 'stärken und verbessern...' aren't these adjectives subjective evaluations? Should the summary be 'neutral'? (Gemma)
 - Where 'jedoch' is used as a contrast to other voting choices by the MP, is this to be interpreted as a 'judgement' or indication of an inconsistency or contradiction? Should it rather be neutral? i.e. without the word 'jedoch' ?
 	- e.g. Hansjörg Knecht + Flüchtlinge / Asylfragen (Gemma)

@@ -1,0 +1,103 @@
+
+# Context -----------------------------------------------------------------
+# For each Worry and Items of Business, add a string that contains the Worry's topic in the business description
+
+
+## Which topic appears the most in the desciprtion? ------------------------------------------
+
+### 1. Which Worries does an item of business have? -----------------------
+
+df <- all_businesses_sorgen %>% 
+  select(-Title, -TagNames, -chatgpt_summaries, -chatgpt_tags_clean)
+  
+# Function to concatenate the column names where value is TRUE
+get_true_cols <- function(row) {
+  true_cols <- names(row)[row == TRUE]
+  paste(true_cols, collapse = ", ")
+}
+  
+# Apply the function to each row and create a new column
+df$true_columns <- apply(df[-c(1,2)], 1, get_true_cols)
+
+df <- df %>% 
+  select(BusinessShortNumber, InitialSituation_clean, true_columns) %>% 
+  dplyr::filter(true_columns != "")
+
+
+### 2. Which topics are associated with those Worries? ----------------------
+
+# Function to get corresponding words
+get_words <- function(true_cols) {
+  keywords <- unlist(strsplit(true_cols, ",\\s*"))  # Split by comma and optional space
+  words <- unlist(lapply(keywords, function(k) get(k)))  # Fetch words using get()
+  paste(words, collapse = ", ")  # Combine words into a string
+}
+
+# Apply the function to the true_columns and create a new column
+df$associated_words <- sapply(df$true_columns, get_words)
+
+
+### 3. Which three topics appear most frequent in the description? -----------------------
+
+df <- df %>% select(-true_columns)
+
+# Function to find the top 3 most frequent associated words
+find_most_frequent_words <- function(row) {
+  # Split associated_words by comma and remove leading/trailing whitespaces
+  words <- trimws(unlist(strsplit(row[3], ",\\s*")))
+  # Count occurrences of each word in InitialSituation_clean
+  word_counts <- sapply(words, function(word) {
+    sum(gregexpr(word, row[2], ignore.case = TRUE)[[1]] >= 0)
+  })
+  # Find indices of top 3 word counts
+  top_indices <- order(word_counts, decreasing = TRUE)[1:min(3, length(word_counts))]
+  # Extract top 3 words
+  most_frequent_words <- paste(words[top_indices], collapse = ", ")
+  return(most_frequent_words)
+}
+
+# Apply the function to each row and create a new column
+df$top_3_frequent_words <- apply(df, 1, find_most_frequent_words)
+
+# Split the top_3_frequent_words column into multiple columns
+split_columns <- str_split_fixed(df$top_3_frequent_words, ",\\s*", 3)
+
+# Add the new columns to the data frame
+df <- cbind(df, as.data.frame(split_columns))
+
+# Housekeeping
+df <- df %>%
+  select(-top_3_frequent_words, -associated_words) %>% 
+  rename(associated_word_1 = V1,
+         associated_word_2 = V2,
+         associated_word_3 = V3)
+
+
+# 4. Extract string around where the worry appears -------------------------------
+
+# Function to extract context around a word
+get_context <- function(text, word, context_len = 20) {
+  if (is.na(text)) {
+    return(NA)
+  }
+  pattern <- sprintf('%s', word)
+  match_positions <- gregexpr(pattern, text, ignore.case = TRUE)[[1]]
+  
+  if (match_positions[1] == -1) {
+    return(NA)
+  }
+  
+  start_pos <- max(1, match_positions[1] - context_len)
+  end_pos <- min(nchar(text), match_positions[1] + nchar(word) - 1 + context_len)
+  
+  return(substr(text, start_pos, end_pos))
+}
+
+# Apply the function for each associated word
+for (i in 1:3) {
+  word_col <- paste0("associated_word_", i)
+  context_col <- paste0("context_", i)
+  df[, context_col] <- mapply(get_context, df$InitialSituation_clean, df[, word_col])
+}
+
+
