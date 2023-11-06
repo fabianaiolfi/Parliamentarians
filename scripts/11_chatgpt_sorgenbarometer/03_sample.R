@@ -34,4 +34,4 @@ prompt_vote_statement_sorge_sample <- prompt_vote_statement_sorge %>%
 # prompt_vote_statement_sorge_sample <- sample_n(prompt_vote_statement_sorge_sample, size = 3)
 
 # Super mini sample
-prompt_vote_statement_sorge_sample <- prompt_vote_statement_sorge_sample[63, ]
+# prompt_vote_statement_sorge_sample <- prompt_vote_statement_sorge_sample[63, ]

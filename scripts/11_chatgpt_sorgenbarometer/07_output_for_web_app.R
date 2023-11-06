@@ -9,7 +9,7 @@ names <- output_merged %>%
   distinct(PersonNumber, .keep_all = T)
 
 # Add party name to each parliamentarian
-here("data", "member_council.RData")
+load(here("data", "member_council.RData"))
 names <- names %>% left_join(select(member_council, PersonNumber, PartyAbbreviation), by = "PersonNumber")
 
 # Convert dataframe to list with PersonNumber as names
@@ -85,38 +85,39 @@ write(json_output, here("scripts", "11_chatgpt_sorgenbarometer", "person_bsn_vot
 # DF/JSON with summary and vote statement of each item of business
 
 bsn_summary_statement <- all_businesses_web %>%
-  select(BusinessShortNumber, Title, chatgpt_summary, vote_statement,
-         associated_word_1, associated_word_2, associated_word_3,
-         context_1, context_2, context_3) %>% # Some confusion about chatgpt_summary and chatgpt_summaries; chatgpt_summary is GPT4 from chatgpt_output_df_20230827_100317.RData
+  select(BusinessShortNumber, Title, chatgpt_summary, vote_statement, # Some confusion about chatgpt_summary and chatgpt_summaries; chatgpt_summary is GPT4 from chatgpt_output_df_20230827_100317.RData
+         #associated_word_1, associated_word_2, associated_word_3,
+         #context_1, context_2, context_3
+         ) %>% 
   rename(summary = chatgpt_summary)
 
 json_data <- toJSON(setNames(lapply(seq_len(nrow(bsn_summary_statement)), function(i) {
-  bsn_summary_statement[i, c("Title", "summary", "vote_statement",
-                             "associated_word_1", "associated_word_2", "associated_word_3",
-                             "context_1", "context_2", "context_3")]
+  bsn_summary_statement[i, c("Title", "summary", "vote_statement"#,
+                             #"associated_word_1", "associated_word_2", "associated_word_3",
+                             #"context_1", "context_2", "context_3"
+                             )]
 }), bsn_summary_statement$BusinessShortNumber), pretty = TRUE)
 
 
 # Output
-write(json_data, here("scripts", "11_chatgpt_sorgenbarometer", "bsn_summary_statement_test.json"))
+write(json_data, here("scripts", "11_chatgpt_sorgenbarometer", "bsn_summary_statement.json"))
 
 
 ## BSN Initial Situation split by sentence ----------------------------
 # Used to retrieve context
 
-# Assuming your dataframe is named 'df'
 # You may need to unnest the 'sents' column if it's a list of lists
-df <- df %>%
+bsn_sents <- bsn_sents %>%
   mutate(sents = map(sents, ~ as.character(.x)))
 
 # Now, convert the dataframe to a named list
-named_list <- setNames(df$sents, df$BusinessShortNumber)
+named_list <- setNames(bsn_sents$sents, bsn_sents$BusinessShortNumber)
 
 # Convert the named list to JSON
 json_data <- toJSON(named_list, pretty = TRUE, auto_unbox = TRUE)
 
 # If you want to write the JSON to a file
-write(json_data, here("scripts", "11_chatgpt_sorgenbarometer", "test.json"))
+write(json_data, here("scripts", "11_chatgpt_sorgenbarometer", "bsn_sents.json"))
 
 
 ## Topic and associated words ----------------------------
@@ -134,4 +135,3 @@ json_data <- toJSON(named_list, pretty = TRUE, auto_unbox = TRUE)
 
 # If you want to write the JSON to a file
 write(json_data, here("scripts", "11_chatgpt_sorgenbarometer", "topics_associated_words.json"))
-
