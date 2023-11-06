@@ -38,8 +38,8 @@ lst <- setNames(split(worry_statement[-1], worry_statement$PersonNumber), worry_
 # Convert list to JSON
 json_output <- toJSON(lst, pretty = TRUE, auto_unbox = TRUE)
 
-# Output
-write(json_output, here("scripts", "11_chatgpt_sorgenbarometer", "worry_statement.json"))
+# Output: Watch out when exporting here, something's off between personnumber and topic's statement!
+# write(json_output, here("scripts", "11_chatgpt_sorgenbarometer", "worry_statement.json"))
 
 
 ## Sorgen and BSNs ----------------------------
