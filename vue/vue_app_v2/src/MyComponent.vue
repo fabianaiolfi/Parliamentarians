@@ -293,10 +293,15 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
 </script>
 
 <style>
+
 .highlight {
   background-color: yellow;
-  /* You can add more styles here for highlighting */
 }
+.em-dash {
+  color: #b9b9b9;
+  transform: translateY(25%);
+}
+
 </style>
 
 <template>
@@ -361,16 +366,19 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
                     :two-tone-color="iconColors[behavior]"
                   /> {{ behavior + BSNStatement[vote][0].vote_statement }}
                 </template>
-                <small><strong>TITEL</strong></small>
+                <small><strong>TITEL DES GESCHÄFTS</strong></small>
                 <h3>{{ BSNStatement[vote][0].Title || 'Title not available' }}</h3>
-                <small><strong>ZUSAMMENFASSUNG</strong></small>
+                <a-divider />
+                <small><strong>KURZ GEFASST</strong></small>
                 <p>{{ BSNStatement[vote][0].summary || 'Summary not available' }}</p>
-                <small><strong>KONTEXT</strong></small>
+                <a-divider />
+                <small><strong>AUS DER OFFIZIELLEN ZUSAMMENFASSUNG</strong></small>
                   <div v-for="(sentence, index) in sentencesForVotes[vote]" :key="index">
                     <div v-html="highlightAssociatedWords(sentence, associatedWords)"></div>
+                    <p class="em-dash">&#8212;</p>
                   </div>
                 <small v-if="bsnURL[vote]">
-                Details: <a :href="bsnURL[vote]" target="_blank">
+                Weitere Informationen: <a :href="bsnURL[vote]" target="_blank">
                   parlament.ch 
                   <i class="material-icons" style="font-size: 0.8rem; vertical-align: -2.6px">open_in_new</i></a>
               </small>
