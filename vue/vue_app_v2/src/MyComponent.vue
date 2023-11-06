@@ -115,6 +115,10 @@ const associatedWords = computed(() => {
   return [];
 })
 
+watch(associatedWords, (newValue, oldValue) => {
+      console.log("Associated Words changed from:", oldValue, "to:", newValue);
+    });
+
 // Make BSNsentsData reactive
 const BSNsents = ref(BSNsentsData)
 
@@ -132,6 +136,70 @@ const findSentencesForVote = (vote) => {
   }
   return voteSentences;
 };
+
+const sentences = ref([]);
+
+const updateSentences = () => {
+      sentences.value = [];  // Reset sentences
+      Object.entries(BSNsents.value).forEach(([key, sents]) => {
+        if (Array.isArray(sents)) {
+          sents.forEach(sentence => {
+            if (associatedWords.value.some(word => sentence.includes(word))) {
+              sentences.value.push(sentence);
+            }
+          });
+        }
+      });
+    };
+
+// Run once on component mount
+updateSentences();
+
+// Re-run updateSentences when associatedWords changes
+watch(associatedWords, updateSentences);
+
+
+function highlightAssociatedWords(sentence, associatedWords) {
+  let highlightedSentence = sentence;
+  
+  // Sort associatedWords by length in descending order to avoid overriding matches within longer words
+  const sortedAssociatedWords = [...associatedWords].sort((a, b) => b.length - a.length);
+
+  sortedAssociatedWords.forEach((word) => {
+    const regex = new RegExp(`${word}`, 'gi'); // Remove the word boundary to match partial words
+    highlightedSentence = highlightedSentence.replace(regex, `<span class="highlight">$&</span>`);
+  });
+
+  return highlightedSentence;
+}
+
+
+// function highlightAssociatedWords(sentence, wordsToHighlight) {
+//   let highlightedSentence = sentence;
+//   wordsToHighlight.forEach(word => {
+//     const regex = new RegExp(word, 'gi');
+//     highlightedSentence = highlightedSentence.replace(regex, match => `<span class="highlight">${match}</span>`);
+//   });
+//   return highlightedSentence;
+// }
+
+
+// function highlightAssociatedWords(sentence, associatedWords) {
+//   let highlightedSentence = sentence;
+  
+//   // Sort associatedWords by length in descending order to avoid overriding matches within longer words
+//   const sortedAssociatedWords = [...associatedWords].sort((a, b) => b.length - a.length);
+
+//   sortedAssociatedWords.forEach((word) => {
+//     const regex = new RegExp(`${word}`, 'gi'); // Remove the word boundary to match partial words
+//     highlightedSentence = highlightedSentence.replace(regex, `<span class="highlight">$&</span>`);
+//   });
+
+//   return highlightedSentence;
+// }
+
+
+////////////////////////////////////
 
 
 function getIconForBehavior(behavior) {
@@ -306,8 +374,8 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
                 <small><strong>ZUSAMMENFASSUNG</strong></small>
                 <p>{{ BSNStatement[vote][0].summary || 'Summary not available' }}</p>
                 <small><strong>KONTEXT</strong></small>
-                  <div v-for="(sentence, sentenceIndex) in findSentencesForVote(vote)" :key="sentenceIndex">
-                    {{ sentence }}
+                  <div v-for="(sentence, index) in sentences" :key="index">
+                    <div v-html="highlightAssociatedWords(sentence, associatedWords)"></div>
                   </div>
                 <small v-if="bsnURL[vote]">
                 Details: <a :href="bsnURL[vote]" target="_blank">
