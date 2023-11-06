@@ -9,7 +9,11 @@ import NamesSearchSelect from './names.json'
 import SorgenBSN from './sorgen_bsn.json'
 import PersonBSNVote from './person_bsn_vote.json'
 import BSNStatement from './bsn_summary_statement_test.json'
+import BSNsentsData from './test.json'
+import TopicAssWords from './topics_associated_words.json'
 import bsnURL from './bsn_url.json'
+
+const topicValue = ref('');
 
 
 // Update logic for dropdown selections
@@ -39,7 +43,8 @@ watch([selectedPerson, selectedMainTopic], ([newPerson, newTopic]) => {
 
         resultingValues.value = groupedVotes;
 
-        console.log("Grouped votes:", resultingValues.value);
+        //console.log("Grouped votes:", resultingValues.value);
+        console.log("Grouped votes:", groupedVotes);
     } else {
         resultingValues.value = {};
     }
@@ -95,6 +100,39 @@ function handleMainTopicChange(topicValue) {
   console.log("Main Topic Changed:", topicValue);
   selectedMainTopic.value = topicValue;
 }
+
+
+//////////// Associated Words ///////////////
+
+// This computed property will automatically update when topicValue changes
+const associatedWords = computed(() => {
+  // Check if the topicValue exists as a key in TopicAssWords
+  if (selectedMainTopic.value && TopicAssWords.hasOwnProperty(selectedMainTopic.value)) {
+    // Return the array of words associated with the selected topic
+    return TopicAssWords[selectedMainTopic.value];
+  }
+  // If the selected topic is not in the JSON, return an empty array or a default set of words
+  return [];
+})
+
+// Make BSNsentsData reactive
+const BSNsents = ref(BSNsentsData)
+
+// Assuming 'associatedWords' and 'BSNsents' are reactive and available in the scope
+const findSentencesForVote = (vote) => {
+  let voteSentences = [];
+  // Get the sentences for the specific 'vote' if they exist
+  const voteRelatedSentences = BSNsents.value[vote];
+
+  if (voteRelatedSentences && associatedWords.value.length > 0) {
+    // Filter the sentences for this vote based on associated words
+    voteSentences = voteRelatedSentences.filter(sentence =>
+      associatedWords.value.some(word => sentence.toLowerCase().includes(word.toLowerCase()))
+    );
+  }
+  return voteSentences;
+};
+
 
 function getIconForBehavior(behavior) {
   switch (behavior) {
@@ -194,16 +232,12 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
 
 </script>
 
-
-
 <style>
 .highlight {
   background-color: yellow;
   /* You can add more styles here for highlighting */
 }
 </style>
-
-
 
 <template>
 
@@ -272,9 +306,9 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
                 <small><strong>ZUSAMMENFASSUNG</strong></small>
                 <p>{{ BSNStatement[vote][0].summary || 'Summary not available' }}</p>
                 <small><strong>KONTEXT</strong></small>
-                <p v-for="index in 3" :key="index">
-                  <span v-html="highlightWords(vote, `context_${index}`, `associated_word_${index}`)"></span>
-                </p>
+                  <div v-for="(sentence, sentenceIndex) in findSentencesForVote(vote)" :key="sentenceIndex">
+                    {{ sentence }}
+                  </div>
                 <small v-if="bsnURL[vote]">
                 Details: <a :href="bsnURL[vote]" target="_blank">
                   parlament.ch 

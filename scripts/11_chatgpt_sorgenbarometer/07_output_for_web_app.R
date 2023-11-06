@@ -99,3 +99,39 @@ json_data <- toJSON(setNames(lapply(seq_len(nrow(bsn_summary_statement)), functi
 
 # Output
 write(json_data, here("scripts", "11_chatgpt_sorgenbarometer", "bsn_summary_statement_test.json"))
+
+
+## BSN Initial Situation split by sentence ----------------------------
+# Used to retrieve context
+
+# Assuming your dataframe is named 'df'
+# You may need to unnest the 'sents' column if it's a list of lists
+df <- df %>%
+  mutate(sents = map(sents, ~ as.character(.x)))
+
+# Now, convert the dataframe to a named list
+named_list <- setNames(df$sents, df$BusinessShortNumber)
+
+# Convert the named list to JSON
+json_data <- toJSON(named_list, pretty = TRUE, auto_unbox = TRUE)
+
+# If you want to write the JSON to a file
+write(json_data, here("scripts", "11_chatgpt_sorgenbarometer", "test.json"))
+
+
+## Topic and associated words ----------------------------
+# Used to retrieve context
+
+# Unnest the 'sents' column if it's a list of lists
+associated_words <- associated_words %>%
+  mutate(words_list = map(words_list, ~ as.character(.x)))
+
+# Now, convert the dataframe to a named list
+named_list <- setNames(associated_words$words_list, associated_words$sorge)
+
+# Convert the named list to JSON
+json_data <- toJSON(named_list, pretty = TRUE, auto_unbox = TRUE)
+
+# If you want to write the JSON to a file
+write(json_data, here("scripts", "11_chatgpt_sorgenbarometer", "topics_associated_words.json"))
+
