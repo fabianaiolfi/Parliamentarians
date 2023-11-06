@@ -64,7 +64,7 @@ const topicNameMapping = {
   sicherheit: "Sicherheit",
   menschenrechte: "Menschenrechte",
   sozial: "Soziale Sicherheit / Sicherung der Sozialwerke",
-  bildung: "Bildung",
+  bildung: "Bildung und Forschung",
   verkehr: "Verkehr",
   kriminalitaet: "Kriminalität",
   europa: "Beziehung zu Europa, EU, Rahmenabkommen, Zugang zum europäischen Markt",
