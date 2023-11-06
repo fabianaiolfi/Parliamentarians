@@ -102,7 +102,7 @@ function handleMainTopicChange(topicValue) {
 }
 
 
-//////////// Associated Words ///////////////
+//////////// ASSOCIATED WORDS ///////////////
 
 // This computed property will automatically update when topicValue changes
 const associatedWords = computed(() => {
@@ -137,27 +137,45 @@ const findSentencesForVote = (vote) => {
   return voteSentences;
 };
 
+// HIGHLIGHT ASSOCIATED WORDS //
+
 const sentences = ref([]);
+const sentencesForVotes = ref({});
 
-const updateSentences = () => {
-      sentences.value = [];  // Reset sentences
-      Object.entries(BSNsents.value).forEach(([key, sents]) => {
-        if (Array.isArray(sents)) {
-          sents.forEach(sentence => {
-            if (associatedWords.value.some(word => sentence.includes(word))) {
-              sentences.value.push(sentence);
-            }
-          });
-        }
-      });
-    };
+const updateSentencesForVote = (vote) => {
+      // Initialize an empty array for this vote if it doesn't exist yet
+      if (!sentencesForVotes.value[vote]) {
+        sentencesForVotes.value[vote] = [];
+      }
 
-// Run once on component mount
-updateSentences();
+  // Assuming BSNsents.value[vote] is an array of sentences for this vote
+  const sents = BSNsents.value[vote];
+  if (Array.isArray(sents)) {
+    sents.forEach(sentence => {
+      if (associatedWords.value.some(word => sentence.includes(word))) {
+        sentencesForVotes.value[vote].push(sentence);
+      }
+    });
+  }
+};
 
-// Re-run updateSentences when associatedWords changes
-watch(associatedWords, updateSentences);
+// Iterate over each vote to populate sentences
+const populateSentencesForAllVotes = () => {
+  for (const vote in BSNsents.value) {
+    updateSentencesForVote(vote);
+  }
+};
 
+// Initial population
+populateSentencesForAllVotes();
+
+// Watch for changes in associatedWords to update the sentences for each vote
+watch(associatedWords, () => {
+  // Clear the current sentences
+  sentencesForVotes.value = {};
+  // Repopulate the sentences
+  populateSentencesForAllVotes();
+});
 
 function highlightAssociatedWords(sentence, associatedWords) {
   let highlightedSentence = sentence;
@@ -172,32 +190,6 @@ function highlightAssociatedWords(sentence, associatedWords) {
 
   return highlightedSentence;
 }
-
-
-// function highlightAssociatedWords(sentence, wordsToHighlight) {
-//   let highlightedSentence = sentence;
-//   wordsToHighlight.forEach(word => {
-//     const regex = new RegExp(word, 'gi');
-//     highlightedSentence = highlightedSentence.replace(regex, match => `<span class="highlight">${match}</span>`);
-//   });
-//   return highlightedSentence;
-// }
-
-
-// function highlightAssociatedWords(sentence, associatedWords) {
-//   let highlightedSentence = sentence;
-  
-//   // Sort associatedWords by length in descending order to avoid overriding matches within longer words
-//   const sortedAssociatedWords = [...associatedWords].sort((a, b) => b.length - a.length);
-
-//   sortedAssociatedWords.forEach((word) => {
-//     const regex = new RegExp(`${word}`, 'gi'); // Remove the word boundary to match partial words
-//     highlightedSentence = highlightedSentence.replace(regex, `<span class="highlight">$&</span>`);
-//   });
-
-//   return highlightedSentence;
-// }
-
 
 ////////////////////////////////////
 
@@ -374,7 +366,7 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
                 <small><strong>ZUSAMMENFASSUNG</strong></small>
                 <p>{{ BSNStatement[vote][0].summary || 'Summary not available' }}</p>
                 <small><strong>KONTEXT</strong></small>
-                  <div v-for="(sentence, index) in sentences" :key="index">
+                  <div v-for="(sentence, index) in sentencesForVotes[vote]" :key="index">
                     <div v-html="highlightAssociatedWords(sentence, associatedWords)"></div>
                   </div>
                 <small v-if="bsnURL[vote]">
