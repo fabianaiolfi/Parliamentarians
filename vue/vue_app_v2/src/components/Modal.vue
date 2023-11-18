@@ -32,7 +32,7 @@ export default {
 
   <a-modal v-model:open="open" width="1000px" @ok="handleOk" footer="">
 
-    <div class="flex-container" style="margin-top: 20px;">
+    <div class="flex-container" style="margin-top: 20px; align-items: center;">
       <div class="flex-item" style="margin-right: 20px;">
         <p>
           <CheckCircleTwoTone
@@ -54,7 +54,7 @@ export default {
       <p>Das neue Gesetz soll die Qualität der Weiterbildung verbessern und lebenslanges Lernen fördern.</p>
     </div>
     
-    <div>
+    <div style="margin-top: 20px;">
       <small><strong>SCHLUSSRESULTAT</strong></small>
       <p style="color: #eb2f96;">
         <CloseCircleTwoTone two-tone-color="#eb2f96"/>
@@ -62,7 +62,7 @@ export default {
       </p>
 
       <p>
-        <div class="flex-container">
+        <div class="flex-container" style="margin-top: -10px;">
           <div class="flex-item">
             <CheckCircleTwoTone two-tone-color="#52c41a"/> 56 Ja
           </div>
@@ -84,10 +84,15 @@ export default {
 
     <a-divider />
 
-    <small><strong>TITEL DES GESCHÄFTS</strong></small>
-      <p>Bundesgesetz über die Weiterbildung</p>
+    <!-- <small><strong>TITEL DES GESCHÄFTS</strong></small>
+      <h3>Bundesgesetz über die Weiterbildung</h3> -->
 
-    <div class="flex-container">
+    <div class="flex-container" style="margin-top: 20px;">
+      <div class="flex-item">
+        <small><strong>TITEL DES GESCHÄFTS</strong></small>
+        <p>Bundesgesetz über die Weiterbildung Bundesgesetz über die Weiterbildung Bundesgesetz über die Weiterbildung</p>
+      </div>
+      
       <div class="flex-item">
         <small><strong>DATUM</strong></small>
         <p>12. Juni 2017</p>
@@ -121,11 +126,11 @@ export default {
 .flex-container {
     display: flex; /* This enables flexbox */
     justify-content: flex-start; /* This spreads out the flex items evenly */
-    align-items: center; /* This aligns items vertically */
+    align-items: top; /* This aligns items vertically */
 }
 
 .flex-item {
-    margin-right: 40px; /* Adds space to the right of each item */
+  margin-right: 40px; /* Adds space to the right of each item */
 }
 
 </style>
