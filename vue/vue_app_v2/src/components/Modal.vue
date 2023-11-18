@@ -55,10 +55,6 @@ export default {
     </div>
     
     <div style="margin-top: 20px;">
-      <!-- <small><strong>SCHLUSSRESULTAT</strong></small>
-      <p style="color: #eb2f96;">
-        <strong>Das Geschäft wurde abgelehnt</strong>
-      </p> -->
 
       <p>
         <div class="flex-container">
@@ -69,22 +65,22 @@ export default {
           
           <div class="flex-item">
             <small><strong>JA</strong></small>
-            <p style="color: #52c41a;">56</p>
+            <p style="color: #52c41a;"><strong>56</strong></p>
           </div>
 
           <div class="flex-item">
             <small><strong>NEIN</strong></small>
-            <p style="color: #eb2f96;">77</p>
+            <p style="color: #eb2f96;"><strong>77</strong></p>
           </div>
 
           <div class="flex-item">
             <small><strong>ENTHALTUNGEN</strong></small>
-            <p style="color: #b4b4b4;">3</p>
+            <p style="color: #b4b4b4;"><strong>3</strong></p>
           </div>
 
           <div class="flex-item">
             <small><strong>KEINE TEILNAHME</strong></small>
-            <p style="color: #b4b4b4;">2</p>
+            <p style="color: #b4b4b4;"><strong>2</strong></p>
           </div>
         </div>
       </p>
@@ -96,19 +92,20 @@ export default {
       <h3>Bundesgesetz über die Weiterbildung</h3>
 
     <div class="flex-container" style="margin-top: 20px;">
-      <!-- <div class="flex-item">
-        <small><strong>TITEL DES GESCHÄFTS</strong></small>
-        <p>Bundesgesetz über die Weiterbildung Bundesgesetz über die Weiterbildung Bundesgesetz über die Weiterbildung</p>
-      </div> -->
       
       <div class="flex-item">
-        <small><strong>DATUM</strong></small>
+        <small><strong>ABSTIMMUNGSDATUM</strong></small>
         <p>12. Juni 2017</p>
       </div>
 
       <div class="flex-item">
         <small><strong>GESCHÄFTSTYP</strong></small>
         <p>Geschäft des Bundesrates</p>
+      </div>
+
+      <div class="flex-item">
+        <small><strong>GESCHÄFT EINGEREICHT VON</strong></small>
+        <p>Lombardi Filippo</p>
       </div>
 
       <div class="flex-item">
