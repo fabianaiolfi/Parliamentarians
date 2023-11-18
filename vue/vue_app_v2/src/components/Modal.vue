@@ -55,28 +55,36 @@ export default {
     </div>
     
     <div style="margin-top: 20px;">
-      <small><strong>SCHLUSSRESULTAT</strong></small>
+      <!-- <small><strong>SCHLUSSRESULTAT</strong></small>
       <p style="color: #eb2f96;">
-        <CloseCircleTwoTone two-tone-color="#eb2f96"/>
-        Das Geschäft wurde abgelehnt
-      </p>
+        <strong>Das Geschäft wurde abgelehnt</strong>
+      </p> -->
 
       <p>
-        <div class="flex-container" style="margin-top: -10px;">
+        <div class="flex-container">
           <div class="flex-item">
-            <CheckCircleTwoTone two-tone-color="#52c41a"/> 56 Ja
+            <small><strong>SCHLUSSRESULTAT</strong></small>
+            <p style="color: #eb2f96;"><strong>Das Geschäft wurde abgelehnt</strong></p>
+          </div>
+          
+          <div class="flex-item">
+            <small><strong>JA</strong></small>
+            <p style="color: #52c41a;">56</p>
           </div>
 
           <div class="flex-item">
-            <CloseCircleTwoTone two-tone-color="#eb2f96"/> 77 Nein
+            <small><strong>NEIN</strong></small>
+            <p style="color: #eb2f96;">77</p>
           </div>
 
           <div class="flex-item">
-            <QuestionCircleTwoTone two-tone-color="#b4b4b4"/> 3 Enthaltungen
+            <small><strong>ENTHALTUNGEN</strong></small>
+            <p style="color: #b4b4b4;">3</p>
           </div>
 
           <div class="flex-item">
-            <FrownTwoTone two-tone-color="#b4b4b4"/> 2 keine Teilnahme
+            <small><strong>KEINE TEILNAHME</strong></small>
+            <p style="color: #b4b4b4;">2</p>
           </div>
         </div>
       </p>
@@ -84,14 +92,14 @@ export default {
 
     <a-divider />
 
-    <!-- <small><strong>TITEL DES GESCHÄFTS</strong></small>
-      <h3>Bundesgesetz über die Weiterbildung</h3> -->
+    <small><strong>TITEL DES GESCHÄFTS</strong></small>
+      <h3>Bundesgesetz über die Weiterbildung</h3>
 
     <div class="flex-container" style="margin-top: 20px;">
-      <div class="flex-item">
+      <!-- <div class="flex-item">
         <small><strong>TITEL DES GESCHÄFTS</strong></small>
         <p>Bundesgesetz über die Weiterbildung Bundesgesetz über die Weiterbildung Bundesgesetz über die Weiterbildung</p>
-      </div>
+      </div> -->
       
       <div class="flex-item">
         <small><strong>DATUM</strong></small>
