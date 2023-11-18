@@ -1,3 +1,30 @@
+<script>
+import { ref, onMounted } from 'vue';
+import Modal from './components/Modal.vue';
+
+export default {
+  components: {
+    Modal,
+  },
+  setup() {
+    const modalRef = ref(null);
+
+    const showModal = () => {
+      if (modalRef.value) {
+        modalRef.value.showModal();
+      }
+    };
+
+    onMounted(() => {
+      // This ensures that modalRef is available after the component has been mounted
+      console.log(modalRef.value); // You can remove this line after verifying
+    });
+
+    return { modalRef, showModal };
+  },
+};
+</script>
+
 
 <template>
   <a-layout class="layout">
@@ -25,11 +52,17 @@
         <router-view />
       </div>
     </a-layout-content>
-    <a-layout-footer style="text-align: center">
 
+    <div>
+    <a-button type="primary" @click="showModal">Open Modal of 1000px width</a-button>
+    <Modal ref="modalRef"/>
+  </div>
+
+    <a-layout-footer style="text-align: center">
     </a-layout-footer>
   </a-layout>
 </template>
+
 
 <style scoped>
 ::v-deep .ant-menu-item-selected {
