@@ -54,9 +54,9 @@ export default {
     </a-layout-content>
 
     <div>
-    <a-button type="primary" @click="showModal">Open Modal of 1000px width</a-button>
-    <Modal ref="modalRef"/>
-  </div>
+      <a-button type="primary" @click="showModal">Open Modal</a-button>
+      <Modal ref="modalRef"/>
+    </div>
 
     <a-layout-footer style="text-align: center">
     </a-layout-footer>
