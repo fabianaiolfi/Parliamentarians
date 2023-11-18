@@ -439,7 +439,8 @@ all_businesses_eval$ReasonText[all_businesses_eval$BusinessShortNumber == "01.45
 ############# 
 
 
-
+sum(is.na(all_businesses_eval$SubmittedBy))
+unique(all_businesses_eval$SubmittedBy)
 
 
 
