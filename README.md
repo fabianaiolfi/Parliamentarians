@@ -42,10 +42,15 @@ The output of this sub-project are two Shiny web apps: - [Abstimmungsverhalten N
   - [ ] Maybe place über-topics into (another) dropdown, so to only ever display one über-topic at once
   - [ ] [Fix faulty business item categorisations](https://github.com/fabianaiolfi/Parliamentarians/blob/d4864887646ac2d40570d4758eabc19623974aed/documentation/Feedback.txt#L3)
   - [ ] [Look into strange worry barometer formulations](https://github.com/fabianaiolfi/Parliamentarians/blob/d4864887646ac2d40570d4758eabc19623974aed/documentation/Feedback.txt#L13)
+- [ ] Generate data on all parliamentarians from last legislatory period to wrap up project for the end of the year
 
 ### UI
 #### Must
 - [x] Increase main dropdown size
+- [ ] Replace Collapse with Modal
+- [ ] Find better way to display Worries Selector/Dropdown
+- [ ] Naming / Branding / Logo
+- [ ] About Page
 
 #### Should
 - [ ] Add Table of Contents to top of profile page
