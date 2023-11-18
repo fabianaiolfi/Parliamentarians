@@ -115,7 +115,6 @@ export default {
           </p>
       </div>
     </div>
-
       
     <a-divider />
 
