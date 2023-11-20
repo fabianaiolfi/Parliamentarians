@@ -1,13 +1,16 @@
 <script>
 import { ref, onMounted } from 'vue';
 import Modal from './components/Modal.vue';
+import Table from './components/Table.vue';
 
 export default {
   components: {
     Modal,
+    Table,
   },
   setup() {
     const modalRef = ref(null);
+    const tableRef = ref(null);
 
     const showModal = () => {
       if (modalRef.value) {
@@ -17,10 +20,10 @@ export default {
 
     onMounted(() => {
       // This ensures that modalRef is available after the component has been mounted
-      console.log(modalRef.value); // You can remove this line after verifying
+      //console.log(modalRef.value); // You can remove this line after verifying
     });
 
-    return { modalRef, showModal };
+    return { tableRef, modalRef, showModal };
   },
 };
 </script>
@@ -56,6 +59,7 @@ export default {
     <div>
       <a-button type="primary" @click="showModal">Open Modal</a-button>
       <Modal ref="modalRef"/>
+      <Table ref="tableRef"/>
     </div>
 
     <a-layout-footer style="text-align: center">
