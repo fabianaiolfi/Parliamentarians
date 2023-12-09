@@ -28,16 +28,11 @@
       </template>
       <template v-else-if="column.key === 'action'">
         <span>
-          <a>Details</a>
           <div>
             <a-button type="primary" @click="props.openModal">Open Modal</a-button>
-            <!-- <Modal ref="modalRef"/> -->
           </div>
         </span>
       </template>
-      <!-- <Modal v-model:visible="showModal">
-        <Modal ref="modalRef"/>
-      </Modal> -->
     </template>
   </a-table>
 </template>
@@ -57,18 +52,12 @@ const props = defineProps({
 
 const open = ref(false);
 
-// const showModal = () => {
-//   open.value = true;
-// };
-
 const handleOk = e => {
   console.log(e);
   open.value = false;
 };
 
 const setup = () => {
-  // Make showModal accessible from the parent
-  //return { open, showModal, handleOk };
   return { open, handleOk };
 };
 
@@ -123,4 +112,3 @@ const data = [
   },
 ];
 </script>
-

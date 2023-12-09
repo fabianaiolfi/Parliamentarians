@@ -136,5 +136,4 @@ export default {
 .flex-item {
   margin-right: 40px; /* Adds space to the right of each item */
 }
-
 </style>
