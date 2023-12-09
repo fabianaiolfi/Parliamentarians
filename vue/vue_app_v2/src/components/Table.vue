@@ -30,14 +30,14 @@
         <span>
           <a>Details</a>
           <div>
-            <a-button type="primary" @click="showModal = true">Open Modal</a-button>
+            <a-button type="primary" @click="props.openModal">Open Modal</a-button>
             <!-- <Modal ref="modalRef"/> -->
           </div>
         </span>
       </template>
-      <Modal v-model:visible="showModal">
+      <!-- <Modal v-model:visible="showModal">
         <Modal ref="modalRef"/>
-      </Modal>
+      </Modal> -->
     </template>
   </a-table>
 </template>
@@ -50,11 +50,16 @@ import Modal from './Modal.vue';
 import { ref } from 'vue';
 import { CheckCircleTwoTone, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';
 
+// Define props
+const props = defineProps({
+  openModal: Function
+});
+
 const open = ref(false);
 
-const showModal = () => {
-  open.value = true;
-};
+// const showModal = () => {
+//   open.value = true;
+// };
 
 const handleOk = e => {
   console.log(e);
@@ -63,7 +68,8 @@ const handleOk = e => {
 
 const setup = () => {
   // Make showModal accessible from the parent
-  return { open, showModal, handleOk };
+  //return { open, showModal, handleOk };
+  return { open, handleOk };
 };
 
 const columns = [

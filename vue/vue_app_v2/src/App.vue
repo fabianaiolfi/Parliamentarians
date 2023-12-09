@@ -8,6 +8,15 @@ export default {
     Modal,
     Table,
   },
+
+  methods: {
+    showModal() {
+      if (this.modalRef.value) {
+        this.modalRef.value.showModal();
+      }
+    }
+  },
+  
   setup() {
     const modalRef = ref(null);
     const tableRef = ref(null);
@@ -59,7 +68,8 @@ export default {
     <div>
       <a-button type="primary" @click="showModal">Open Modal</a-button>
       <Modal ref="modalRef"/>
-      <Table ref="tableRef"/>
+      <!-- <Table ref="tableRef"/> -->
+      <Table :open-modal="showModal" />
     </div>
 
     <a-layout-footer style="text-align: center">
