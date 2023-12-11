@@ -93,13 +93,13 @@ const columns = [
     onFilter: (value, record) => {
       switch (value) {
         case 'Ja':
-          return record.vote_statement.startsWith('der');
+          return record.concatenatedValue.startsWith('Stimmte für');
         case 'Nein':
-          return record.vote_statement.startsWith('die');
+          return record.concatenatedValue.startsWith('Stimmte gegen');
         case 'Enthaltung':
-          return record.vote_statement.startsWith('das');
+          return record.concatenatedValue.startsWith('Enthielt sich');
         case 'Keine Teilnahme':
-          return record.vote_statement.startsWith('ein');
+          return record.concatenatedValue.startsWith('Keine Teilnahme');
         default:
           return true;
       }
