@@ -1,5 +1,6 @@
 <template>
-  <a-table :columns="columns" :data-source="tableData">
+  <a-table :columns="columns" :data-source="tableData" style="margin-left: 30px; margin-right: 30px;">
+    <!-- :pagination="false" remove pagination later on -->
     <template #headerCell="{ column }">
       <template v-if="column.key === 'entscheid'">
         <span>

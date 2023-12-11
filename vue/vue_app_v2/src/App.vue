@@ -75,8 +75,8 @@ export default {
   </a-layout>
 </template>
 
-
 <style scoped>
+
 ::v-deep .ant-menu-item-selected {
   color: #ffffff !important;
   background-color: #001529 !important;
@@ -102,4 +102,12 @@ export default {
 [data-theme='dark'] .site-layout-content {
   background: #141414;
 }
+</style>
+
+<style>
+
+body {
+  background-color: #F5F5F5;
+}
+
 </style>
