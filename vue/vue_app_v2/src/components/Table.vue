@@ -1,11 +1,11 @@
 <template>
-  <a-table :columns="columns" :data-source="tableData" :showHeader="false" style="margin-left: 30px; margin-right: 30px;">
+  <a-table :columns="columns" :data-source="tableData" :showHeader="true" style="margin-left: 30px; margin-right: 30px;">
     <!-- :pagination="false" remove pagination later on -->
 
     <template #bodyCell="{ column, record }">
       <div @click="props.openModal" style="cursor: pointer;">
         <template v-if="column.key === 'entscheid'">
-          <p><CheckCircleOutlined /></p>
+          <p><CheckCircleTwoTone /></p>
         </template>
         <template v-else-if="column.key === 'action'">
           <span>
@@ -64,9 +64,42 @@ tableData.value = Object.values(jsonData).flat().map(item => ({
 
 const columns = [
   {
-    title: '',
+    title: 'Entscheid',
     dataIndex: 'name',
     key: 'entscheid',
+    width: '100px',
+    filters: [
+      {
+        text: 'Ja',
+        value: 'Ja',
+      },
+      {
+        text: 'Nein',
+        value: 'Nein',
+      },
+      {
+        text: 'Enthaltung',
+        value: 'Enthaltung',
+      },
+      {
+        text: 'Keine Teilnahme',
+        value: 'Keine Teilnahme',
+      },
+    ],
+    onFilter: (value, record) => {
+      switch (value) {
+        case 'Ja':
+          return record.vote_statement.startsWith('der');
+        case 'Nein':
+          return record.vote_statement.startsWith('die');
+        case 'Enthaltung':
+          return record.vote_statement.startsWith('das');
+        case 'Keine Teilnahme':
+          return record.vote_statement.startsWith('ein');
+        default:
+          return true;
+      }
+    },
   },
   {
     title: '',
