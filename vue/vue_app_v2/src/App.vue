@@ -66,9 +66,7 @@ export default {
     </a-layout-content>
 
     <div>
-      <a-button type="primary" @click="showModal">Open Modal</a-button>
       <Modal ref="modalRef"/>
-      <!-- <Table ref="tableRef"/> -->
       <Table :open-modal="showModal" />
     </div>
 
