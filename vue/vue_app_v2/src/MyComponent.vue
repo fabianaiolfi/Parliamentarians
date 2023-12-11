@@ -17,7 +17,6 @@ import bsnURL from './bsn_url.json'
 
 const topicValue = ref('');
 
-
 // Update logic for dropdown selections
 // Set up reactive properties to store the selected person, the selected topic, and the resulting values
 const selectedPerson = ref("");
@@ -45,17 +44,29 @@ watch([selectedPerson, selectedMainTopic], ([newPerson, newTopic]) => {
             }
         }
 
-        // This line is no longer necessary as you'll transform groupedVotes outside the if block
-        // resultingValues.value = groupedVotes; 
     } else {
         resultingValues.value = {};
     }
 
     // Transform groupedVotes into tableData outside the if-else block
-    const tableData = [];
+//     const tableData = [];
+//     for (const [behavior, votes] of Object.entries(groupedVotes)) {
+//         votes.forEach(vote => {
+//             tableData.push({ behavior, vote });
+//         });
+//     }
+//     resultingValues.value = tableData;
+// });
+
+const tableData = [];
     for (const [behavior, votes] of Object.entries(groupedVotes)) {
-        votes.forEach(vote => {
-            tableData.push({ behavior, vote });
+        votes.forEach(businessNumber => {
+            const voteData = BSNStatement[businessNumber];
+            if (voteData && voteData.length > 0) {
+                // Assuming each businessNumber has an array of items, and you're interested in the first one
+                const voteStatement = voteData[0].vote_statement;
+                tableData.push({ behavior, businessNumber, vote_statement: voteStatement });
+            }
         });
     }
     resultingValues.value = tableData;

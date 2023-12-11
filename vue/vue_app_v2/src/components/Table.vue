@@ -1,8 +1,7 @@
 <template>
-  <!-- <a-table :columns="columns" :data-source="tableData" :showHeader="true" style="margin-left: 30px; margin-right: 30px;"> -->
-  <!-- <a-table :columns="columns" :data-source="props.resultingValues" :showHeader="true" style="margin-left: 30px; margin-right: 30px;"> -->
+  <!-- <pre>{{ tableData }}</pre> -->
+  <pre>{{ props.resultingValues }}</pre>
   <a-table :columns="columns" :data-source="props.resultingValues" :pagination="false">
-    <!-- :pagination="false" remove pagination later on -->
 
     <template #bodyCell="{ column, record }">
       <div @click="props.openModal" style="cursor: pointer;">
@@ -61,11 +60,19 @@ interface DataItem {
 const tableData = ref<DataItem[]>([]);
 
 // Processing the JSON data
-tableData.value = Object.values(jsonData).flat().map(item => ({
-  vote_statement: item.vote_statement,
-  //name: item.Title,  // Adjust according to your needs
-  // other fields...
-}));
+// tableData.value = Object.values(jsonData).flat().map(item => ({
+//   vote_statement: item.vote_statement,
+//   //name: item.Title,  // Adjust according to your needs
+//   // other fields...
+// }));
+
+tableData.value = Object.entries(jsonData).flatMap(([businessNumber, votes]) => {
+  return votes.map(vote => ({
+    businessNumber: businessNumber,
+    vote_statement: vote.vote_statement,
+  }));
+});
+
 
 const columns = [
 {
@@ -78,9 +85,17 @@ const columns = [
     title: 'Vote',
     dataIndex: 'vote',
     key: 'vote',
-    // other properties as needed...
   },
-  // ... more columns as needed
+  {
+    title: 'Business Number',
+    dataIndex: 'businessNumber',
+    key: 'businessNumber',
+  },
+  {
+    title: 'Vote Statement',
+    dataIndex: 'vote_statement',
+    key: 'vote_statement',
+  },
   {
     title: 'Entscheid',
     dataIndex: 'name',
