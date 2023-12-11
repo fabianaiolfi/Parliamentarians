@@ -16,7 +16,7 @@
       <template v-else-if="column.key === 'action'">
         <span>
           <div>
-            <a-button type="primary" @click="props.openModal">Open Modal</a-button>
+            <a-button type="default" shape="circle" @click="props.openModal"><InfoCircleOutlined /></a-button>
           </div>
         </span>
       </template>
@@ -30,7 +30,7 @@ import { CheckCircleOutlined, SmileOutlined, DownOutlined } from '@ant-design/ic
 //import Modal from './Modal.vue';
 
 import { ref } from 'vue';
-import { CheckCircleTwoTone, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';
+import { CheckCircleTwoTone, InfoCircleOutlined, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';
 import jsonData from '../bsn_summary_statement.json';
 
 // Define props
@@ -78,6 +78,7 @@ const columns = [
   {
     title: 'Action',
     key: 'action',
+    align: 'right',
   },
 ];
 
