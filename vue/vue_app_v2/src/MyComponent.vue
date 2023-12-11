@@ -65,7 +65,13 @@ const tableData = [];
             if (voteData && voteData.length > 0) {
                 // Assuming each businessNumber has an array of items, and you're interested in the first one
                 const voteStatement = voteData[0].vote_statement;
-                tableData.push({ behavior, businessNumber, vote_statement: voteStatement });
+                //tableData.push({ behavior, businessNumber, vote_statement: voteStatement });
+                tableData.push({
+                behavior,
+                businessNumber,
+                vote_statement: voteStatement,
+                concatenatedValue: behavior + ' ' + voteStatement // Concatenate here
+            });
             }
         });
     }

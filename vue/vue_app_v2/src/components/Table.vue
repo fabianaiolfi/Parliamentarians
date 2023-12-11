@@ -1,6 +1,6 @@
 <template>
   <!-- <pre>{{ tableData }}</pre> -->
-  <pre>{{ props.resultingValues }}</pre>
+  <!-- <pre>{{ props.resultingValues }}</pre> -->
   <a-table :columns="columns" :data-source="props.resultingValues" :pagination="false">
 
     <template #bodyCell="{ column, record }">
@@ -59,13 +59,6 @@ interface DataItem {
 
 const tableData = ref<DataItem[]>([]);
 
-// Processing the JSON data
-// tableData.value = Object.values(jsonData).flat().map(item => ({
-//   vote_statement: item.vote_statement,
-//   //name: item.Title,  // Adjust according to your needs
-//   // other fields...
-// }));
-
 tableData.value = Object.entries(jsonData).flatMap(([businessNumber, votes]) => {
   return votes.map(vote => ({
     businessNumber: businessNumber,
@@ -73,29 +66,7 @@ tableData.value = Object.entries(jsonData).flatMap(([businessNumber, votes]) => 
   }));
 });
 
-
 const columns = [
-{
-    title: 'Behavior',
-    dataIndex: 'behavior',
-    key: 'behavior',
-    // other properties as needed...
-  },
-  {
-    title: 'Vote',
-    dataIndex: 'vote',
-    key: 'vote',
-  },
-  {
-    title: 'Business Number',
-    dataIndex: 'businessNumber',
-    key: 'businessNumber',
-  },
-  {
-    title: 'Vote Statement',
-    dataIndex: 'vote_statement',
-    key: 'vote_statement',
-  },
   {
     title: 'Entscheid',
     dataIndex: 'name',
@@ -135,10 +106,11 @@ const columns = [
     },
   },
   {
-    title: '',
-    dataIndex: 'vote_statement',
-    key: 'vote_statement',
+    title: 'Concatenated Value',
+    dataIndex: 'concatenatedValue',
+    key: 'concatenatedValue',
   },
+
   {
     title: '',
     key: 'action',
