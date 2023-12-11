@@ -2,6 +2,8 @@
 
 import { ref, watch, computed } from 'vue'
 import { CheckCircleTwoTone, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';  // Import the icon
+import Table from './components/Table.vue'; // Adjust the import path as necessary
+import { inject } from 'vue';
 
 // Importing the JSON files
 import WorryStatement from './worry_statement.json'
@@ -20,18 +22,20 @@ const topicValue = ref('');
 // Set up reactive properties to store the selected person, the selected topic, and the resulting values
 const selectedPerson = ref("");
 const resultingValues = ref([]);
+const showModal = inject('showModal');
 
 // MainTopic Dropdown
 const selectedMainTopic = ref("");  // Initialize to 'Alle Themen' or any default value
 
 // Create a watcher or a method that triggers whenever selectedPerson or selectedMainTopic changes
 watch([selectedPerson, selectedMainTopic], ([newPerson, newTopic]) => {
+    const groupedVotes = {}; // Declare groupedVotes at the top of the watch callback
+
     if (newPerson && newTopic) {
         const topicValues = SorgenBSN[newTopic] || [];
         const personVotes = PersonBSNVote[newPerson] || {};
         
-        const groupedVotes = {};
-        
+        // Now groupedVotes is accessible within this block
         for (const [behavior, votes] of Object.entries(personVotes)) {
             const filteredVotes = votes.filter(vote => 
                 topicValues.some(topicValue => topicValue.split(', ').includes(vote))
@@ -41,14 +45,22 @@ watch([selectedPerson, selectedMainTopic], ([newPerson, newTopic]) => {
             }
         }
 
-        resultingValues.value = groupedVotes;
-
-        //console.log("Grouped votes:", resultingValues.value);
-        console.log("Grouped votes:", groupedVotes);
+        // This line is no longer necessary as you'll transform groupedVotes outside the if block
+        // resultingValues.value = groupedVotes; 
     } else {
         resultingValues.value = {};
     }
+
+    // Transform groupedVotes into tableData outside the if-else block
+    const tableData = [];
+    for (const [behavior, votes] of Object.entries(groupedVotes)) {
+        votes.forEach(vote => {
+            tableData.push({ behavior, vote });
+        });
+    }
+    resultingValues.value = tableData;
 });
+
 
 // Assuming WorryStatement is already imported
 const uniqueMainTopics = ref([]);
@@ -393,5 +405,8 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
   </div>
 
 </div>
+
+<Table :resultingValues="resultingValues" :open-modal="showModal" />
+
 
 </template>

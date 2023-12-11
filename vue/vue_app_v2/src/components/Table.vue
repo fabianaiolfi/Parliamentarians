@@ -1,5 +1,7 @@
 <template>
-  <a-table :columns="columns" :data-source="tableData" :showHeader="true" style="margin-left: 30px; margin-right: 30px;">
+  <!-- <a-table :columns="columns" :data-source="tableData" :showHeader="true" style="margin-left: 30px; margin-right: 30px;"> -->
+  <!-- <a-table :columns="columns" :data-source="props.resultingValues" :showHeader="true" style="margin-left: 30px; margin-right: 30px;"> -->
+  <a-table :columns="columns" :data-source="props.resultingValues" :pagination="false">
     <!-- :pagination="false" remove pagination later on -->
 
     <template #bodyCell="{ column, record }">
@@ -26,6 +28,8 @@
 
 import { CheckCircleOutlined, SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
 //import Modal from './Modal.vue';
+import { defineProps } from 'vue';
+
 
 import { ref } from 'vue';
 import { CheckCircleTwoTone, InfoCircleOutlined, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';
@@ -33,7 +37,8 @@ import jsonData from '../bsn_summary_statement.json';
 
 // Define props
 const props = defineProps({
-  openModal: Function
+  openModal: Function,
+  resultingValues: Array
 });
 
 const open = ref(false);
@@ -63,6 +68,19 @@ tableData.value = Object.values(jsonData).flat().map(item => ({
 }));
 
 const columns = [
+{
+    title: 'Behavior',
+    dataIndex: 'behavior',
+    key: 'behavior',
+    // other properties as needed...
+  },
+  {
+    title: 'Vote',
+    dataIndex: 'vote',
+    key: 'vote',
+    // other properties as needed...
+  },
+  // ... more columns as needed
   {
     title: 'Entscheid',
     dataIndex: 'name',

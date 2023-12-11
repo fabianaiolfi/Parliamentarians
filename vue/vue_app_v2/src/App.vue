@@ -8,6 +8,11 @@ export default {
     Modal,
     Table,
   },
+  provide() {
+    return {
+      showModal: this.showModal
+    };
+  },
 
   methods: {
     showModal() {
@@ -67,7 +72,7 @@ export default {
 
     <div>
       <Modal ref="modalRef"/>
-      <Table :open-modal="showModal" />
+      <!-- <Table :open-modal="showModal" /> -->
     </div>
 
     <a-layout-footer style="text-align: center">
