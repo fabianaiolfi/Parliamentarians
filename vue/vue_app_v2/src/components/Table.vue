@@ -1,26 +1,24 @@
 <template>
-  <a-table :columns="columns" :data-source="tableData" style="margin-left: 30px; margin-right: 30px;">
+  <a-table :columns="columns" :data-source="tableData" :showHeader="false" style="margin-left: 30px; margin-right: 30px;">
     <!-- :pagination="false" remove pagination later on -->
-    <template #headerCell="{ column }">
-      <template v-if="column.key === 'entscheid'">
-        <span>
-          Entscheid
-        </span>
-      </template>
+
+    <template #bodyCell="{ column, record }">
+      <div @click="props.openModal" style="cursor: pointer;">
+        <template v-if="column.key === 'entscheid'">
+          <p><CheckCircleOutlined /></p>
+        </template>
+        <template v-else-if="column.key === 'action'">
+          <span>
+            <a-button type="default" shape="circle"><InfoCircleOutlined /></a-button>
+          </span>
+        </template>
+        <template v-else>
+          <!-- Add handling for other columns here if needed -->
+          {{ record[column.dataIndex] }}
+        </template>
+      </div>
     </template>
 
-    <template #bodyCell="{ column }">
-      <template v-if="column.key === 'entscheid'">
-        <p><CheckCircleOutlined /></p>
-      </template>
-      <template v-else-if="column.key === 'action'">
-        <span>
-          <div>
-            <a-button type="default" shape="circle" @click="props.openModal"><InfoCircleOutlined /></a-button>
-          </div>
-        </span>
-      </template>
-    </template>
   </a-table>
 </template>
 
@@ -66,17 +64,17 @@ tableData.value = Object.values(jsonData).flat().map(item => ({
 
 const columns = [
   {
-    name: 'Entscheid',
+    title: '',
     dataIndex: 'name',
     key: 'entscheid',
   },
   {
-    title: 'Abstimmungsverhalten',
+    title: '',
     dataIndex: 'vote_statement',
     key: 'vote_statement',
   },
   {
-    title: 'Action',
+    title: '',
     key: 'action',
     align: 'right',
   },
