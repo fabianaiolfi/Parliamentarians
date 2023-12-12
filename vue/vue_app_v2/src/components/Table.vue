@@ -1,10 +1,9 @@
 <template>
-  <!-- <pre>{{ tableData }}</pre> -->
-  <!-- <pre>{{ props.resultingValues }}</pre> -->
   <a-table :columns="columns" :data-source="props.resultingValues" :pagination="false">
-
-    <template #bodyCell="{ column, record }">
+    <template #bodyCell="{ record, column }">
       <div @click="props.openModal" style="cursor: pointer;">
+
+        <!-- Existing conditions for 'entscheid' and 'action' columns -->
         <template v-if="column.key === 'entscheid'">
           <p><CheckCircleTwoTone /></p>
         </template>
@@ -13,24 +12,41 @@
             <a-button type="default" shape="circle"><InfoCircleOutlined /></a-button>
           </span>
         </template>
+
+        <!-- New condition for 'status' column -->
+        <template v-else-if="column.key === 'status'">
+          <span v-if="record.behavior.startsWith('Stimmte für')">
+            <CheckCircleTwoTone two-tone-color="#52c41a"/>
+          </span>
+          <span v-else-if="record.behavior.startsWith('Stimmte gegen')">
+            <CloseCircleTwoTone two-tone-color="#eb2f96"/>
+          </span>
+          <span v-else-if="record.behavior.startsWith('Enthielt sich')">
+            <QuestionCircleTwoTone two-tone-color="#b4b4b4"/>
+          </span>
+          <span v-else-if="record.behavior.startsWith('Keine Teilnahme')">
+            <FrownTwoTone two-tone-color="#b4b4b4"/>
+          </span>
+        </template>
+
+        <!-- Default case for other columns -->
         <template v-else>
-          <!-- Add handling for other columns here if needed -->
           {{ record[column.dataIndex] }}
         </template>
+
       </div>
     </template>
-
   </a-table>
 </template>
 
 <script lang="ts" setup>
 
-import { CheckCircleOutlined, SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
+//import { CheckCircleOutlined, SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
 //import Modal from './Modal.vue';
 import { defineProps } from 'vue';
 
 
-import { ref } from 'vue';
+import { ref, h } from 'vue';
 import { CheckCircleTwoTone, InfoCircleOutlined, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';
 import jsonData from '../bsn_summary_statement.json';
 
@@ -104,6 +120,10 @@ const columns = [
           return true;
       }
     },
+  },
+  {
+    title: 'Status',
+    key: 'status',
   },
   {
     title: 'Concatenated Value',
