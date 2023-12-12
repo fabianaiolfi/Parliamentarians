@@ -54,11 +54,25 @@ export default {
           :style="{ lineHeight: '64px' }"
         >
           <a-menu-item key="1">
-            <router-link to="/parlamentarier">Parlamentarier:innen</router-link>
+            <router-link to="/parlamentarier">Check Your Parliamentarian</router-link>
           </a-menu-item>
           <!-- <a-menu-item key="2">
             <router-link to="/info">Info</router-link>
           </a-menu-item> -->
+          <div style="text-align: left; margin-bottom: 20px;">
+      <a-select
+        v-model:value="selectedPerson"
+        show-search
+        placeholder="Select a person"
+        style="width: 350px"
+        :options="options"
+        :filter-option="filterOption"
+        size="middle"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        @change="handleChange"
+      ></a-select>
+    </div>
         </a-menu>
         <!-- Button aligned to the right -->
         <a-button type="link" style="color: white;">
