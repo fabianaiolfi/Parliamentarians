@@ -44,19 +44,27 @@ export default {
 
 
 <template>
-  
   <a-layout class="layout">
-    
     <a-layout-header>
-      <div class="logo" />
-      <a-menu
-        theme="dark"
-        mode="horizontal"
-        :style="{ lineHeight: '64px' }"
-      >
-      <a-menu-item key="1"><router-link to="/parlamentarier">Parlamentarier:innen</router-link></a-menu-item>
-      <a-menu-item key="2"><router-link to="/info">Info</router-link></a-menu-item>
-      </a-menu>
+      <div class="header-container">
+        <!-- <div class="logo" /> -->
+        <a-menu
+          theme="dark"
+          mode="horizontal"
+          :style="{ lineHeight: '64px' }"
+        >
+          <a-menu-item key="1">
+            <router-link to="/parlamentarier">Parlamentarier:innen</router-link>
+          </a-menu-item>
+          <!-- <a-menu-item key="2">
+            <router-link to="/info">Info</router-link>
+          </a-menu-item> -->
+        </a-menu>
+        <!-- Button aligned to the right -->
+        <a-button type="link" style="color: white;">
+          <router-link to="/info">Info</router-link>
+        </a-button>
+      </div>
     </a-layout-header>
     
     <a-layout-content style="padding: 0 50px">
@@ -77,6 +85,13 @@ export default {
 
 <style scoped>
 
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 ::v-deep .ant-menu-item-selected {
   color: #ffffff !important;
   background-color: #001529 !important;
@@ -88,7 +103,7 @@ export default {
   background: #fff;
 }
 #components-layout-demo-top .logo {
-  float: left;
+  /* float: left; */
   width: 120px;
   height: 31px;
   margin: 16px 24px 16px 0;
