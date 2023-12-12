@@ -50,28 +50,17 @@
 
       </div>
     </template>
-
-    <!-- Custom Empty slot -->
-    <template #empty>
-      <div>Custom Empty Content</div>
-    </template>
-
   </a-table>
   
-  <pre>{{ filteredTableData }}</pre>
+  <!-- <pre>{{ filteredTableData }}</pre> -->
 
-  <template>
-  <a-table :columns="columns" :data-source="filteredTableData" :pagination="false">
+  <a-table :columns="[]" :data-source="[]">
     <template #empty>
-      <div>Custom Empty Content</div>
+      <a-empty :description="null" />
     </template>
   </a-table>
-</template>
 
 </template>
-
-
-
 
 <script lang="ts" setup>
 
