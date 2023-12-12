@@ -1,18 +1,21 @@
 <template>
   
   <div>
-    <a-radio-group v-model:value="value1">
+    <a-radio-group v-model:value="tablefilter">
       <a-radio-button value="all">Alle Abstimmungen</a-radio-button>
-      <a-radio-button value="yes">Ja</a-radio-button>
-      <a-radio-button value="no">Nein</a-radio-button>
-      <a-radio-button value="abstain">Enthaltung</a-radio-button>
-      <a-radio-button value="no_participation">Keine Teilnahme</a-radio-button>
+      <a-radio-button value="yes"><CheckCircleTwoTone two-tone-color="#52c41a"/> Ja</a-radio-button>
+      <a-radio-button value="no"><CloseCircleTwoTone two-tone-color="#eb2f96"/> Nein</a-radio-button>
+      <a-radio-button value="abstain"><QuestionCircleTwoTone two-tone-color="#b4b4b4"/> Enthaltung</a-radio-button>
+      <a-radio-button value="no_participation"><FrownTwoTone two-tone-color="#b4b4b4"/> Keine Teilnahme</a-radio-button>
     </a-radio-group>
   </div>
 
   <div class="spacer" style="height: 10px;"></div>
 
-  <a-table :columns="columns" :data-source="props.resultingValues" :pagination="false" :show-header="false">
+  <!-- <a-table :columns="columns" :data-source="props.resultingValues" :pagination="false" :show-header="false"> -->
+  <a-table :columns="columns" :data-source="filteredTableData" :pagination="false" :show-header="false">
+
+  
     <template #bodyCell="{ record, column }">
       <div @click="props.openModal" style="cursor: pointer;">
 
@@ -56,10 +59,7 @@
 
 //import { CheckCircleOutlined, SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
 //import Modal from './Modal.vue';
-import { defineProps } from 'vue';
-
-
-import { ref, h } from 'vue';
+import { ref, defineProps, computed } from 'vue';
 import { CheckCircleTwoTone, InfoCircleOutlined, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';
 import jsonData from '../bsn_summary_statement.json';
 
@@ -67,6 +67,26 @@ import jsonData from '../bsn_summary_statement.json';
 const props = defineProps({
   openModal: Function,
   resultingValues: Array
+});
+
+const tablefilter = ref('all'); // Default table filter value
+const originalTableData = ref([]); // This should be your unfiltered table data
+
+const filteredTableData = computed(() => {
+  switch (tablefilter.value) {
+    case 'all': // Alle Abstimmungen
+      return props.resultingValues;
+    case 'yes': // Ja
+      return props.resultingValues.filter(item => item.behavior.startsWith('Stimmte für'));
+    case 'no': // Nein
+      return props.resultingValues.filter(item => item.behavior.startsWith('Stimmte gegen'));
+    case 'abstain': // Enthaltung
+      return props.resultingValues.filter(item => item.behavior.startsWith('Enthielt sich'));
+    case 'no_participation': // Keine Teilnahme
+      return props.resultingValues.filter(item => item.behavior.startsWith('Keine Teilnahme'));
+    default:
+      return props.resultingValues;
+  }
 });
 
 const open = ref(false);
