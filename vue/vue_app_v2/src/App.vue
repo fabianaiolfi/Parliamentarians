@@ -68,7 +68,6 @@ export default {
 
     <div>
       <Modal ref="modalRef"/>
-      <!-- <Table :open-modal="showModal" /> -->
     </div>
 
     <a-layout-footer style="text-align: center">
