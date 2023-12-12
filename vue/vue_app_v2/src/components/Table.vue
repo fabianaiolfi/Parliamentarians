@@ -54,18 +54,30 @@
   
   <!-- <pre>{{ filteredTableData }}</pre> -->
 
-  <a-table :columns="[]" :data-source="[]">
+  <!-- <a-table :columns="[]" :data-source="[]">
     <template #empty>
       <a-empty :description="null" />
     </template>
-  </a-table>
+  </a-table> -->
+
+  <div>
+    <!-- Show the table only if there is data -->
+    <a-table v-if="filteredTableData.length > 0" :columns="columns" :data-source="filteredTableData" :pagination="false">
+      <!-- ... other table configurations ... -->
+    </a-table>
+
+    <!-- Show custom empty state when there is no data -->
+    <a-empty v-else :image="simpleImage" :description="null">
+      <div v-html="descriptionHtml"></div>
+    </a-empty>
+  </div>
 
 </template>
 
 <script lang="ts" setup>
 
-//import { CheckCircleOutlined, SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
-//import Modal from './Modal.vue';
+// import { CheckCircleOutlined, SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
+// import Modal from './Modal.vue';
 import { ref, defineProps, computed, PropType } from 'vue';
 import { CheckCircleTwoTone, InfoCircleOutlined, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';
 import { Empty } from 'ant-design-vue';
@@ -84,6 +96,9 @@ const tablefilter = ref('all'); // Default table filter value
 const originalTableData = ref([]); // This should be your unfiltered table data
 const simpleImage = Empty.PRESENTED_IMAGE_SIMPLE;
 
+const descriptionHtml = computed(() => {
+  return 'Keine Abstimmungen vorhanden.<br>Wähle einen anderen Filter oder ein anderes Themengebiet.';
+});
 
 const filteredTableData = computed(() => {
   switch (tablefilter.value) {
