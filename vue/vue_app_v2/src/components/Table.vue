@@ -59,14 +59,17 @@
 
 //import { CheckCircleOutlined, SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
 //import Modal from './Modal.vue';
-import { ref, defineProps, computed } from 'vue';
+import { ref, defineProps, computed, PropType } from 'vue';
 import { CheckCircleTwoTone, InfoCircleOutlined, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';
 import jsonData from '../bsn_summary_statement.json';
 
 // Define props
 const props = defineProps({
   openModal: Function,
-  resultingValues: Array
+  resultingValues: {
+    type: Array as PropType<VoteItem[]>,
+    default: () => []
+  }
 });
 
 const tablefilter = ref('all'); // Default table filter value
@@ -104,6 +107,11 @@ interface DataItem {
   vote_statement: string;
   //name: string;
   // Define other fields as needed
+}
+
+interface VoteItem {
+  behavior: string; // Define the properties expected in each item
+  // Add other properties as needed
 }
 
 const tableData = ref<DataItem[]>([]);
