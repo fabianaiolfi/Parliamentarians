@@ -12,7 +12,14 @@
 
   <div class="spacer" style="height: 10px;"></div>
 
-  <a-table :columns="columns" :data-source="filteredTableData" :pagination="false" :show-header="false" size="middle">
+  <a-table 
+    :columns="columns"
+    :data-source="filteredTableData"
+    :pagination="false"
+    :show-header="false"
+    size="middle"
+    v-if="filteredTableData.length > 0"
+    >
   
     <template #bodyCell="{ record, column }">
       <div @click="props.openModal" style="cursor: pointer;">
@@ -51,26 +58,11 @@
       </div>
     </template>
   </a-table>
-  
-  <!-- <pre>{{ filteredTableData }}</pre> -->
 
-  <!-- <a-table :columns="[]" :data-source="[]">
-    <template #empty>
-      <a-empty :description="null" />
-    </template>
-  </a-table> -->
-
-  <div>
-    <!-- Show the table only if there is data -->
-    <a-table v-if="filteredTableData.length > 0" :columns="columns" :data-source="filteredTableData" :pagination="false">
-      <!-- ... other table configurations ... -->
-    </a-table>
-
-    <!-- Show custom empty state when there is no data -->
-    <a-empty v-else :image="simpleImage" :description="null">
-      <div v-html="descriptionHtml"></div>
-    </a-empty>
-  </div>
+  <!-- Show custom empty state when there is no data -->
+  <a-empty v-else :image="simpleImage" :description="null">
+    <div v-html="descriptionHtml"></div>
+  </a-empty>
 
 </template>
 
