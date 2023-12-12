@@ -84,9 +84,9 @@ tableData.value = Object.entries(jsonData).flatMap(([businessNumber, votes]) => 
 
 const columns = [
   {
-    title: 'Entscheid',
-    dataIndex: 'name',
-    key: 'entscheid',
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
     width: '100px',
     filters: [
       {
@@ -120,10 +120,6 @@ const columns = [
           return true;
       }
     },
-  },
-  {
-    title: 'Status',
-    key: 'status',
   },
   {
     title: 'Concatenated Value',
