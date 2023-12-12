@@ -1,5 +1,18 @@
 <template>
-  <a-table :columns="columns" :data-source="props.resultingValues" :pagination="false">
+  
+  <div>
+    <a-radio-group v-model:value="value1">
+      <a-radio-button value="all">Alle Abstimmungen</a-radio-button>
+      <a-radio-button value="yes">Ja</a-radio-button>
+      <a-radio-button value="no">Nein</a-radio-button>
+      <a-radio-button value="abstain">Enthaltung</a-radio-button>
+      <a-radio-button value="no_participation">Keine Teilnahme</a-radio-button>
+    </a-radio-group>
+  </div>
+
+  <div class="spacer" style="height: 10px;"></div>
+
+  <a-table :columns="columns" :data-source="props.resultingValues" :pagination="false" :show-header="false">
     <template #bodyCell="{ record, column }">
       <div @click="props.openModal" style="cursor: pointer;">
 
@@ -87,7 +100,7 @@ const columns = [
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
-    width: '100px',
+    width: '10px',
     filters: [
       {
         text: 'Ja',

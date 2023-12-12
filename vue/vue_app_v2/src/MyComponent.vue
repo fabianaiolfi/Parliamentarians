@@ -378,7 +378,7 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
 
     <div class="spacer" style="height: 30px;"></div>
 
-    <h3>Einzelne Abstimmungen</h3>
+    <!-- <h3>Einzelne Abstimmungen</h3> -->
 
     <div v-if="Object.keys(getOrderedValues()).length">
       <div v-for="(votes, behavior) in getOrderedValues()" :key="behavior">
