@@ -12,9 +12,7 @@
 
   <div class="spacer" style="height: 10px;"></div>
 
-  <!-- <a-table :columns="columns" :data-source="props.resultingValues" :pagination="false" :show-header="false"> -->
-  <a-table :columns="columns" :data-source="filteredTableData" :pagination="false" :show-header="false">
-
+  <a-table :columns="columns" :data-source="filteredTableData" :pagination="false" :show-header="false" size="middle">
   
     <template #bodyCell="{ record, column }">
       <div @click="props.openModal" style="cursor: pointer;">
@@ -52,8 +50,28 @@
 
       </div>
     </template>
+
+    <!-- Custom Empty slot -->
+    <template #empty>
+      <div>Custom Empty Content</div>
+    </template>
+
+  </a-table>
+  
+  <pre>{{ filteredTableData }}</pre>
+
+  <template>
+  <a-table :columns="columns" :data-source="filteredTableData" :pagination="false">
+    <template #empty>
+      <div>Custom Empty Content</div>
+    </template>
   </a-table>
 </template>
+
+</template>
+
+
+
 
 <script lang="ts" setup>
 
@@ -61,6 +79,7 @@
 //import Modal from './Modal.vue';
 import { ref, defineProps, computed, PropType } from 'vue';
 import { CheckCircleTwoTone, InfoCircleOutlined, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';
+import { Empty } from 'ant-design-vue';
 import jsonData from '../bsn_summary_statement.json';
 
 // Define props
@@ -74,6 +93,8 @@ const props = defineProps({
 
 const tablefilter = ref('all'); // Default table filter value
 const originalTableData = ref([]); // This should be your unfiltered table data
+const simpleImage = Empty.PRESENTED_IMAGE_SIMPLE;
+
 
 const filteredTableData = computed(() => {
   switch (tablefilter.value) {
@@ -91,6 +112,7 @@ const filteredTableData = computed(() => {
       return props.resultingValues;
   }
 });
+
 
 const open = ref(false);
 
