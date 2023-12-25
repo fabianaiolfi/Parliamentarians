@@ -15,73 +15,41 @@ export default {
     };
   },
   data() {
+    const options = []; // Initialize options as an empty array
+
+    // Populate options from NamesSearchSelect
+    for (const personNumber in NamesSearchSelect) {
+      const person = NamesSearchSelect[personNumber][0]; // Assuming this structure based on your code
+      const fullName = `${person.FirstName} ${person.LastName} (${person.PartyAbbreviation}, ${person.CantonName})`;
+      options.push({
+        label: fullName,
+        value: personNumber
+      });
+    }
+
     return {
-      selectedPerson: null,
-      personOptions: [],
+      selectedPerson: '', // Default value for selected person
+      options, // The populated options for your select component
     };
   },
 
-  mounted() {
-    this.populatePersonOptions();
+  methods: {
+    handleChange(value) {
+    },
+    handleFocus() {
+    },
+    handleBlur() {
+    },
+
+    filterOption(input, option) {
+      return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
   },
 
-  methods: {
-    filterOption(input, option) {
-    // Implementation
-  },
-  handleFocus() {
-    // Implementation
-  },
-  handleBlur() {
-    // Implementation
-  },
-  handleChange(value) {
-    console.log('Selected:', value);
-  },
     showModal() {
       if (this.modalRef.value) {
         this.modalRef.value.showModal();
       }
     },
-    handleChange(value) {
-      // Handle the change event
-      console.log(value);
-    },
-
-    // populatePersonOptions() {
-    //   const NamesSearchSelect = {
-    //     // ... your NamesSearchSelect object here
-    //   };
-
-    //   for (const personNumber in NamesSearchSelect) {
-    //     const person = NamesSearchSelect[personNumber][0];
-    //     const fullName = `${person.FirstName} ${person.LastName} (${person.PartyAbbreviation}, ${person.CantonName})`;
-    //     this.personOptions.push({
-    //       label: fullName,
-    //       value: personNumber
-    //     });
-    //   }
-    // },
-
-    populatePersonOptions() {
-    // Assuming NamesSearchSelect is an external data source, make sure it is imported or set properly.
-    console.log('NamesSearchSelect:', NamesSearchSelect); // Check if data is there
-
-    for (const personNumber in NamesSearchSelect) {
-      const person = NamesSearchSelect[personNumber][0];
-      if (!person) {
-        console.error('Person data is undefined for personNumber:', personNumber);
-        continue; // Skip this iteration if person data is not available
-      }
-      const fullName = `${person.FirstName} ${person.LastName} (${person.PartyAbbreviation}, ${person.CantonName})`;
-      this.personOptions.push({
-        label: fullName,
-        value: personNumber
-      });
-    }
-    console.log('personOptions:', this.personOptions); // Check the populated options
-  },
-  // ... other methods
 },
 
   filterOption(input, option) {
@@ -90,14 +58,11 @@ export default {
       return option.label.toLowerCase().indexOf(input.toLowerCase()) > -1;
     },
     handleFocus() {
-      // Handle focus event
     },
     handleBlur() {
-      // Handle blur event
     },
     handleChange(value) {
-      // Handle change event
-      console.log('Selected:', value);
+      // console.log('Selected:', value);
     },
   };
 
@@ -116,7 +81,7 @@ export default {
           show-search
           placeholder="Select a person"
           style="width: 450px"
-          :options="personOptions"
+          :options="options"
           :filter-option="filterOption"
           size="large"
           @focus="handleFocus"
