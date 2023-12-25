@@ -13,73 +13,69 @@ export default {
       showModal: this.showModal
     };
   },
+  data() {
+    return {
+      selectedRep: null,
+      repOptions: [
+        // Populate this array with your options
+        { value: 'rep1', label: 'Representative 1' },
+        { value: 'rep2', label: 'Representative 2' },
+        // ... other options
+      ],
+    };
+  },
 
   methods: {
     showModal() {
       if (this.modalRef.value) {
         this.modalRef.value.showModal();
       }
-    }
-  },
-  
-  setup() {
-    const modalRef = ref(null);
-    const tableRef = ref(null);
-
-    const showModal = () => {
-      if (modalRef.value) {
-        modalRef.value.showModal();
-      }
-    };
-
-    onMounted(() => {
-      // This ensures that modalRef is available after the component has been mounted
-      //console.log(modalRef.value); // You can remove this line after verifying
-    });
-
-    return { tableRef, modalRef, showModal };
+    },
+    handleChange(value) {
+      // Handle the change event
+      console.log(value);
+    },
   },
 };
+
+const handleBlur = () => {
+  console.log('blur');
+};
+const handleFocus = () => {
+  console.log('focus');
+};
+const filterOption = (input, option) => {
+    return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+}
+
 </script>
 
 
 <template>
   <a-layout class="layout">
     <a-layout-header>
-      <div class="header-container">
-        <!-- <div class="logo" /> -->
-        <a-menu
-          theme="dark"
-          mode="horizontal"
-          :style="{ lineHeight: '64px' }"
+    <div class="header-container" style="display: flex; justify-content: space-between; align-items: center;">
+      <!-- Left-aligned items -->
+      <div>
+        <router-link to="/parlamentarier" class="nav-text">Check Your Rep</router-link>
+        <a-select
+          v-model="selectedRep"
+          placeholder="Select a rep"
+          style="width: 200px; margin-left: 20px;"
+          @change="handleChange"
         >
-          <a-menu-item key="1">
-            <router-link to="/parlamentarier">Check Your Parliamentarian</router-link>
-          </a-menu-item>
-          <!-- <a-menu-item key="2">
-            <router-link to="/info">Info</router-link>
-          </a-menu-item> -->
-          <div style="text-align: left; margin-bottom: 20px;">
-      <a-select
-        v-model:value="selectedPerson"
-        show-search
-        placeholder="Select a person"
-        style="width: 350px"
-        :options="options"
-        :filter-option="filterOption"
-        size="middle"
-        @focus="handleFocus"
-        @blur="handleBlur"
-        @change="handleChange"
-      ></a-select>
-    </div>
-        </a-menu>
-        <!-- Button aligned to the right -->
-        <a-button type="link" style="color: white;">
-          <router-link to="/info">Info</router-link>
-        </a-button>
+          <a-select-option v-for="option in repOptions" :value="option.value" :key="option.value">
+            {{ option.label }}
+          </a-select-option>
+        </a-select>
       </div>
-    </a-layout-header>
+
+      <!-- Right-aligned items -->
+      <a-button type="link" class="info-button">
+        <router-link to="/info">Info</router-link>
+      </a-button>
+    </div>
+  </a-layout-header>
     
     <a-layout-content style="padding: 0 50px">
       
@@ -98,6 +94,14 @@ export default {
 </template>
 
 <style scoped>
+.nav-text {
+  color: white;
+  margin-right: 16px;
+}
+
+.info-button {
+  color: white;
+}
 
 .header-container {
   display: flex;
