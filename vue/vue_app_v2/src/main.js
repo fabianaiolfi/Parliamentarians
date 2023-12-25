@@ -1,17 +1,17 @@
 import { createApp } from 'vue';
-import Vuex from 'vuex';
+// import Vue from 'vue';
 import App from './App.vue';
 import store from './store'; // The Vuex store
-import Vue from 'vue';
+// import Vuex from 'vuex';
 import Antd from 'ant-design-vue';
 import router from './router';
 import 'ant-design-vue/dist/reset.css';
 import 'material-icons/iconfont/material-icons.css';
 
-new Vue({
-  store,
-  render: h => h(App)
-}).$mount('#app');
+// new Vue({
+//   store,
+//   render: h => h(App)
+// }).$mount('#app');
 
 // // Create a new store instance
 // const store = Vuex.createStore({

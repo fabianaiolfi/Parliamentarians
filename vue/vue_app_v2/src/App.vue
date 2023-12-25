@@ -23,6 +23,14 @@ import Vuex from 'vuex';
 //   }
 // });
 
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+const onPersonSelected = (personId) => {
+  store.commit('setSelectedPerson', personId);
+};
+
 export default {
   components: {
     Modal,
@@ -53,6 +61,9 @@ export default {
   },
 
   methods: {
+    onPersonSelected(personId) {
+    this.$store.commit('setSelectedPerson', personId);
+  },
     updateContent() {
     if (this.selectedPerson && this.selectedMainTopic) {
       // Logic to update resultingValues...
