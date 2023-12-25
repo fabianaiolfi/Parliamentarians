@@ -1,8 +1,27 @@
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import Modal from './components/Modal.vue';
 import Table from './components/Table.vue';
 import NamesSearchSelect from './names.json'
+import Vuex from 'vuex';
+// import { createStore } from 'vuex';
+// import { mapState } from 'vuex';
+
+// // Vuex store
+// const store = createStore({
+//   state: {
+//     selectedPerson: null,
+//     selectedMainTopic: null
+//   },
+//   mutations: {
+//     setSelectedPerson(state, payload) {
+//       state.selectedPerson = payload;
+//     },
+//     setSelectedMainTopic(state, topic) {
+//       state.selectedMainTopic = topic;
+//     }
+//   }
+// });
 
 export default {
   components: {
@@ -34,11 +53,38 @@ export default {
   },
 
   methods: {
+    updateContent() {
+    if (this.selectedPerson && this.selectedMainTopic) {
+      // Logic to update resultingValues...
+    }
+  },
+  handleMainTopicChange(value) {
+    this.$store.commit('setSelectedMainTopic', value);
+  },
+    handlePersonChange(value) {
+    this.$store.commit('setSelectedPerson', value);
+  },
+    onSelectPerson(person) {
+    this.$store.commit('setSelectedPerson', person);
+  },
+  onSelectMainTopic(topic) {
+    this.$store.commit('setSelectedMainTopic', topic);
+  },
+  computed: {
+  ...Vuex.mapState(['selectedPerson', 'selectedMainTopic']),
+},
     handleChange(value) {
+      this.$emit('person-selected', value);
     },
+    handleTopicChange(value) {
+    this.$emit('topic-selected', value);
+  },
     handleFocus() {
     },
     handleBlur() {
+    },
+    handlePersonSelected(selectedPerson) {
+      // this.selectedPerson = selectedPerson;
     },
 
     filterOption(input, option) {
@@ -64,7 +110,17 @@ export default {
     handleChange(value) {
       // console.log('Selected:', value);
     },
-  };
+  
+    watch: {
+  selectedPerson(newPerson, oldPerson) {
+    this.updateContent();
+  },
+  selectedMainTopic(newTopic, oldTopic) {
+    this.updateContent();
+  }
+},
+};
+
 
 </script>
 
@@ -87,6 +143,8 @@ export default {
           @focus="handleFocus"
           @blur="handleBlur"
           @change="handleChange"
+          @person-selected="selectedPerson = $event"
+          @topic-selected="selectedMainTopic = $event"
     ></a-select>
       </div>
 
