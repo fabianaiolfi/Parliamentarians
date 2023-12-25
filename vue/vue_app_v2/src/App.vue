@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import Modal from './components/Modal.vue';
 import Table from './components/Table.vue';
+import NamesSearchSelect from './names.json'
 
 export default {
   components: {
@@ -15,17 +16,28 @@ export default {
   },
   data() {
     return {
-      selectedRep: null,
-      repOptions: [
-        // Populate this array with your options
-        { value: 'rep1', label: 'Representative 1' },
-        { value: 'rep2', label: 'Representative 2' },
-        // ... other options
-      ],
+      selectedPerson: null,
+      personOptions: [],
     };
   },
 
+  mounted() {
+    this.populatePersonOptions();
+  },
+
   methods: {
+    filterOption(input, option) {
+    // Implementation
+  },
+  handleFocus() {
+    // Implementation
+  },
+  handleBlur() {
+    // Implementation
+  },
+  handleChange(value) {
+    console.log('Selected:', value);
+  },
     showModal() {
       if (this.modalRef.value) {
         this.modalRef.value.showModal();
@@ -35,18 +47,59 @@ export default {
       // Handle the change event
       console.log(value);
     },
-  },
-};
 
-const handleBlur = () => {
-  console.log('blur');
-};
-const handleFocus = () => {
-  console.log('focus');
-};
-const filterOption = (input, option) => {
-    return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-}
+    // populatePersonOptions() {
+    //   const NamesSearchSelect = {
+    //     // ... your NamesSearchSelect object here
+    //   };
+
+    //   for (const personNumber in NamesSearchSelect) {
+    //     const person = NamesSearchSelect[personNumber][0];
+    //     const fullName = `${person.FirstName} ${person.LastName} (${person.PartyAbbreviation}, ${person.CantonName})`;
+    //     this.personOptions.push({
+    //       label: fullName,
+    //       value: personNumber
+    //     });
+    //   }
+    // },
+
+    populatePersonOptions() {
+    // Assuming NamesSearchSelect is an external data source, make sure it is imported or set properly.
+    console.log('NamesSearchSelect:', NamesSearchSelect); // Check if data is there
+
+    for (const personNumber in NamesSearchSelect) {
+      const person = NamesSearchSelect[personNumber][0];
+      if (!person) {
+        console.error('Person data is undefined for personNumber:', personNumber);
+        continue; // Skip this iteration if person data is not available
+      }
+      const fullName = `${person.FirstName} ${person.LastName} (${person.PartyAbbreviation}, ${person.CantonName})`;
+      this.personOptions.push({
+        label: fullName,
+        value: personNumber
+      });
+    }
+    console.log('personOptions:', this.personOptions); // Check the populated options
+  },
+  // ... other methods
+},
+
+  filterOption(input, option) {
+      // Implement your search filter logic here
+      // This usually involves matching the input with the option label
+      return option.label.toLowerCase().indexOf(input.toLowerCase()) > -1;
+    },
+    handleFocus() {
+      // Handle focus event
+    },
+    handleBlur() {
+      // Handle blur event
+    },
+    handleChange(value) {
+      // Handle change event
+      console.log('Selected:', value);
+    },
+  };
 
 </script>
 
@@ -59,15 +112,17 @@ const filterOption = (input, option) => {
       <div>
         <router-link to="/parlamentarier" class="nav-text">Check Your Rep</router-link>
         <a-select
-          v-model="selectedRep"
-          placeholder="Select a rep"
-          style="width: 200px; margin-left: 20px;"
+          v-model:value="selectedPerson"
+          show-search
+          placeholder="Select a person"
+          style="width: 450px"
+          :options="personOptions"
+          :filter-option="filterOption"
+          size="large"
+          @focus="handleFocus"
+          @blur="handleBlur"
           @change="handleChange"
-        >
-          <a-select-option v-for="option in repOptions" :value="option.value" :key="option.value">
-            {{ option.label }}
-          </a-select-option>
-        </a-select>
+    ></a-select>
       </div>
 
       <!-- Right-aligned items -->
