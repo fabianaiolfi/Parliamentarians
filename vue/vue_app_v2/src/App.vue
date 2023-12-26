@@ -1,81 +1,45 @@
 <script>
-import { ref, onMounted, provide } from 'vue';
+import { ref, provide } from 'vue';
+import NamesSearchSelect from './names.json'
 import Modal from './components/Modal.vue';
 import Table from './components/Table.vue';
-import NamesSearchSelect from './names.json'
 
 export default {
-
-  watch: {
-  selectedPerson(newVal) {
-    console.log("App.vue: Selected person changed to", newVal);
-  }
-},
-
-  inject: ['selectedPerson'],
-
   components: {
     Modal,
     Table,
   },
-  provide() {
-    return {
-      // showModal: this.showModal,
-      selectedPerson: this.$data.selectedPerson
-      // selectedPerson: "Test Person"
-    };
-  },
 
   setup() {
     const selectedPerson = ref(null);
+
+    // Provide selectedPerson
     provide('selectedPerson', selectedPerson);
-  },
-
-
-  data() {
-    const options = []; // Initialize options as an empty array
 
     // Populate options from NamesSearchSelect
+    const options = ref([]);
     for (const personNumber in NamesSearchSelect) {
-      const person = NamesSearchSelect[personNumber][0]; // Assuming this structure based on your code
+      const person = NamesSearchSelect[personNumber][0];
       const fullName = `${person.FirstName} ${person.LastName} (${person.PartyAbbreviation}, ${person.CantonName})`;
-      options.push({
+      options.value.push({
         label: fullName,
         value: personNumber
       });
     }
 
+    // Method to handle change
+    const handleChange = (value) => {
+      console.log('Person selected:', value);
+      selectedPerson.value = value;
+    };
+
     return {
-      selectedPerson: null, // Default value for selected person
-      options, // The populated options for your select component
+      options,
+      handleChange,
+      selectedPerson, // This is not necessary to return if it's only used within this component
     };
   },
-
-  methods: {
-
-    filterOption(input, option) {
-      return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-  },
-
-    showModal() {
-      if (this.modalRef.value) {
-        this.modalRef.value.showModal();
-      }
-    },
-  // filterOption(input, option) {
-  //     return option.label.toLowerCase().indexOf(input.toLowerCase()) > -1;
-  //   },
-    handleFocus() {
-    },
-    handleBlur() {
-    },
-    handleChange(value) {
-    console.log('Person selected:', value);
-    this.selectedPerson = value;
-  },
-  },
-  };
-
+};
 </script>
 
 

@@ -1,9 +1,8 @@
 <script setup>
 
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, inject } from 'vue'
 import { CheckCircleTwoTone, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';  // Import the icon
 import Table from './components/Table.vue'; // Adjust the import path as necessary
-import { inject } from 'vue';
 
 // Importing the JSON files
 import WorryStatement from './worry_statement.json'
@@ -23,11 +22,27 @@ const topicValue = ref('');
 const resultingValues = ref([]);
 const showModal = inject('showModal');
 const selectedPerson = inject('selectedPerson');
+const selectedPersonId = inject('selectedPerson');
 
+const selectedPersonName = computed(() => {
+  if (selectedPersonId.value && NamesSearchSelect[selectedPersonId.value]) {
+    const person = NamesSearchSelect[selectedPersonId.value][0];
+    return `${person.FirstName} ${person.LastName}`;
+  }
+  return 'No person selected';
+});
 
-watch(selectedPerson, (newVal, oldVal) => {
-  console.log("Selected person changed to:", newVal);
-}, { immediate: true });  // Add immediate: true to log the initial value as well
+const selectedPersonPartyCanton = computed(() => {
+  if (selectedPersonId.value && NamesSearchSelect[selectedPersonId.value]) {
+    const person = NamesSearchSelect[selectedPersonId.value][0];
+    return `${person.CantonName}, ${person.PartyAbbreviation}`;
+  }
+  return '';
+});
+
+// watch(selectedPerson, (newVal, oldVal) => {
+//   console.log("Selected person changed to:", newVal);
+// }, { immediate: true });  // Add immediate: true to log the initial value as well
 
 // MainTopic Dropdown
 const selectedMainTopic = ref("");  // Initialize to 'Alle Themen' or any default value
@@ -339,21 +354,37 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
   transform: translateY(25%);
 }
 
+.person-container {
+  display: flex;
+  align-items: flex-start; /* Aligns items at the top */
+}
+
+.person-image {
+  margin-right: 20px; /* Adds some space between the image and the text */
+}
+
 </style>
 
 <template>
 
-<div>
-    Selected person: {{ selectedPerson }}
+  <div>
+    <div class="person-container">
+    <img src="https://www.parlament.ch/sitecollectionimages/profil/portrait-260/3009.jpg" width="180" class="person-image">
+    <div>
+      <h1>{{ selectedPersonName }}</h1>
+      <h3>{{ selectedPersonPartyCanton }}</h3>
+      <p>{{ selectedPerson }}</p>  
+    </div>
+  </div>
   </div>
 
 <div style="background: #F5F5F5; padding: 0px; display: flex; flex-direction: column;">
   <!-- Wrapper for alignment -->
   <div style="width: 100%;">  <!-- Adjust the width to your liking -->
-    <h3>Wähle eine:n Parlamentarier:in</h3>
+    <!-- <h3>Wähle eine:n Parlamentarier:in</h3> -->
     <!-- Select Parliamentarian Dropdown -->
-    <div style="text-align: left; margin-bottom: 20px;">
-      <a-select
+    <!-- <div style="text-align: left; margin-bottom: 20px;"> -->
+    <!--  <a-select
         v-model:value="selectedPerson"
         show-search
         placeholder="Select a person"
@@ -365,7 +396,7 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
         @blur="handleBlur"
         @change="handleChange"
       ></a-select>
-    </div>
+    </div> -->
 
     <!-- Main Topic Dropdown -->
     <h4>Wähle ein Themengebiet</h4>
