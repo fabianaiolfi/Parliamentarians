@@ -5,21 +5,6 @@ import { CheckCircleTwoTone, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwo
 import Table from './components/Table.vue'; // Adjust the import path as necessary
 import { inject } from 'vue';
 
-import { useStore } from 'vuex';
-
-const store = useStore();
-
-const onTopicSelected = (topicId) => {
-  store.commit('setSelectedMainTopic', topicId);
-};
-
-
-watch([selectedPerson, selectedMainTopic], ([newPerson, newTopic], [oldPerson, oldTopic]) => {
-  if (newPerson && newTopic) {
-    // React to the new selections
-  }
-});
-
 // Importing the JSON files
 import WorryStatement from './worry_statement.json'
 import NamesSearchSelect from './names.json'
