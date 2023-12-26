@@ -19,9 +19,15 @@ const topicValue = ref('');
 
 // Update logic for dropdown selections
 // Set up reactive properties to store the selected person, the selected topic, and the resulting values
-const selectedPerson = ref("");
+// const selectedPerson = ref("");
 const resultingValues = ref([]);
 const showModal = inject('showModal');
+const selectedPerson = inject('selectedPerson');
+
+
+watch(selectedPerson, (newVal, oldVal) => {
+  console.log("Selected person changed to:", newVal);
+}, { immediate: true });  // Add immediate: true to log the initial value as well
 
 // MainTopic Dropdown
 const selectedMainTopic = ref("");  // Initialize to 'Alle Themen' or any default value
@@ -319,6 +325,8 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
       return highlighted;
     }
 
+
+
 </script>
 
 <style>
@@ -334,6 +342,10 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
 </style>
 
 <template>
+
+<div>
+    Selected person: {{ selectedPerson }}
+  </div>
 
 <div style="background: #F5F5F5; padding: 0px; display: flex; flex-direction: column;">
   <!-- Wrapper for alignment -->

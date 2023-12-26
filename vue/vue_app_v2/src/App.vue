@@ -1,19 +1,37 @@
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, provide } from 'vue';
 import Modal from './components/Modal.vue';
 import Table from './components/Table.vue';
 import NamesSearchSelect from './names.json'
 
 export default {
+
+  watch: {
+  selectedPerson(newVal) {
+    console.log("App.vue: Selected person changed to", newVal);
+  }
+},
+
+  inject: ['selectedPerson'],
+
   components: {
     Modal,
     Table,
   },
   provide() {
     return {
-      showModal: this.showModal
+      // showModal: this.showModal,
+      selectedPerson: this.$data.selectedPerson
+      // selectedPerson: "Test Person"
     };
   },
+
+  setup() {
+    const selectedPerson = ref(null);
+    provide('selectedPerson', selectedPerson);
+  },
+
+
   data() {
     const options = []; // Initialize options as an empty array
 
@@ -28,18 +46,12 @@ export default {
     }
 
     return {
-      selectedPerson: '', // Default value for selected person
+      selectedPerson: null, // Default value for selected person
       options, // The populated options for your select component
     };
   },
 
   methods: {
-    handleChange(value) {
-    },
-    handleFocus() {
-    },
-    handleBlur() {
-    },
 
     filterOption(input, option) {
       return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
@@ -50,20 +62,18 @@ export default {
         this.modalRef.value.showModal();
       }
     },
-},
-
-  filterOption(input, option) {
-      // Implement your search filter logic here
-      // This usually involves matching the input with the option label
-      return option.label.toLowerCase().indexOf(input.toLowerCase()) > -1;
-    },
+  // filterOption(input, option) {
+  //     return option.label.toLowerCase().indexOf(input.toLowerCase()) > -1;
+  //   },
     handleFocus() {
     },
     handleBlur() {
     },
     handleChange(value) {
-      // console.log('Selected:', value);
-    },
+    console.log('Person selected:', value);
+    this.selectedPerson = value;
+  },
+  },
   };
 
 </script>
