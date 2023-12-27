@@ -22,7 +22,7 @@
     >
   
     <template #bodyCell="{ record, column }">
-      <div @click="props.openModal" style="cursor: pointer;">
+      <div @click="openModal" style="cursor: pointer;">
 
         <!-- Existing conditions for 'entscheid' and 'action' columns -->
         <template v-if="column.key === 'entscheid'">
@@ -30,7 +30,7 @@
         </template>
         <template v-else-if="column.key === 'action'">
           <span>
-            <a-button type="default" shape="circle" @click="handleAction"><InfoCircleOutlined /></a-button>
+            <a-button type="default" shape="circle"><InfoCircleOutlined /></a-button>
           </span>
         </template>
 
@@ -64,16 +64,23 @@
     <div v-html="descriptionHtml"></div>
   </a-empty>
 
+  <Modal ref="customModal"></Modal>
+
+
+
 </template>
 
 <script lang="ts" setup>
 
 // import { CheckCircleOutlined, SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
 // import Modal from './Modal.vue';
-import { ref, defineProps, computed, PropType } from 'vue';
+import { ref, defineProps, computed, PropType, defineComponent } from 'vue';
+import type { Ref } from 'vue';
 import { CheckCircleTwoTone, InfoCircleOutlined, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';
 import { Empty } from 'ant-design-vue';
 import jsonData from '../bsn_summary_statement.json';
+// import { Modal } from 'ant-design-vue';
+import Modal from './Modal.vue';
 
 // Define props
 const props = defineProps({
@@ -83,6 +90,22 @@ const props = defineProps({
     default: () => []
   }
 });
+
+type ModalComponent = {
+  showModal: () => void;
+  // Add other methods or properties if needed
+};
+
+
+const customModal = ref<ModalComponent | null>(null);
+const isModalOpen = ref(false);
+
+const openModal = () => {
+  customModal.value?.showModal();
+};
+
+
+
 
 const tablefilter = ref('all'); // Default table filter value
 const originalTableData = ref([]); // This should be your unfiltered table data
@@ -118,7 +141,7 @@ const handleOk = e => {
 };
 
 const setup = () => {
-  return { open, handleOk };
+  return { open, handleOk, openModal, customModal };
 };
 
 interface DataItem {
