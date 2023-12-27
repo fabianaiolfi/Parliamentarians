@@ -10,6 +10,15 @@ export default {
     Table,
   },
 
+  methods: {
+    handleFocus() {
+      console.log('focus');
+    },
+    handleBlur() {
+      console.log('focus');
+    },
+  },
+
   setup() {
     const selectedPerson = ref(null);
 
@@ -41,7 +50,8 @@ export default {
       options,
       filterOption,
       handleChange,
-      // selectedPerson, // This is not necessary to return if it's only used within this component
+      selectedPerson // This is not necessary to return if it's only used within this component
+      // handleFocus
     };
   },
 };

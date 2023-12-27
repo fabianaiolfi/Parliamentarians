@@ -95,6 +95,16 @@ const tableData = [];
     resultingValues.value = tableData;
 });
 
+// Watcher to react to changes in selectedPerson
+watch(selectedPerson, (newVal, oldVal) => {
+  if (newVal) {
+    const statements = WorryStatement[newVal] ? WorryStatement[newVal][0] : {};
+    availableTopics.value = Object.keys(statements);
+  } else {
+    availableTopics.value = [];
+  }
+});
+
 
 // Assuming WorryStatement is already imported
 const uniqueMainTopics = ref([]);
@@ -369,7 +379,6 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
     <div>
       <h1>{{ selectedPersonName }}</h1>
       <h3>{{ selectedPersonPartyCanton }}</h3>
-      <p>{{ selectedPerson }}</p>  
     </div>
   </div>
   </div>
