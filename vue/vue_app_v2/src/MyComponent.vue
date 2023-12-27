@@ -24,6 +24,11 @@ const showModal = inject('showModal');
 const selectedPerson = inject('selectedPerson');
 const selectedPersonId = inject('selectedPerson');
 
+const handleAction = () => {
+  // When you need to show the modal
+  showModal();
+};
+
 const selectedPersonName = computed(() => {
   if (selectedPersonId.value && NamesSearchSelect[selectedPersonId.value]) {
     const person = NamesSearchSelect[selectedPersonId.value][0];

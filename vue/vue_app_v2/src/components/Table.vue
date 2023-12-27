@@ -30,7 +30,7 @@
         </template>
         <template v-else-if="column.key === 'action'">
           <span>
-            <a-button type="default" shape="circle"><InfoCircleOutlined /></a-button>
+            <a-button type="default" shape="circle" @click="handleAction"><InfoCircleOutlined /></a-button>
           </span>
         </template>
 

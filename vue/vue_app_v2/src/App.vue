@@ -4,6 +4,13 @@ import NamesSearchSelect from './names.json'
 import Modal from './components/Modal.vue';
 import Table from './components/Table.vue';
 
+const open = ref(false);
+
+const showModal = () => {
+  open.value = true;
+};
+
+
 export default {
   components: {
     Modal,
@@ -23,7 +30,10 @@ export default {
     const selectedPerson = ref(null);
 
     // Provide selectedPerson
-    provide('selectedPerson', selectedPerson);
+    provide(
+      'selectedPerson', selectedPerson,
+      'showModal', showModal
+    );
 
     // Populate options from NamesSearchSelect
     const options = ref([]);
