@@ -41,11 +41,12 @@ const selectedPersonPartyCanton = computed(() => {
 });
 
 const selectedPersonImgURL = computed(() => {
-  if (selectedPersonId.value && NamesSearchSelect[selectedPersonId.value]) {
+  if (selectedPersonId.value) {
+    // Replace the URL below with the correct pattern using selectedPersonId.value
     const person = NamesSearchSelect[selectedPersonId.value][0];
     return `${person.img_url}`;
   }
-  return '';
+  return ''; // Default image or empty string
 });
 
 // MainTopic Dropdown
@@ -364,9 +365,7 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
 
   <div>
     <div class="person-container">
-    <!-- <img src="https://www.parlament.ch/sitecollectionimages/profil/portrait-260/3009.jpg" width="180" class="person-image"> -->
-    <img src="{{ selectedPersonImgURL }}" width="180" class="person-image">
-    
+    <img :src="selectedPersonImgURL" width="120" class="person-image">
     <div>
       <h1>{{ selectedPersonName }}</h1>
       <h3>{{ selectedPersonPartyCanton }}</h3>
