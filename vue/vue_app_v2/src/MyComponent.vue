@@ -40,6 +40,14 @@ const selectedPersonPartyCanton = computed(() => {
   return '';
 });
 
+const selectedPersonImgURL = computed(() => {
+  if (selectedPersonId.value && NamesSearchSelect[selectedPersonId.value]) {
+    const person = NamesSearchSelect[selectedPersonId.value][0];
+    return `${person.img_url}`;
+  }
+  return '';
+});
+
 // watch(selectedPerson, (newVal, oldVal) => {
 //   console.log("Selected person changed to:", newVal);
 // }, { immediate: true });  // Add immediate: true to log the initial value as well
@@ -369,7 +377,9 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
 
   <div>
     <div class="person-container">
-    <img src="https://www.parlament.ch/sitecollectionimages/profil/portrait-260/3009.jpg" width="180" class="person-image">
+    <!-- <img src="https://www.parlament.ch/sitecollectionimages/profil/portrait-260/3009.jpg" width="180" class="person-image"> -->
+    <img src="{{ selectedPersonImgURL }}" width="180" class="person-image">
+    
     <div>
       <h1>{{ selectedPersonName }}</h1>
       <h3>{{ selectedPersonPartyCanton }}</h3>

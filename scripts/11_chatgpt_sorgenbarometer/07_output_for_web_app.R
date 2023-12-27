@@ -8,9 +8,12 @@ names <- output_merged %>%
   select(PersonNumber, FirstName, LastName, CantonName) %>% 
   distinct(PersonNumber, .keep_all = T)
 
-# Add party name to each parliamentarian
+# Add party name and portrait URL to each parliamentarian
 load(here("data", "member_council.RData"))
-names <- names %>% left_join(select(member_council, PersonNumber, PartyAbbreviation), by = "PersonNumber")
+names <- names %>% 
+  left_join(select(member_council, PersonNumber, PersonIdCode, PartyAbbreviation), by = "PersonNumber") %>% 
+  mutate(img_url = paste0("https://www.parlament.ch/sitecollectionimages/profil/portrait-260/", PersonIdCode, ".jpg")) %>%  # Get portrait URL
+  select(-PersonIdCode)
 
 # Convert dataframe to list with PersonNumber as names
 lst <- split(names[-1], factor(names$PersonNumber, levels = unique(names$PersonNumber)))
