@@ -74,7 +74,6 @@ watch([selectedPerson, selectedMainTopic], ([newPerson, newTopic]) => {
         resultingValues.value = {};
     }
 
-
 const tableData = [];
     for (const [behavior, votes] of Object.entries(groupedVotes)) {
         votes.forEach(businessNumber => {
@@ -95,12 +94,22 @@ const tableData = [];
     resultingValues.value = tableData;
 });
 
-// Watcher to react to changes in selectedPerson
-watch(selectedPerson, (newVal, oldVal) => {
-  if (newVal) {
-    const statements = WorryStatement[newVal] ? WorryStatement[newVal][0] : {};
-    availableTopics.value = Object.keys(statements);
+// // Watcher to react to changes in selectedPerson
+// watch(selectedPerson, (newVal, oldVal) => {
+//   if (newVal) {
+//     const statements = WorryStatement[newVal] ? WorryStatement[newVal][0] : {};
+//     availableTopics.value = Object.keys(statements);
+//   } else {
+//     availableTopics.value = [];
+//   }
+// });
+
+watch(selectedPerson, (newValue) => {
+  if (newValue) {
+    selectedStatements.value = WorryStatement[newValue] ? WorryStatement[newValue][0] : {};
+    availableTopics.value = Object.keys(selectedStatements.value);
   } else {
+    selectedStatements.value = {};
     availableTopics.value = [];
   }
 });
@@ -287,7 +296,6 @@ function setActiveKey(key) {
 
 const handleChange = (value) => {
     selectedStatements.value = WorryStatement[value] ? WorryStatement[value][0] : {};
-
     // Update available topics for the selected name
     availableTopics.value = Object.keys(selectedStatements.value);
 }
