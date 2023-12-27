@@ -48,10 +48,6 @@ const selectedPersonImgURL = computed(() => {
   return '';
 });
 
-// watch(selectedPerson, (newVal, oldVal) => {
-//   console.log("Selected person changed to:", newVal);
-// }, { immediate: true });  // Add immediate: true to log the initial value as well
-
 // MainTopic Dropdown
 const selectedMainTopic = ref("");  // Initialize to 'Alle Themen' or any default value
 
@@ -77,15 +73,6 @@ watch([selectedPerson, selectedMainTopic], ([newPerson, newTopic]) => {
         resultingValues.value = {};
     }
 
-    // Transform groupedVotes into tableData outside the if-else block
-//     const tableData = [];
-//     for (const [behavior, votes] of Object.entries(groupedVotes)) {
-//         votes.forEach(vote => {
-//             tableData.push({ behavior, vote });
-//         });
-//     }
-//     resultingValues.value = tableData;
-// });
 
 const tableData = [];
     for (const [behavior, votes] of Object.entries(groupedVotes)) {
