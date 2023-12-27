@@ -33,10 +33,15 @@ export default {
       selectedPerson.value = value;
     };
 
+    const filterOption = (input, option) => {
+    return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+  }
+
     return {
       options,
+      filterOption,
       handleChange,
-      selectedPerson, // This is not necessary to return if it's only used within this component
+      // selectedPerson, // This is not necessary to return if it's only used within this component
     };
   },
 };
