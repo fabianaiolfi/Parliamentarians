@@ -443,5 +443,5 @@ sum(is.na(all_businesses_eval$SubmittedBy))
 unique(all_businesses_eval$SubmittedBy)
 
 
-
+load("data/member_council.RData")
 
