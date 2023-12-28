@@ -25,10 +25,8 @@ watch(selectedTopic, (newVal) => {
 
 watch(value1, (newVal) => {
   if (newVal) {
-    // selectedTopic.value = null; // Reset the dropdown when a radio button is selected
-    // selectedTopic.value = topicNameMapping[newVal] || newVal;
     handleMainTopicChange(newVal); // Call the same function as the select component
-    // Place the code here to display the selected topic from the radio button in your interface
+    selectedTopic.value = null; // Reset the select component to show the placeholder
     console.log("Selected Topic from Radio:", newVal);
   }
 });
@@ -39,19 +37,19 @@ watch(selectedTopic, (newVal) => {
   }
 });
 
-
 const handleMainTopicChange = (topicValue) => {
   console.log("Main Topic Changed:", topicValue);
-  selectedTopic.value = topicValue; // This will trigger the watcher to reset the radio buttons
+  if (value1.value === null) { // Check if radio buttons are not selected
+    selectedTopic.value = topicValue; // Update selected topic from dropdown
+  }
   selectedMainTopic.value = topicValue;
-  // value1.value = null; // Reset radio buttons when a topic is selected from the dropdown
 };
+
 
 const topicValue = ref('');
 
 // Update logic for dropdown selections
 // Set up reactive properties to store the selected person, the selected topic, and the resulting values
-// const selectedPerson = ref("");
 const resultingValues = ref([]);
 const showModal = inject('showModal');
 const selectedPerson = inject('selectedPerson');
@@ -132,16 +130,6 @@ const tableData = [];
     resultingValues.value = tableData;
 });
 
-// // Watcher to react to changes in selectedPerson
-// watch(selectedPerson, (newVal, oldVal) => {
-//   if (newVal) {
-//     const statements = WorryStatement[newVal] ? WorryStatement[newVal][0] : {};
-//     availableTopics.value = Object.keys(statements);
-//   } else {
-//     availableTopics.value = [];
-//   }
-// });
-
 watch(selectedPerson, (newValue) => {
   if (newValue) {
     selectedStatements.value = WorryStatement[newValue] ? WorryStatement[newValue][0] : {};
@@ -198,11 +186,6 @@ for (const personNumber in NamesSearchSelect) {
         value: personNumber
     })
 }
-
-// function handleMainTopicChange(topicValue) {
-//   console.log("Main Topic Changed:", topicValue);
-//   selectedMainTopic.value = topicValue;
-// }
 
 
 //////////// ASSOCIATED WORDS ///////////////
@@ -392,8 +375,6 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
       return highlighted;
     }
 
-
-
 </script>
 
 <style>
@@ -456,24 +437,8 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
 
 <div style="background: #F5F5F5; padding: 0px; display: flex; flex-direction: column;">
   <!-- Wrapper for alignment -->
-  <div style="width: 100%;">  <!-- Adjust the width to your liking -->
-    <!-- <h3>Wähle eine:n Parlamentarier:in</h3> -->
-    <!-- Select Parliamentarian Dropdown -->
-    <!-- <div style="text-align: left; margin-bottom: 20px;"> -->
-    <!--  <a-select
-        v-model:value="selectedPerson"
-        show-search
-        placeholder="Select a person"
-        style="width: 450px"
-        :options="options"
-        :filter-option="filterOption"
-        size="large"
-        @focus="handleFocus"
-        @blur="handleBlur"
-        @change="handleChange"
-      ></a-select>
-    </div> -->
-
+  <div style="width: 100%;"> <!--  Adjust the width to your liking -->
+    
     <div class="spacer" style="height: 30px;"></div>
 
     <!-- Main Topic Radio Buttons -->
@@ -496,21 +461,6 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
     </div>
 
     <div class="spacer" style="height: 30px;"></div>
-
-    <!-- Main Topic Dropdown -->
-    <!-- <h4>Wähle ein Themengebiet</h4> -->
-    <!-- <a-select
-      @change="handleMainTopicChange"
-      style="width: 450px">
-      <a-select-option v-for="topic in availableTopics" :key="topic" :value="topic">
-        {{ topicNameMapping[topic] || topic }}
-      </a-select-option>
-    </a-select> -->
-    
-    <!-- <div class="spacer" style="height: 40px;"></div> -->
-
-    <!-- <h3>Zusammenfassung aller Abstimmungen zum Thema {{ topicNameMapping[selectedMainTopic] || selectedMainTopic }}</h3> -->
-    <!-- <h3>Zusammenfassend</h3> -->
 
     <div v-if="selectedMainTopic !== 'Alle Themen' && selectedStatements[selectedMainTopic]">
       <a-card style="width: 100%;" :bordered="false">
