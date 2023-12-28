@@ -14,6 +14,8 @@ import BSNsentsData from './bsn_sents.json'
 import TopicAssWords from './topics_associated_words.json'
 import bsnURL from './bsn_url.json'
 
+const value1 = ref('a'); // or whatever your default value is
+
 const topicValue = ref('');
 
 // Update logic for dropdown selections
@@ -365,7 +367,49 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
 
 <style>
 
-.highlight {
+/* .vertical-radio-group .ant-radio-button-wrapper {
+  display: block;
+  margin-right: 0;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border-right: none; } Removes the right border */
+
+/* .vertical-radio-group .ant-radio-button-wrapper:not(:first-child) {
+  border-left: none; } /* Removes the left border for all but the first button */
+
+
+/* .vertical-radio-group .ant-radio-button-wrapper::before {
+  content: none; } /* Removes any pseudo-elements used for lines */
+
+/* .vertical-radio-group .ant-radio-button-wrapper:last-child {
+  margin-bottom: 0; } */
+
+  .topic-radio-group .ant-radio-button-wrapper:last-of-type {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.custom-select .ant-select-selector {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.container {
+  display: flex; /* Aligns children in a row */
+  align-items: center; /* Aligns children vertically in the center */
+}
+
+.topic-radio-group .ant-radio-button-wrapper,
+.ant-select {
+  margin-right: 0; /* Removes margin on the right of each radio button and select */
+}
+
+/* Optional: Adjust if there's still a small gap */
+.topic-radio-group .ant-radio-button-wrapper:last-of-type {
+  margin-right: -1px; /* Sometimes needed to fully close a small gap */
+}
+
+  .highlight {
   background-color: yellow;
 }
 .em-dash {
@@ -416,20 +460,41 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
       ></a-select>
     </div> -->
 
-    <!-- Main Topic Dropdown -->
-    <h4>Wähle ein Themengebiet</h4>
-    <a-select
+    <div class="spacer" style="height: 30px;"></div>
+
+    <!-- Main Topic Radio Buttons -->
+    <div class="container">
+      <a-radio-group v-model:value="value1" button-style="solid" class="topic-radio-group">
+        <a-radio-button value="a">Umwelt</a-radio-button>
+        <a-radio-button value="b">AHV</a-radio-button>
+        <a-radio-button value="c">Energie</a-radio-button>
+      </a-radio-group>
+      <a-select
       @change="handleMainTopicChange"
+      placeholder="Weitere Themen"
+      class="custom-select"
       style="width: 450px">
       <a-select-option v-for="topic in availableTopics" :key="topic" :value="topic">
         {{ topicNameMapping[topic] || topic }}
       </a-select-option>
     </a-select>
+    </div>
+    <div class="spacer" style="height: 30px;"></div>
+
+    <!-- Main Topic Dropdown -->
+    <!-- <h4>Wähle ein Themengebiet</h4> -->
+    <!-- <a-select
+      @change="handleMainTopicChange"
+      style="width: 450px">
+      <a-select-option v-for="topic in availableTopics" :key="topic" :value="topic">
+        {{ topicNameMapping[topic] || topic }}
+      </a-select-option>
+    </a-select> -->
     
-    <div class="spacer" style="height: 40px;"></div>
+    <!-- <div class="spacer" style="height: 40px;"></div> -->
 
     <!-- <h3>Zusammenfassung aller Abstimmungen zum Thema {{ topicNameMapping[selectedMainTopic] || selectedMainTopic }}</h3> -->
-    <h3>Zusammenfassend</h3>
+    <!-- <h3>Zusammenfassend</h3> -->
 
     <div v-if="selectedMainTopic !== 'Alle Themen' && selectedStatements[selectedMainTopic]">
       <a-card style="width: 100%;" :bordered="false">
