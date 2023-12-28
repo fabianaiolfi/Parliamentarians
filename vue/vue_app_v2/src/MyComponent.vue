@@ -419,6 +419,7 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
 
 .person-image {
   margin-right: 20px; /* Adds some space between the image and the text */
+  border-radius: 6px;
 }
 
 </style>
@@ -460,7 +461,7 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
     </a-select>
     </div>
 
-    <div class="spacer" style="height: 30px;"></div>
+    <div class="spacer" style="height: 10px;"></div>
 
     <div v-if="selectedMainTopic !== 'Alle Themen' && selectedStatements[selectedMainTopic]">
       <a-card style="width: 100%;" :bordered="false">
