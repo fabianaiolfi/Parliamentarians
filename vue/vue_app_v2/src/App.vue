@@ -28,6 +28,7 @@ export default {
 
   setup() {
     const selectedPerson = ref(null);
+    // const selectedPerson = ref('3903');
 
     // Provide selectedPerson
     provide(
@@ -74,11 +75,11 @@ export default {
     <div class="header-container" style="display: flex; justify-content: space-between; align-items: center;">
       <!-- Left-aligned items -->
       <div>
-        <router-link to="/parlamentarier" class="nav-text">Check Your Rep</router-link>
+        <router-link to="/parlamentarier" class="nav-text"></router-link>
         <a-select
           v-model:value="selectedPerson"
           show-search
-          placeholder="Select a person"
+          placeholder="Wähle eine:n Parlamentarier:in aus"
           style="width: 450px"
           :options="options"
           :filter-option="filterOption"
