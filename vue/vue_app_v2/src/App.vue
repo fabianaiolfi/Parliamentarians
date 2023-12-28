@@ -19,16 +19,20 @@ export default {
 
   methods: {
     handleFocus() {
-      console.log('focus');
+      // console.log('focus');
     },
     handleBlur() {
-      console.log('focus');
+      // console.log('focus');
     },
   },
 
   setup() {
     const selectedPerson = ref(null);
-    // const selectedPerson = ref('3903');
+    const isModalVisible = ref(false);
+
+    const toggleModal = () => {
+      isModalVisible.value = !isModalVisible.value;
+    };
 
     // Provide selectedPerson
     provide(
@@ -59,10 +63,11 @@ export default {
 
     return {
       options,
+      isModalVisible,
+      toggleModal,
       filterOption,
       handleChange,
-      selectedPerson // This is not necessary to return if it's only used within this component
-      // handleFocus
+      selectedPerson
     };
   },
 };
@@ -89,24 +94,27 @@ export default {
           @change="handleChange"
     ></a-select>
       </div>
-
-      <!-- Right-aligned items -->
-      <a-button type="link" class="info-button">
-        <router-link to="/info">Info</router-link>
-      </a-button>
-    </div>
-  </a-layout-header>
+      <a-button type="link" class="info-button" @click="toggleModal">Info</a-button>
+      </div>
+    </a-layout-header>
     
     <a-layout-content style="padding: 0 50px">
       
-      <div :style="{ background: '#F5F5F5', padding: '24px', minHeight: '280px' }">
-        <router-view />
-      </div>
+    <div :style="{ background: '#F5F5F5', padding: '24px', minHeight: '280px' }">
+      <router-view />
+    </div>
     </a-layout-content>
 
     <div>
       <Modal ref="modalRef"/>
     </div>
+
+    <!-- Info Modal -->
+    <a-modal v-model:visible="isModalVisible" title="Info" footer="">
+      <div>
+        <p>Diese Seite ist in Bearbeitung.</p>
+      </div>
+    </a-modal>
 
     <a-layout-footer style="text-align: center">
     </a-layout-footer>
