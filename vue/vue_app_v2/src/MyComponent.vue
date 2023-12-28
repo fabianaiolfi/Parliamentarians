@@ -65,7 +65,8 @@ const selectedPersonName = computed(() => {
     const person = NamesSearchSelect[selectedPersonId.value][0];
     return `${person.FirstName} ${person.LastName}`;
   }
-  return 'No person selected';
+  // return 'No person selected';
+  return '';
 });
 
 const selectedPersonPartyCanton = computed(() => {
@@ -450,11 +451,13 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
   </div>
   </div>
 
-<div style="background: #F5F5F5; padding: 0px; display: flex; flex-direction: column;">
+<div style="background: #F5F5F5; padding: 0px; display: flex; flex-direction: column;" v-if="selectedPerson">
   <!-- Wrapper for alignment -->
   <div style="width: 100%;"> <!--  Adjust the width to your liking -->
     
     <div class="spacer" style="height: 30px;"></div>
+
+    <h3>Wähle ein Themengebiet aus</h3>
 
     <!-- Main Topic Radio Buttons -->
     <div class="container">
@@ -485,52 +488,10 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
 
     <div class="spacer" style="height: 30px;"></div>
 
-    <!-- <h3>Einzelne Abstimmungen</h3> -->
-
-    <div v-if="Object.keys(getOrderedValues()).length">
-      <div v-for="(votes, behavior) in getOrderedValues()" :key="behavior">
-        <div v-for="vote in votes" :key="vote">
-          {{ console.log("Current vote: ", vote) }}
-          <!-- <div v-if="BSNStatement[vote]"> -->
-          <div v-if="BSNStatement && BSNStatement[vote] && BSNStatement[vote].length">
-            <a-collapse :style="{ backgroundColor: 'white' }" :active-key="activeKey === vote ? [vote] : []" @change="() => setActiveKey(vote)" :expand-icon-position="expandIconPosition">
-              <a-collapse-panel :key="vote" :show-arrow="true">
-                <!-- Custom title with dynamic icon -->
-                <template #header>
-                  <component
-                    :is="getIconForBehavior(behavior)"
-                    :two-tone-color="iconColors[behavior]"
-                  /> {{ behavior + BSNStatement[vote][0].vote_statement }}
-                </template>
-                <small><strong>TITEL DES GESCHÄFTS</strong></small>
-                <h3>{{ BSNStatement[vote][0].Title || 'Title not available' }}</h3>
-                <a-divider />
-                <small><strong>KURZ GEFASST</strong></small>
-                <p>{{ BSNStatement[vote][0].summary || 'Summary not available' }}</p>
-                <a-divider />
-                <small><strong>AUS DER OFFIZIELLEN ZUSAMMENFASSUNG</strong></small>
-                  <div v-for="(sentence, index) in sentencesForVotes[vote]" :key="index">
-                    <div v-html="highlightAssociatedWords(sentence, associatedWords)"></div>
-                    <p class="em-dash">&#8212;</p>
-                  </div>
-                <small v-if="bsnURL[vote]">
-                Weitere Informationen: <a :href="bsnURL[vote]" target="_blank">
-                  parlament.ch 
-                  <i class="material-icons" style="font-size: 0.8rem; vertical-align: -2.6px">open_in_new</i></a>
-              </small>
-              </a-collapse-panel>
-            </a-collapse>
-          </div>
-          <div class="spacer" style="height: 10px;"></div>
-        </div>
-      </div>
-    </div>
-
   </div>
 
 </div>
 
-<Table :resultingValues="resultingValues" :open-modal="showModal" />
-
+<Table :resultingValues="resultingValues" :open-modal="showModal" v-if="value1 || selectedTopic" />
 
 </template>
