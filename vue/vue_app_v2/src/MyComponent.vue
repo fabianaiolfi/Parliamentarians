@@ -14,7 +14,7 @@ import BSNsentsData from './bsn_sents.json'
 import TopicAssWords from './topics_associated_words.json'
 import bsnURL from './bsn_url.json'
 
-const value1 = ref('a'); // Existing v-model for radio group
+const value1 = ref(null); // Or the default value
 const selectedTopic = ref(null); // New v-model for select component
 
 watch(selectedTopic, (newVal) => {
@@ -25,22 +25,27 @@ watch(selectedTopic, (newVal) => {
 
 watch(value1, (newVal) => {
   if (newVal) {
-    selectedTopic.value = null; // Reset select component when a radio button is selected
+    // selectedTopic.value = null; // Reset the dropdown when a radio button is selected
+    // selectedTopic.value = topicNameMapping[newVal] || newVal;
+    handleMainTopicChange(newVal); // Call the same function as the select component
+    // Place the code here to display the selected topic from the radio button in your interface
+    console.log("Selected Topic from Radio:", newVal);
   }
 });
 
-// const handleMainTopicChange = (newValue) => {
-//   selectedTopic.value = newValue;
-//   // Additional logic if needed
-// };
+watch(selectedTopic, (newVal) => {
+  if (newVal) {
+    value1.value = null; // Unselect radio buttons if the topic is selected from the dropdown
+  }
+});
+
 
 const handleMainTopicChange = (topicValue) => {
   console.log("Main Topic Changed:", topicValue);
   selectedTopic.value = topicValue; // This will trigger the watcher to reset the radio buttons
   selectedMainTopic.value = topicValue;
+  // value1.value = null; // Reset radio buttons when a topic is selected from the dropdown
 };
-
-
 
 const topicValue = ref('');
 
@@ -474,9 +479,9 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
     <!-- Main Topic Radio Buttons -->
     <div class="container">
       <a-radio-group v-model:value="value1" button-style="solid" class="topic-radio-group">
-        <a-radio-button value="a">Umwelt</a-radio-button>
-        <a-radio-button value="b">AHV</a-radio-button>
-        <a-radio-button value="c">Energie</a-radio-button>
+        <a-radio-button value="umwelt">Umwelt</a-radio-button>
+        <a-radio-button value="ahv">AHV</a-radio-button>
+        <a-radio-button value="energiefragen">Energie</a-radio-button>
       </a-radio-group>
       <a-select
       v-model:value="selectedTopic"
