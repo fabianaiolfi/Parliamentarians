@@ -14,7 +14,33 @@ import BSNsentsData from './bsn_sents.json'
 import TopicAssWords from './topics_associated_words.json'
 import bsnURL from './bsn_url.json'
 
-const value1 = ref('a'); // or whatever your default value is
+const value1 = ref('a'); // Existing v-model for radio group
+const selectedTopic = ref(null); // New v-model for select component
+
+watch(selectedTopic, (newVal) => {
+  if (newVal) {
+    value1.value = null; // Reset radio buttons when a topic is selected
+  }
+});
+
+watch(value1, (newVal) => {
+  if (newVal) {
+    selectedTopic.value = null; // Reset select component when a radio button is selected
+  }
+});
+
+// const handleMainTopicChange = (newValue) => {
+//   selectedTopic.value = newValue;
+//   // Additional logic if needed
+// };
+
+const handleMainTopicChange = (topicValue) => {
+  console.log("Main Topic Changed:", topicValue);
+  selectedTopic.value = topicValue; // This will trigger the watcher to reset the radio buttons
+  selectedMainTopic.value = topicValue;
+};
+
+
 
 const topicValue = ref('');
 
@@ -168,10 +194,10 @@ for (const personNumber in NamesSearchSelect) {
     })
 }
 
-function handleMainTopicChange(topicValue) {
-  console.log("Main Topic Changed:", topicValue);
-  selectedMainTopic.value = topicValue;
-}
+// function handleMainTopicChange(topicValue) {
+//   console.log("Main Topic Changed:", topicValue);
+//   selectedMainTopic.value = topicValue;
+// }
 
 
 //////////// ASSOCIATED WORDS ///////////////
@@ -367,23 +393,6 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
 
 <style>
 
-/* .vertical-radio-group .ant-radio-button-wrapper {
-  display: block;
-  margin-right: 0;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  border-right: none; } Removes the right border */
-
-/* .vertical-radio-group .ant-radio-button-wrapper:not(:first-child) {
-  border-left: none; } /* Removes the left border for all but the first button */
-
-
-/* .vertical-radio-group .ant-radio-button-wrapper::before {
-  content: none; } /* Removes any pseudo-elements used for lines */
-
-/* .vertical-radio-group .ant-radio-button-wrapper:last-child {
-  margin-bottom: 0; } */
-
   .topic-radio-group .ant-radio-button-wrapper:last-of-type {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
@@ -470,6 +479,7 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
         <a-radio-button value="c">Energie</a-radio-button>
       </a-radio-group>
       <a-select
+      v-model:value="selectedTopic"
       @change="handleMainTopicChange"
       placeholder="Weitere Themen"
       class="custom-select"
@@ -479,6 +489,7 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
       </a-select-option>
     </a-select>
     </div>
+
     <div class="spacer" style="height: 30px;"></div>
 
     <!-- Main Topic Dropdown -->
