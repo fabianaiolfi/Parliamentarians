@@ -71,7 +71,7 @@ const selectedPersonName = computed(() => {
 const selectedPersonPartyCanton = computed(() => {
   if (selectedPersonId.value && NamesSearchSelect[selectedPersonId.value]) {
     const person = NamesSearchSelect[selectedPersonId.value][0];
-    return `${person.CantonName}, ${person.PartyAbbreviation}`;
+    return `${person.PartyAbbreviation}, ${person.CantonName}`;
   }
   return '';
 });
@@ -148,6 +148,11 @@ const selectedStatements = ref({})
 const options = ref([])  // We'll populate this shortly
 
 const availableTopics = ref([]);
+const excludedTopics = ['ahv', 'umwelt', 'energiefragen'];
+
+const filteredTopics = computed(() => {
+  return availableTopics.value.filter(topic => !excludedTopics.includes(topic));
+});
 
 const topicNameMapping = {
   zusammenleben: "Zusammenleben in der Schweiz / Toleranz",
@@ -176,6 +181,11 @@ const topicNameMapping = {
   corona: "Corona-Pandemie und ihre Folgen",
   ukraine: "Der Krieg in der Ukraine"
 };
+
+
+// availableTopics.value = availableTopics.value.filter(topic => !excludedTopics.includes(topic));
+
+
 
 // Transform the imported JSON into dropdown options
 for (const personNumber in NamesSearchSelect) {
@@ -455,7 +465,7 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
       placeholder="Weitere Themen"
       class="custom-select"
       style="width: 450px">
-      <a-select-option v-for="topic in availableTopics" :key="topic" :value="topic">
+      <a-select-option v-for="topic in filteredTopics" :key="topic" :value="topic">
         {{ topicNameMapping[topic] || topic }}
       </a-select-option>
     </a-select>
