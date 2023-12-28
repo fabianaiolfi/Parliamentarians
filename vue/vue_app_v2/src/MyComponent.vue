@@ -389,6 +389,10 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
 
 <style>
 
+.custom-select.ant-select-single .ant-select-selector { /* Color of "Weitere Themen" topic selector dropdown */
+  color: #1677ff !important;
+}
+
   .topic-radio-group .ant-radio-button-wrapper:last-of-type {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
@@ -463,7 +467,7 @@ const highlightWords = (vote, contextKey, associatedWordKey) => {
       v-model:value="selectedTopic"
       @change="handleMainTopicChange"
       placeholder="Weitere Themen"
-      class="custom-select"
+      :class="{ 'active-select': selectedTopic, 'custom-select': true }"
       style="width: 450px">
       <a-select-option v-for="topic in filteredTopics" :key="topic" :value="topic">
         {{ topicNameMapping[topic] || topic }}
