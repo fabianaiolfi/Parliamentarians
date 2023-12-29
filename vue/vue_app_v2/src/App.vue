@@ -1,6 +1,7 @@
 <script>
 import { ref, provide, onMounted, inject, watch, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import NamesSearchSelect from './names.json'
 import Modal from './components/Modal.vue';
 import Table from './components/Table.vue';
@@ -30,10 +31,16 @@ export default {
 
   setup() {
     const router = useRouter();
+    const route = useRoute();
     const selectedPerson = ref(null);
     const isModalVisible = ref(false);
     // const selectedPersonId = inject('selectedPersonId');
     const selectedPersonDisplay = computed(() => selectedPersonId.value);
+
+    const isLandingPage = computed(() => {
+      // Assuming the landing page has a specific path, e.g., '/'
+      return route.path === '/';
+    });
 
     const toggleModal = () => {
       isModalVisible.value = !isModalVisible.value;
@@ -103,7 +110,8 @@ export default {
       handleChange,
       selectedPerson,
       handlePersonSelected,
-      selectedPersonDisplay
+      selectedPersonDisplay,
+      isLandingPage
     };
   },
 };
@@ -115,8 +123,8 @@ export default {
     <a-layout-header>
     <div class="header-container" style="display: flex; justify-content: space-between; align-items: center;">
       <!-- Left-aligned items -->
-      <div>
-        <router-link to="/parliamentarian" class="nav-text"></router-link>
+      <div v-if="!isLandingPage">
+        <!-- <router-link to="/parliamentarian" class="nav-text"></router-link> -->
         <a-select
           v-model:value="selectedPerson"
           show-search
