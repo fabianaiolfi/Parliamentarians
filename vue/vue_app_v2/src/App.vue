@@ -1,8 +1,10 @@
 <script>
-import { ref, provide } from 'vue';
+import { ref, provide, onMounted, inject, watch, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import NamesSearchSelect from './names.json'
 import Modal from './components/Modal.vue';
 import Table from './components/Table.vue';
+import { selectedPersonId } from './store.js';
 
 const open = ref(false);
 
@@ -27,18 +29,20 @@ export default {
   },
 
   setup() {
+    const router = useRouter();
     const selectedPerson = ref(null);
     const isModalVisible = ref(false);
+    // const selectedPersonId = inject('selectedPersonId');
+    const selectedPersonDisplay = computed(() => selectedPersonId.value);
 
     const toggleModal = () => {
       isModalVisible.value = !isModalVisible.value;
     };
 
-    // Provide selectedPerson
-    provide(
-      'selectedPerson', selectedPerson,
-      'showModal', showModal
-    );
+    const handlePersonSelected = (personId) => {
+      provide('selectedPersonId', personId); // Provide the selected person's ID
+      router.push('/parlamentarier');
+    };
 
     // Populate options from NamesSearchSelect
     const options = ref([]);
@@ -51,11 +55,31 @@ export default {
       });
     }
 
-    // Method to handle change
-    const handleChange = (value) => {
+      // Method to handle change
+      const handleChange = (value) => {
       console.log('Person selected:', value);
       selectedPerson.value = value;
     };
+
+    // Synchronize global state with local state
+    watch(selectedPersonId, (newVal) => {
+      console.log('Global selectedPersonId changed:', newVal);
+      if (newVal) {
+        const person = NamesSearchSelect[newVal]?.[0];
+        if (person) {
+          const fullName = `${person.FirstName} ${person.LastName} (${person.PartyAbbreviation}, ${person.CantonName})`;
+          selectedPerson.value = { label: fullName, value: newVal };
+        }
+      }
+    });
+
+    // Provide selectedPerson
+    provide(
+      'selectedPerson', selectedPerson,
+      'showModal', showModal,
+      'options', options,
+      'handleChange', handleChange
+    );
 
     const filterOption = (input, option) => {
     return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
@@ -68,6 +92,8 @@ export default {
       filterOption,
       handleChange,
       selectedPerson,
+      handlePersonSelected,
+      selectedPersonDisplay
     };
   },
 };
@@ -99,6 +125,8 @@ export default {
     </a-layout-header>
     
     <a-layout-content style="padding: 0 50px">
+
+      <LandingPage @person-selected="handlePersonSelected" />
       
     <div :style="{ background: '#F5F5F5', padding: '24px', minHeight: '280px' }">
       <router-view />

@@ -3,6 +3,8 @@
 import { ref, watch, computed, inject } from 'vue'
 import { CheckCircleTwoTone, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';  // Import the icon
 import Table from './components/Table.vue'; // Adjust the import path as necessary
+import { selectedPersonId } from './store.js'; // Update the path accordingly
+
 
 // Importing the JSON files
 import WorryStatement from './worry_statement.json'
@@ -53,7 +55,7 @@ const topicValue = ref('');
 const resultingValues = ref([]);
 const showModal = inject('showModal');
 const selectedPerson = inject('selectedPerson');
-const selectedPersonId = inject('selectedPerson');
+// const selectedPersonId = inject('selectedPerson');
 
 const handleAction = () => {
   // When you need to show the modal
