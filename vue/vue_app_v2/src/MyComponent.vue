@@ -172,6 +172,9 @@ watch(selectedPerson, (newValue) => {
 });
 
 
+
+
+
 // Assuming WorryStatement is already imported
 const uniqueMainTopics = ref([]);
 
@@ -184,6 +187,24 @@ const excludedTopics = ['ahv', 'umwelt', 'energiefragen'];
 const filteredTopics = computed(() => {
   return availableTopics.value.filter(topic => !excludedTopics.includes(topic));
 });
+
+watch(selectedPersonId, (newPersonId) => {
+  if (newPersonId && NamesSearchSelect[newPersonId]) {
+    const personData = NamesSearchSelect[newPersonId][0];
+    selectedPerson.value = newPersonId;
+    
+    // Now, update the topics based on the selected person
+    const personTopics = WorryStatement[newPersonId];
+    if (personTopics) {
+      availableTopics.value = Object.keys(personTopics[0]);
+    } else {
+      availableTopics.value = [];
+    }
+  } else {
+    selectedPerson.value = null;
+    availableTopics.value = [];
+  }
+}, { immediate: true });
 
 const topicNameMapping = {
   zusammenleben: "Zusammenleben in der Schweiz / Toleranz",
