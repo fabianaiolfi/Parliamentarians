@@ -1,6 +1,7 @@
 <script>
 import { ref } from 'vue';
 import { CheckCircleTwoTone, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';  // Import the icon
+//import BSNStatement from './bsn_summary_statement.json'
 
 export default {
   setup() {
@@ -17,6 +18,10 @@ export default {
 
     // Make showModal accessible from the parent
     return { open, showModal, handleOk };
+  },
+
+  props: {
+    rowData: Object
   },
 
   components: {
@@ -43,7 +48,8 @@ export default {
       </div>
 
       <div class="flex-item">
-        <h1 style="color: #52c41a;">Valérie Piller Carrard (SP, Freiburg) stimmte für das Bundesgesetz über die Weiterbildung.</h1>
+        <!-- <h1 style="color: #52c41a;">Valérie Piller Carrard (SP, Freiburg) stimmte für das Bundesgesetz über die Weiterbildung.</h1> -->
+        <h1 style="color: #52c41a;">{{ rowData.statement }}</h1>
       </div>
     </div>
 
@@ -51,7 +57,7 @@ export default {
     
     <div>
       <small><strong>KURZ GEFASST</strong></small>
-      <p>Das neue Gesetz soll die Qualität der Weiterbildung verbessern und lebenslanges Lernen fördern.</p>
+      <p>{{ rowData.summary }}</p>
     </div>
     
     <div style="margin-top: 20px;">
@@ -89,7 +95,7 @@ export default {
     <a-divider />
 
     <small><strong>TITEL DES GESCHÄFTS</strong></small>
-      <h3>Bundesgesetz über die Weiterbildung</h3>
+      <h3>{{ rowData.title }}</h3>
 
     <div class="flex-container" style="margin-top: 20px;">
       

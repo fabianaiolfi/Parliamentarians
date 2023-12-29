@@ -22,7 +22,7 @@
     >
   
     <template #bodyCell="{ record, column }">
-      <div @click="openModal" style="cursor: pointer;">
+      <div @click="openModal(record)" style="cursor: pointer;">
 
         <!-- Existing conditions for 'entscheid' and 'action' columns -->
         <template v-if="column.key === 'entscheid'">
@@ -64,7 +64,7 @@
     <div v-html="descriptionHtml"></div>
   </a-empty>
 
-  <Modal ref="customModal"></Modal>
+  <Modal ref="customModal" :rowData="selectedRowData"></Modal>
 
 
 
@@ -81,6 +81,7 @@ import { Empty } from 'ant-design-vue';
 import jsonData from '../bsn_summary_statement.json';
 // import { Modal } from 'ant-design-vue';
 import Modal from './Modal.vue';
+import BSNStatement from '../bsn_summary_statement.json'
 
 // Define props
 const props = defineProps({
@@ -100,12 +101,18 @@ type ModalComponent = {
 const customModal = ref<ModalComponent | null>(null);
 const isModalOpen = ref(false);
 
-const openModal = () => {
+const selectedRowData = ref(null);
+
+const openModal = (rowData) => {
+  const businessNumber = rowData.businessNumber;
+  const bsnEntry = BSNStatement[businessNumber]?.[0] || {};
+  const title = bsnEntry.Title || 'No title found';
+  const summary = bsnEntry.summary || 'No summary available';
+  const statement = bsnEntry.vote_statement || 'No statement available';
+
+  selectedRowData.value = { ...rowData, title, summary, statement };
   customModal.value?.showModal();
 };
-
-
-
 
 const tablefilter = ref('all'); // Default table filter value
 const originalTableData = ref([]); // This should be your unfiltered table data
