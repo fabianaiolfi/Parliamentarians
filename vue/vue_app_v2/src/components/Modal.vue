@@ -8,6 +8,19 @@ export default {
     rowData: Object, // Define rowData as a prop
   },
   setup(props) {
+
+    const concatenatedValueClass = computed(() => {
+  if (formattedConcatenatedValue.value.includes("stimmte für")) {
+    return 'text-green';
+  } else if (formattedConcatenatedValue.value.includes("stimmte gegen")) {
+    return 'text-red';
+  } else if (formattedConcatenatedValue.value.includes("enthielt sich") || formattedConcatenatedValue.value.includes("keine Teilnahme")) {
+    return 'text-gray';
+  }
+  return ''; // Default class if none of the conditions are met
+});
+
+
     const open = ref(false);
 
     const showModal = () => {
@@ -46,7 +59,7 @@ export default {
 
 
     // Combine all the reactive data and methods to be returned from the setup function
-    return { open, showModal, handleOk, selectedPersonFullName, formattedConcatenatedValue };
+    return { open, showModal, handleOk, selectedPersonFullName, formattedConcatenatedValue, concatenatedValueClass };
   },
 
   components: {
@@ -75,7 +88,7 @@ export default {
 
       <div class="flex-item">
         <!-- <h1 style="color: #52c41a;">Valérie Piller Carrard (SP, Freiburg) stimmte für das Bundesgesetz über die Weiterbildung.</h1> -->
-        <h1 style="color: #52c41a;">{{ selectedPersonFullName }} {{ formattedConcatenatedValue }}</h1>
+        <h1 :class="concatenatedValueClass">{{ selectedPersonFullName }} {{ formattedConcatenatedValue }}</h1>
       </div>
     </div>
 
@@ -158,7 +171,18 @@ export default {
 </template>
 
 
-<style scoped>
+<style>
+
+.text-green {
+  color: #52c41a;
+}
+.text-red {
+  color: #eb2f96;
+}
+.text-gray {
+  color: #b4b4b4;
+}
+
 .flex-container {
     display: flex; /* This enables flexbox */
     justify-content: flex-start; /* This spreads out the flex items evenly */
