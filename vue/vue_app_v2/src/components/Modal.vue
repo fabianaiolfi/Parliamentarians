@@ -179,7 +179,7 @@ export default {
         <p>{{ rowData.businessType }}</p>
       </div>
 
-      <div class="flex-item">
+      <div class="flex-item" v-if="rowData.submittedBy !== 'Nicht vorhanden'">
         <small><strong>GESCHÄFT EINGEREICHT VON</strong></small>
         <p>{{ rowData.submittedBy }}</p>
       </div>
@@ -187,7 +187,7 @@ export default {
       <div class="flex-item">
         <small><strong>GESCHÄFTSNUMMER</strong></small>
           <p>
-            <a href="https://example.net/" target="_blank">{{ rowData.businessShortNumber }} <i class="material-icons" style="font-size: 0.8rem; vertical-align: -2px">open_in_new</i></a>
+            <a :href="rowData.businessURL" target="_blank">{{ rowData.businessShortNumber }} <i class="material-icons" style="font-size: 0.8rem; vertical-align: -2px">open_in_new</i></a>
           </p>
       </div>
     </div>

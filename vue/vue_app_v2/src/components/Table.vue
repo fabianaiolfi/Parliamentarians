@@ -110,7 +110,7 @@ const openModal = (rowData) => {
   const summary = bsnEntry.summary || 'No summary available';
   const statement = bsnEntry.vote_statement || 'No statement available';
   const voteDate = bsnEntry.BusinessStatusDate || 'No date available';
-  const submittedBy = bsnEntry.SubmittedBy || '–';
+  const submittedBy = bsnEntry.SubmittedBy || 'Nicht vorhanden';
   const businessURL = bsnEntry.business_url || 'No URL available';
   const voteResultText = bsnEntry.vote_result_text || 'No vote result available';
   const voteYes = bsnEntry.yes || 0;
