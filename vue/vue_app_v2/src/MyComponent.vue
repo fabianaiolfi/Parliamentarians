@@ -183,7 +183,6 @@ const topicNameMapping = {
   ukraine: "Der Krieg in der Ukraine"
 };
 
-
 // availableTopics.value = availableTopics.value.filter(topic => !excludedTopics.includes(topic));
 
 

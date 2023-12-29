@@ -1,11 +1,13 @@
 <script>
 import { ref, inject, computed } from 'vue';
 import { CheckCircleTwoTone, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';  // Import the icon
-//import BSNStatement from './bsn_summary_statement.json'
 import NamesSearchSelect from '../names.json'
 
 export default {
-  setup() {
+  props: {
+    rowData: Object, // Define rowData as a prop
+  },
+  setup(props) {
     const open = ref(false);
 
     const showModal = () => {
@@ -18,25 +20,33 @@ export default {
     };
 
     const selectedPerson = inject('selectedPerson');
-    // const NamesSearchSelect = inject('NamesSearchSelect');
 
     const selectedPersonFullName = computed(() => {
-      // Directly access NamesSearchSelect without .value
       if (selectedPerson.value && NamesSearchSelect[selectedPerson.value]) {
         const personInfo = NamesSearchSelect[selectedPerson.value][0];
-        // return `${personInfo.FirstName} ${personInfo.LastName}`;
         return `${personInfo.FirstName} ${personInfo.LastName} (${personInfo.PartyAbbreviation}, ${personInfo.CantonName})`;
       }
       return 'Name not available';
     });
 
+    const formattedConcatenatedValue = computed(() => {
+  if (props.rowData && props.rowData.concatenatedValue) {
+    let value = props.rowData.concatenatedValue.charAt(0).toLowerCase() + props.rowData.concatenatedValue.slice(1);
 
-    // Make showModal accessible from the parent
-    return { open, showModal, handleOk, selectedPersonFullName };
-  },
+    // Check if the string contains "keine Teilnahme in Bezug auf"
+    const searchString = "keine Teilnahme in Bezug auf";
+    if (value.includes(searchString)) {
+      value = value.replace(searchString, `bekundete ${searchString}`);
+    }
 
-  props: {
-    rowData: Object
+    return value;
+  }
+  return '';
+});
+
+
+    // Combine all the reactive data and methods to be returned from the setup function
+    return { open, showModal, handleOk, selectedPersonFullName, formattedConcatenatedValue };
   },
 
   components: {
@@ -47,6 +57,7 @@ export default {
   },
 };
 </script>
+
 
 <template>
 
@@ -64,7 +75,7 @@ export default {
 
       <div class="flex-item">
         <!-- <h1 style="color: #52c41a;">Valérie Piller Carrard (SP, Freiburg) stimmte für das Bundesgesetz über die Weiterbildung.</h1> -->
-        <h1 style="color: #52c41a;">{{ selectedPersonFullName }} {{ rowData.statement }}</h1>
+        <h1 style="color: #52c41a;">{{ selectedPersonFullName }} {{ formattedConcatenatedValue }}</h1>
       </div>
     </div>
 
