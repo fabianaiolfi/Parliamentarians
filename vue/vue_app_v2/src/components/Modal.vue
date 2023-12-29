@@ -20,6 +20,17 @@ export default {
   return ''; // Default class if none of the conditions are met
 });
 
+const iconData = computed(() => {
+      if (formattedConcatenatedValue.value.includes("stimmte für")) {
+        return { component: CheckCircleTwoTone, color: "#52c41a" };
+      } else if (formattedConcatenatedValue.value.includes("stimmte gegen")) {
+        return { component: CloseCircleTwoTone, color: "#eb2f96" };
+      } else if (formattedConcatenatedValue.value.includes("enthielt sich") || formattedConcatenatedValue.value.includes("keine Teilnahme")) {
+        return { component: QuestionCircleTwoTone, color: "#b4b4b4" };
+      }
+      return {}; // Default case
+    });
+
 
     const open = ref(false);
 
@@ -59,7 +70,7 @@ export default {
 
 
     // Combine all the reactive data and methods to be returned from the setup function
-    return { open, showModal, handleOk, selectedPersonFullName, formattedConcatenatedValue, concatenatedValueClass };
+    return { open, showModal, handleOk, selectedPersonFullName, formattedConcatenatedValue, concatenatedValueClass, iconData };
   },
 
   components: {
@@ -79,15 +90,15 @@ export default {
     <div class="flex-container" style="margin-top: 20px; align-items: center;">
       <div class="flex-item" style="margin-right: 20px;">
         <p>
-          <CheckCircleTwoTone
-          two-tone-color="#52c41a"
+        <component
+          :is="iconData.component"
+          :two-tone-color="iconData.color"
           style="font-size: 60px;"
-          />
-        </p>
+        />
+      </p>
       </div>
 
       <div class="flex-item">
-        <!-- <h1 style="color: #52c41a;">Valérie Piller Carrard (SP, Freiburg) stimmte für das Bundesgesetz über die Weiterbildung.</h1> -->
         <h1 :class="concatenatedValueClass">{{ selectedPersonFullName }} {{ formattedConcatenatedValue }}</h1>
       </div>
     </div>
