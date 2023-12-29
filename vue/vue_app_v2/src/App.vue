@@ -67,7 +67,7 @@ export default {
       toggleModal,
       filterOption,
       handleChange,
-      selectedPerson
+      selectedPerson,
     };
   },
 };

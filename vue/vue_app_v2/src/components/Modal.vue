@@ -1,7 +1,8 @@
 <script>
-import { ref } from 'vue';
+import { ref, inject, computed } from 'vue';
 import { CheckCircleTwoTone, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';  // Import the icon
 //import BSNStatement from './bsn_summary_statement.json'
+import NamesSearchSelect from '../names.json'
 
 export default {
   setup() {
@@ -16,8 +17,21 @@ export default {
       open.value = false;
     };
 
+    const selectedPerson = inject('selectedPerson');
+    // const NamesSearchSelect = inject('NamesSearchSelect');
+
+    const selectedPersonFullName = computed(() => {
+      // Directly access NamesSearchSelect without .value
+      if (selectedPerson.value && NamesSearchSelect[selectedPerson.value]) {
+        const personInfo = NamesSearchSelect[selectedPerson.value][0];
+        return `${personInfo.FirstName} ${personInfo.LastName}`;
+      }
+      return 'Name not available';
+    });
+
+
     // Make showModal accessible from the parent
-    return { open, showModal, handleOk };
+    return { open, showModal, handleOk, selectedPersonFullName };
   },
 
   props: {
@@ -49,7 +63,7 @@ export default {
 
       <div class="flex-item">
         <!-- <h1 style="color: #52c41a;">Valérie Piller Carrard (SP, Freiburg) stimmte für das Bundesgesetz über die Weiterbildung.</h1> -->
-        <h1 style="color: #52c41a;">{{ rowData.statement }}</h1>
+        <h1 style="color: #52c41a;">{{ selectedPersonFullName }} {{ rowData.statement }}</h1>
       </div>
     </div>
 
