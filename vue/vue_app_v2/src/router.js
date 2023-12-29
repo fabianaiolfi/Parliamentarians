@@ -8,7 +8,7 @@ const routes = [
     name: 'LandingPage',
     component: LandingPage
   },
-  { path: '/parlamentarier', component: MyComponent },
+  { path: '/parliamentarian', component: MyComponent },
 ];
 
 const router = createRouter({

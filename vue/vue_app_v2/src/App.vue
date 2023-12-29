@@ -41,7 +41,7 @@ export default {
 
     const handlePersonSelected = (personId) => {
       provide('selectedPersonId', personId); // Provide the selected person's ID
-      router.push('/parlamentarier');
+      router.push('/parliamentarian');
     };
 
     // Populate options from NamesSearchSelect
@@ -59,7 +59,9 @@ export default {
       const handleChange = (value) => {
       console.log('Person selected:', value);
       selectedPerson.value = value;
-    };
+      // Update the URL with the new personId
+      router.push({ path: '/parliamentarian', query: { personId: value } });
+      };
 
     // Synchronize global state with local state
     watch(selectedPersonId, (newVal) => {
@@ -72,6 +74,14 @@ export default {
         }
       }
     });
+
+    watch(() => router.currentRoute.value.query.personId, (newPersonId) => {
+  if (newPersonId && NamesSearchSelect[newPersonId]) {
+    const personData = NamesSearchSelect[newPersonId][0];
+    selectedPerson.value = { label: `${personData.FirstName} ${personData.LastName}`, value: newPersonId };
+  }
+}, { immediate: true });
+
 
     // Provide selectedPerson
     provide(
@@ -106,7 +116,7 @@ export default {
     <div class="header-container" style="display: flex; justify-content: space-between; align-items: center;">
       <!-- Left-aligned items -->
       <div>
-        <router-link to="/parlamentarier" class="nav-text"></router-link>
+        <router-link to="/parliamentarian" class="nav-text"></router-link>
         <a-select
           v-model:value="selectedPerson"
           show-search

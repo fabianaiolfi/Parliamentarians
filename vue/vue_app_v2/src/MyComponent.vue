@@ -1,6 +1,7 @@
 <script setup>
 
-import { ref, watch, computed, inject } from 'vue'
+import { ref, watch, computed, inject, onMounted } from 'vue'
+import { useRoute } from 'vue-router';
 import { CheckCircleTwoTone, CloseCircleTwoTone, QuestionCircleTwoTone, FrownTwoTone } from '@ant-design/icons-vue';  // Import the icon
 import Table from './components/Table.vue'; // Adjust the import path as necessary
 import { selectedPersonId } from './store.js'; // Update the path accordingly
@@ -18,6 +19,33 @@ import bsnURL from './bsn_url.json'
 
 const value1 = ref(null); // Or the default value
 const selectedTopic = ref(null); // New v-model for select component
+const route = useRoute();
+const selectedPerson = ref(null);
+
+watch(() => route.query.personId, (newPersonId) => {
+  if (newPersonId && NamesSearchSelect[newPersonId]) {
+    // Update application state based on newPersonId
+    selectedPersonId.value = newPersonId;  // Update the global state
+    // Other logic to update the component's state based on the new person
+  }
+}, { immediate: true });
+
+const updateSelectedPerson = () => {
+      const personId = route.query.personId;
+      if (personId && NamesSearchSelect[personId]) {
+        const personData = NamesSearchSelect[personId][0];
+        const fullName = `${personData.FirstName} ${personData.LastName} (${personData.PartyAbbreviation}, ${personData.CantonName})`;
+        selectedPerson.value = { label: fullName, value: personId };
+      } else {
+        selectedPerson.value = null;
+      }
+      return {
+        selectedPerson
+      }
+    };
+
+    onMounted(updateSelectedPerson);
+    watch(route, updateSelectedPerson);
 
 watch(selectedTopic, (newVal) => {
   if (newVal) {
@@ -54,7 +82,7 @@ const topicValue = ref('');
 // Set up reactive properties to store the selected person, the selected topic, and the resulting values
 const resultingValues = ref([]);
 const showModal = inject('showModal');
-const selectedPerson = inject('selectedPerson');
+// const selectedPerson = inject('selectedPerson');
 // const selectedPersonId = inject('selectedPerson');
 
 const handleAction = () => {
@@ -67,9 +95,9 @@ const selectedPersonName = computed(() => {
     const person = NamesSearchSelect[selectedPersonId.value][0];
     return `${person.FirstName} ${person.LastName}`;
   }
-  // return 'No person selected';
   return '';
 });
+
 
 const selectedPersonPartyCanton = computed(() => {
   if (selectedPersonId.value && NamesSearchSelect[selectedPersonId.value]) {
@@ -200,94 +228,94 @@ for (const personNumber in NamesSearchSelect) {
 }
 
 
-//////////// ASSOCIATED WORDS ///////////////
+// //////////// ASSOCIATED WORDS ///////////////
 
-// This computed property will automatically update when topicValue changes
-const associatedWords = computed(() => {
-  // Check if the topicValue exists as a key in TopicAssWords
-  if (selectedMainTopic.value && TopicAssWords.hasOwnProperty(selectedMainTopic.value)) {
-    // Return the array of words associated with the selected topic
-    return TopicAssWords[selectedMainTopic.value];
-  }
-  // If the selected topic is not in the JSON, return an empty array or a default set of words
-  return [];
-})
+// // This computed property will automatically update when topicValue changes
+// const associatedWords = computed(() => {
+//   // Check if the topicValue exists as a key in TopicAssWords
+//   if (selectedMainTopic.value && TopicAssWords.hasOwnProperty(selectedMainTopic.value)) {
+//     // Return the array of words associated with the selected topic
+//     return TopicAssWords[selectedMainTopic.value];
+//   }
+//   // If the selected topic is not in the JSON, return an empty array or a default set of words
+//   return [];
+// })
 
-watch(associatedWords, (newValue, oldValue) => {
-      console.log("Associated Words changed from:", oldValue, "to:", newValue);
-    });
+// watch(associatedWords, (newValue, oldValue) => {
+//       console.log("Associated Words changed from:", oldValue, "to:", newValue);
+//     });
 
-// Make BSNsentsData reactive
-const BSNsents = ref(BSNsentsData)
+// // Make BSNsentsData reactive
+// const BSNsents = ref(BSNsentsData)
 
-// Assuming 'associatedWords' and 'BSNsents' are reactive and available in the scope
-const findSentencesForVote = (vote) => {
-  let voteSentences = [];
-  // Get the sentences for the specific 'vote' if they exist
-  const voteRelatedSentences = BSNsents.value[vote];
+// // Assuming 'associatedWords' and 'BSNsents' are reactive and available in the scope
+// const findSentencesForVote = (vote) => {
+//   let voteSentences = [];
+//   // Get the sentences for the specific 'vote' if they exist
+//   const voteRelatedSentences = BSNsents.value[vote];
 
-  if (voteRelatedSentences && associatedWords.value.length > 0) {
-    // Filter the sentences for this vote based on associated words
-    voteSentences = voteRelatedSentences.filter(sentence =>
-      associatedWords.value.some(word => sentence.toLowerCase().includes(word.toLowerCase()))
-    );
-  }
-  return voteSentences;
-};
+//   if (voteRelatedSentences && associatedWords.value.length > 0) {
+//     // Filter the sentences for this vote based on associated words
+//     voteSentences = voteRelatedSentences.filter(sentence =>
+//       associatedWords.value.some(word => sentence.toLowerCase().includes(word.toLowerCase()))
+//     );
+//   }
+//   return voteSentences;
+// };
 
-// HIGHLIGHT ASSOCIATED WORDS //
+// // HIGHLIGHT ASSOCIATED WORDS //
 
-const sentences = ref([]);
-const sentencesForVotes = ref({});
+// const sentences = ref([]);
+// const sentencesForVotes = ref({});
 
-const updateSentencesForVote = (vote) => {
-      // Initialize an empty array for this vote if it doesn't exist yet
-      if (!sentencesForVotes.value[vote]) {
-        sentencesForVotes.value[vote] = [];
-      }
+// const updateSentencesForVote = (vote) => {
+//       // Initialize an empty array for this vote if it doesn't exist yet
+//       if (!sentencesForVotes.value[vote]) {
+//         sentencesForVotes.value[vote] = [];
+//       }
 
-  // Assuming BSNsents.value[vote] is an array of sentences for this vote
-  const sents = BSNsents.value[vote];
-  if (Array.isArray(sents)) {
-    sents.forEach(sentence => {
-      if (associatedWords.value.some(word => sentence.includes(word))) {
-        sentencesForVotes.value[vote].push(sentence);
-      }
-    });
-  }
-};
+//   // Assuming BSNsents.value[vote] is an array of sentences for this vote
+//   const sents = BSNsents.value[vote];
+//   if (Array.isArray(sents)) {
+//     sents.forEach(sentence => {
+//       if (associatedWords.value.some(word => sentence.includes(word))) {
+//         sentencesForVotes.value[vote].push(sentence);
+//       }
+//     });
+//   }
+// };
 
-// Iterate over each vote to populate sentences
-const populateSentencesForAllVotes = () => {
-  for (const vote in BSNsents.value) {
-    updateSentencesForVote(vote);
-  }
-};
+// // Iterate over each vote to populate sentences
+// const populateSentencesForAllVotes = () => {
+//   for (const vote in BSNsents.value) {
+//     updateSentencesForVote(vote);
+//   }
+// };
 
-// Initial population
-populateSentencesForAllVotes();
+// // Initial population
+// populateSentencesForAllVotes();
 
-// Watch for changes in associatedWords to update the sentences for each vote
-watch(associatedWords, () => {
-  // Clear the current sentences
-  sentencesForVotes.value = {};
-  // Repopulate the sentences
-  populateSentencesForAllVotes();
-});
+// // Watch for changes in associatedWords to update the sentences for each vote
+// watch(associatedWords, () => {
+//   // Clear the current sentences
+//   sentencesForVotes.value = {};
+//   // Repopulate the sentences
+//   populateSentencesForAllVotes();
+// });
 
-function highlightAssociatedWords(sentence, associatedWords) {
-  let highlightedSentence = sentence;
+// function highlightAssociatedWords(sentence, associatedWords) {
+//   let highlightedSentence = sentence;
   
-  // Sort associatedWords by length in descending order to avoid overriding matches within longer words
-  const sortedAssociatedWords = [...associatedWords].sort((a, b) => b.length - a.length);
+//   // Sort associatedWords by length in descending order to avoid overriding matches within longer words
+//   const sortedAssociatedWords = [...associatedWords].sort((a, b) => b.length - a.length);
 
-  sortedAssociatedWords.forEach((word) => {
-    const regex = new RegExp(`${word}`, 'gi'); // Remove the word boundary to match partial words
-    highlightedSentence = highlightedSentence.replace(regex, `<span class="highlight">$&</span>`);
-  });
+//   sortedAssociatedWords.forEach((word) => {
+//     const regex = new RegExp(`${word}`, 'gi'); // Remove the word boundary to match partial words
+//     highlightedSentence = highlightedSentence.replace(regex, `<span class="highlight">$&</span>`);
+//   });
 
-  return highlightedSentence;
-}
+//   return highlightedSentence;
+// }
 
 ////////////////////////////////////
 

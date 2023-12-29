@@ -38,7 +38,7 @@
         console.log('Selected ID before update:', selectedPersonId.value);
         selectedPersonId.value = value;
         console.log('Selected ID after update:', selectedPersonId.value);
-        router.push('/parlamentarier');
+        router.push({ path: '/parliamentarian', query: { personId: value } });
         };
   
       const filterOption = (input, option) => {
