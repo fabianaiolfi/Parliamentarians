@@ -24,7 +24,8 @@ export default {
       // Directly access NamesSearchSelect without .value
       if (selectedPerson.value && NamesSearchSelect[selectedPerson.value]) {
         const personInfo = NamesSearchSelect[selectedPerson.value][0];
-        return `${personInfo.FirstName} ${personInfo.LastName}`;
+        // return `${personInfo.FirstName} ${personInfo.LastName}`;
+        return `${personInfo.FirstName} ${personInfo.LastName} (${personInfo.PartyAbbreviation}, ${personInfo.CantonName})`;
       }
       return 'Name not available';
     });
