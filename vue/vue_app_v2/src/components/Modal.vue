@@ -25,8 +25,10 @@ const iconData = computed(() => {
         return { component: CheckCircleTwoTone, color: "#52c41a" };
       } else if (formattedConcatenatedValue.value.includes("stimmte gegen")) {
         return { component: CloseCircleTwoTone, color: "#eb2f96" };
-      } else if (formattedConcatenatedValue.value.includes("enthielt sich") || formattedConcatenatedValue.value.includes("keine Teilnahme")) {
+      } else if (formattedConcatenatedValue.value.includes("enthielt sich")) {
         return { component: QuestionCircleTwoTone, color: "#b4b4b4" };
+      } else if (formattedConcatenatedValue.value.includes("keine Teilnahme")) {
+        return { component: FrownTwoTone, color: "#b4b4b4" };
       }
       return {}; // Default case
     });
