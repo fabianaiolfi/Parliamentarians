@@ -23,6 +23,36 @@ voting_all_periods_edit <- voting_all_periods %>%
 voting_all_periods_edit <- voting_all_periods_edit %>% 
   left_join(select(all_businesses, BusinessShortNumber, main_topic), by = "BusinessShortNumber")
 
+# Add vote tally to all_businesses_web
+vote_tally <- voting_all_periods_edit %>% 
+  group_by(BusinessShortNumber) %>% 
+  count(DecisionText) %>% 
+  mutate(DecisionText = case_when(DecisionText == "Keine Teilnahme in Bezug auf " ~ "no_participation",
+                                  DecisionText == "Stimmte für " ~ "yes",
+                                  DecisionText == "Stimmte gegen " ~ "no",
+                                  DecisionText == "Enthielt sich in Bezug auf " ~ "abstention")) %>% 
+  pivot_wider(
+    names_from = DecisionText,    # Use DecisionText values as new column names
+    values_from = n,             # Fill the new columns with corresponding 'n' values
+    values_fill = list(n = 0)    # Fill missing values with 0
+  ) %>% 
+  mutate(vote_result = case_when(yes > no ~ "yes",
+                                 no > yes ~ "no",
+                                 T ~ NA)) %>% 
+  left_join(select(all_businesses, BusinessShortNumber, BusinessTypeName), by = "BusinessShortNumber") %>% 
+  mutate(vote_result_text = case_when(vote_result == "yes" & BusinessTypeName == "Parlamentarische Initiative" | BusinessTypeName == "Standesinitiative" ~ "Die Initiative wurde angenommen",
+                                      vote_result == "no" & BusinessTypeName == "Parlamentarische Initiative" | BusinessTypeName == "Standesinitiative" ~ "Die Initiative wurde abgelehnt",
+                                      vote_result == "yes" & BusinessTypeName == "Geschäft des Bundesrates" ~ "Das Geschäft wurde angenommen",
+                                      vote_result == "no" & BusinessTypeName == "Geschäft des Bundesrates" ~ "Das Geschäft wurde abgelehnt"))
+
+# Add date, ID and submitting person; Generate URL from ID
+all_businesses_web <- all_businesses_web %>% 
+  left_join(select(all_businesses, BusinessShortNumber, BusinessStatusDate, SubmittedBy, ID), by = "BusinessShortNumber") %>% 
+  mutate(business_url = paste0("https://www.parlament.ch/de/ratsbetrieb/suche-curia-vista/geschaeft?AffairId=", ID))
+
+all_businesses_web <- all_businesses_web %>% 
+  left_join(vote_tally, by = "BusinessShortNumber")
+
 
 # Process DF for vue.js JSON ------------------------------
 
@@ -74,10 +104,10 @@ vote_statement_vue <- vote_statement_vue %>%
 
 # BusinessShortNumber URLs ------------------------------
 
-bsn_url <- all_businesses %>%
-  select(ID, BusinessShortNumber) %>% 
-  mutate(url = paste0('https://www.parlament.ch/de/ratsbetrieb/suche-curia-vista/geschaeft?AffairId=', ID)) %>% 
-  select(-ID)
+# bsn_url <- all_businesses %>%
+#   select(ID, BusinessShortNumber) %>% 
+#   mutate(url = paste0('https://www.parlament.ch/de/ratsbetrieb/suche-curia-vista/geschaeft?AffairId=', ID)) %>% 
+#   select(-ID)
 
 
 # Person Number Index ------------------------------

@@ -118,27 +118,27 @@ const iconData = computed(() => {
         <div class="flex-container">
           <div class="flex-item">
             <small><strong>SCHLUSSRESULTAT</strong></small>
-            <p style="color: #eb2f96;"><strong>Das Geschäft wurde abgelehnt</strong></p>
+            <p style="color: #eb2f96;"><strong>{{ rowData.voteResultText }}</strong></p>
           </div>
           
           <div class="flex-item">
             <small><strong>JA</strong></small>
-            <p style="color: #52c41a;"><strong>56</strong></p>
+            <p style="color: #52c41a;"><strong>{{ rowData.voteYes }}</strong></p>
           </div>
 
           <div class="flex-item">
             <small><strong>NEIN</strong></small>
-            <p style="color: #eb2f96;"><strong>77</strong></p>
+            <p style="color: #eb2f96;"><strong>{{ rowData.voteNo }}</strong></p>
           </div>
 
           <div class="flex-item">
             <small><strong>ENTHALTUNGEN</strong></small>
-            <p style="color: #b4b4b4;"><strong>3</strong></p>
+            <p style="color: #b4b4b4;"><strong>{{ rowData.voteAbstention }}</strong></p>
           </div>
 
           <div class="flex-item">
             <small><strong>KEINE TEILNAHME</strong></small>
-            <p style="color: #b4b4b4;"><strong>2</strong></p>
+            <p style="color: #b4b4b4;"><strong>{{ rowData.voteNoParticipation }}</strong></p>
           </div>
         </div>
       </p>
@@ -153,31 +153,31 @@ const iconData = computed(() => {
       
       <div class="flex-item">
         <small><strong>ABSTIMMUNGSDATUM</strong></small>
-        <p>12. Juni 2017</p>
+        <p>{{ rowData.voteDate }}</p>
       </div>
 
       <div class="flex-item">
         <small><strong>GESCHÄFTSTYP</strong></small>
-        <p>Geschäft des Bundesrates</p>
+        <p>{{ rowData.businessType }}</p>
       </div>
 
       <div class="flex-item">
         <small><strong>GESCHÄFT EINGEREICHT VON</strong></small>
-        <p>Lombardi Filippo</p>
+        <p>{{ rowData.submittedBy }}</p>
       </div>
 
       <div class="flex-item">
         <small><strong>GESCHÄFTSNUMMER</strong></small>
           <p>
-            <a href="https://example.net/" target="_blank">12.015 <i class="material-icons" style="font-size: 0.8rem; vertical-align: -2px">open_in_new</i></a>
+            <a href="https://example.net/" target="_blank">{{ rowData.businessShortNumber }} <i class="material-icons" style="font-size: 0.8rem; vertical-align: -2px">open_in_new</i></a>
           </p>
       </div>
     </div>
       
-    <a-divider />
+    <!-- <a-divider /> -->
 
-    <small><strong>WARUM IST DIESES GESCHÄFT IN DER KATEGORIE «BILDUNG»?</strong></small>
-    <p>…</p>
+    <!-- <small><strong>WARUM IST DIESES GESCHÄFT IN DER KATEGORIE «BILDUNG»?</strong></small> -->
+    <!-- <p>…</p> -->
     
   </a-modal>
 

@@ -89,15 +89,19 @@ write(json_output, here("scripts", "11_chatgpt_sorgenbarometer", "person_bsn_vot
 
 bsn_summary_statement <- all_businesses_web %>%
   select(BusinessShortNumber, Title, chatgpt_summary, vote_statement, # Some confusion about chatgpt_summary and chatgpt_summaries; chatgpt_summary is GPT4 from chatgpt_output_df_20230827_100317.RData
+         BusinessStatusDate, SubmittedBy, business_url, vote_result_text, BusinessTypeName,
+         yes, no, abstention, no_participation
          #associated_word_1, associated_word_2, associated_word_3,
          #context_1, context_2, context_3
          ) %>% 
   rename(summary = chatgpt_summary)
 
 json_data <- toJSON(setNames(lapply(seq_len(nrow(bsn_summary_statement)), function(i) {
-  bsn_summary_statement[i, c("Title", "summary", "vote_statement"#,
+  bsn_summary_statement[i, c("Title", "summary", "vote_statement",
                              #"associated_word_1", "associated_word_2", "associated_word_3",
                              #"context_1", "context_2", "context_3"
+                             "BusinessStatusDate", "SubmittedBy", "business_url", "vote_result_text",
+                             "yes", "no", "abstention", "no_participation", "BusinessShortNumber", "BusinessTypeName"
                              )]
 }), bsn_summary_statement$BusinessShortNumber), pretty = TRUE)
 

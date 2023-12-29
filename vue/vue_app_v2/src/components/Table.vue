@@ -109,8 +109,19 @@ const openModal = (rowData) => {
   const title = bsnEntry.Title || 'No title found';
   const summary = bsnEntry.summary || 'No summary available';
   const statement = bsnEntry.vote_statement || 'No statement available';
+  const voteDate = bsnEntry.BusinessStatusDate || 'No date available';
+  const submittedBy = bsnEntry.SubmittedBy || '–';
+  const businessURL = bsnEntry.business_url || 'No URL available';
+  const voteResultText = bsnEntry.vote_result_text || 'No vote result available';
+  const voteYes = bsnEntry.yes || 0;
+  const voteNo = bsnEntry.no || 0;
+  const voteAbstention = bsnEntry.abstention || 0;
+  const voteNoParticipation = bsnEntry.no_participation || 0;
+  const businessShortNumber = bsnEntry.BusinessShortNumber || 'No BSN available';
+  const businessType = bsnEntry.BusinessTypeName || 'No Type available';
 
-  selectedRowData.value = { ...rowData, title, summary, statement };
+  selectedRowData.value = { ...rowData, title, summary, statement, voteDate, submittedBy, businessURL, 
+    voteResultText, voteYes, voteNo, voteAbstention, voteNoParticipation, businessShortNumber, businessType };
   customModal.value?.showModal();
 };
 
