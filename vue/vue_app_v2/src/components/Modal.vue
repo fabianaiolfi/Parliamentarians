@@ -9,6 +9,12 @@ export default {
   },
   setup(props) {
 
+    const voteResultTextStyle = computed(() => {
+      return {
+        color: props.rowData.voteResultText.includes("angenommen") ? '#52c41a' : '#eb2f96'
+      };
+    });
+
     const concatenatedValueClass = computed(() => {
   if (formattedConcatenatedValue.value.includes("stimmte für")) {
     return 'text-green';
@@ -72,7 +78,8 @@ const iconData = computed(() => {
 
 
     // Combine all the reactive data and methods to be returned from the setup function
-    return { open, showModal, handleOk, selectedPersonFullName, formattedConcatenatedValue, concatenatedValueClass, iconData };
+    return { open, showModal, handleOk, selectedPersonFullName, formattedConcatenatedValue,
+      concatenatedValueClass, iconData, voteResultTextStyle };
   },
 
   components: {
@@ -118,7 +125,7 @@ const iconData = computed(() => {
         <div class="flex-container">
           <div class="flex-item">
             <small><strong>SCHLUSSRESULTAT</strong></small>
-            <p style="color: #eb2f96;"><strong>{{ rowData.voteResultText }}</strong></p>
+            <p :style="voteResultTextStyle"><strong>{{ rowData.voteResultText }}</strong></p>
           </div>
           
           <div class="flex-item">
