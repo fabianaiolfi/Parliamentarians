@@ -9,6 +9,18 @@ export default {
   },
   setup(props) {
 
+    const formattedDate = computed(() => {
+      if (props.rowData && props.rowData.voteDate) {
+        const date = new Date(props.rowData.voteDate);
+        return date.toLocaleDateString('de-DE', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+      }
+      return '';
+    });
+
     const voteResultTextStyle = computed(() => {
       return {
         color: props.rowData.voteResultText.includes("angenommen") ? '#52c41a' : '#eb2f96'
@@ -16,17 +28,17 @@ export default {
     });
 
     const concatenatedValueClass = computed(() => {
-  if (formattedConcatenatedValue.value.includes("stimmte für")) {
-    return 'text-green';
-  } else if (formattedConcatenatedValue.value.includes("stimmte gegen")) {
-    return 'text-red';
-  } else if (formattedConcatenatedValue.value.includes("enthielt sich") || formattedConcatenatedValue.value.includes("keine Teilnahme")) {
-    return 'text-gray';
-  }
-  return ''; // Default class if none of the conditions are met
-});
+      if (formattedConcatenatedValue.value.includes("stimmte für")) {
+        return 'text-green';
+      } else if (formattedConcatenatedValue.value.includes("stimmte gegen")) {
+        return 'text-red';
+      } else if (formattedConcatenatedValue.value.includes("enthielt sich") || formattedConcatenatedValue.value.includes("keine Teilnahme")) {
+        return 'text-gray';
+      }
+        return ''; // Default class if none of the conditions are met
+    });
 
-const iconData = computed(() => {
+    const iconData = computed(() => {
       if (formattedConcatenatedValue.value.includes("stimmte für")) {
         return { component: CheckCircleTwoTone, color: "#52c41a" };
       } else if (formattedConcatenatedValue.value.includes("stimmte gegen")) {
@@ -38,7 +50,6 @@ const iconData = computed(() => {
       }
       return {}; // Default case
     });
-
 
     const open = ref(false);
 
@@ -79,7 +90,7 @@ const iconData = computed(() => {
 
     // Combine all the reactive data and methods to be returned from the setup function
     return { open, showModal, handleOk, selectedPersonFullName, formattedConcatenatedValue,
-      concatenatedValueClass, iconData, voteResultTextStyle };
+      concatenatedValueClass, iconData, voteResultTextStyle, formattedDate };
   },
 
   components: {
@@ -160,7 +171,7 @@ const iconData = computed(() => {
       
       <div class="flex-item">
         <small><strong>ABSTIMMUNGSDATUM</strong></small>
-        <p>{{ rowData.voteDate }}</p>
+        <p>{{ formattedDate }} </p>
       </div>
 
       <div class="flex-item">
