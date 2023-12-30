@@ -137,7 +137,15 @@ export default {
     <!-- Info Modal -->
     <a-modal v-model:visible="isModalVisible" title="Info" footer="">
       <div>
-        <p>Diese Seite ist in Bearbeitung.</p>
+        <p>
+          «Check Your Rep» ist im Rahmen eines LUMACSS Capstone Projekts an der Universität Luzern entstanden. Der Inhalt dieser Website verwendet GPT-4, um das Abstimmungsverhalten Nationalrät:innen zusammen zu fassen. Daten zu den Abstimmungen kommen von SOURCE. Es werden ausschliesslich Schlussabstimmungen in die Analyse genommen. Themen werden vom aktuellen Sorgenbarometer entnommen. Aktuell werden nur Nationalrät:innen von der Legislaturperiode 2019–2023 umfasst.
+
+Letzte Aktualisierung: 31. Dezember 2023
+
+Fragen, Anregungen, Kontakt
+Fabian Aiolfi
+fabian.aiolfi@gmail.com
+        </p>
       </div>
     </a-modal>
 
