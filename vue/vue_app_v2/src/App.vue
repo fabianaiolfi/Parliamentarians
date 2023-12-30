@@ -10,14 +10,27 @@ const showModal = () => {
   open.value = true;
 };
 
-
 export default {
   components: {
     Modal,
     Table,
   },
+  
+  data() {
+    return {
+      showDiv: true,
+    };
+  },
 
   methods: {
+    personSelected() {
+      if (this.selectedPerson) {
+        this.$emit('person-selected');
+      }
+    },
+    hideDiv() {
+      this.showDiv = false;
+    },
     handleFocus() {
       // console.log('focus');
     },
@@ -29,6 +42,7 @@ export default {
   setup() {
     const selectedPerson = ref(null);
     const isModalVisible = ref(false);
+    const showDiv = ref(true); // Initialize showDiv as true
 
     const toggleModal = () => {
       isModalVisible.value = !isModalVisible.value;
@@ -55,6 +69,9 @@ export default {
     const handleChange = (value) => {
       console.log('Person selected:', value);
       selectedPerson.value = value;
+      if (value) {
+        showDiv.value = false;
+      }
     };
 
     const filterOption = (input, option) => {
@@ -68,11 +85,11 @@ export default {
       filterOption,
       handleChange,
       selectedPerson,
+      showDiv
     };
   },
 };
 </script>
-
 
 <template>
   <a-layout class="layout">
@@ -80,25 +97,28 @@ export default {
     <div class="header-container" style="display: flex; justify-content: space-between; align-items: center;">
       <!-- Left-aligned items -->
       <div>
-        <router-link to="/parliamentarian" class="nav-text"></router-link>
         <a-select
-          v-model:value="selectedPerson"
-          show-search
-          placeholder="Wähle eine:n Parlamentarier:in aus"
-          style="width: 450px"
-          :options="options"
-          :filter-option="filterOption"
-          size="large"
-          @focus="handleFocus"
-          @blur="handleBlur"
-          @change="handleChange"
-    ></a-select>
-      </div>
+    v-model:value="selectedPerson"
+    show-search
+    placeholder="Wähle eine:n Parlamentarier:in aus"
+    style="width: 450px"
+    :options="options"
+    :filter-option="filterOption"
+    size="large"
+    @focus="handleFocus"
+    @blur="handleBlur"
+    @change="handleChange"
+  ></a-select>
+    
+    </div>
       <a-button type="link" class="info-button" @click="toggleModal">Info</a-button>
       </div>
     </a-layout-header>
     
     <a-layout-content style="padding: 0 50px">
+
+      <div v-if="showDiv">This div will disappear once a person is selected</div>
+
       
     <div :style="{ background: '#F5F5F5', padding: '24px', minHeight: '280px' }">
       <router-view />
