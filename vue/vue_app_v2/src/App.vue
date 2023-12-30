@@ -80,7 +80,7 @@ export default {
     <div class="header-container" style="display: flex; justify-content: space-between; align-items: center;">
       <!-- Left-aligned items -->
       <div>
-        <router-link to="/parlamentarier" class="nav-text"></router-link>
+        <router-link to="/parliamentarian" class="nav-text"></router-link>
         <a-select
           v-model:value="selectedPerson"
           show-search
