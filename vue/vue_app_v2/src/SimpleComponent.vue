@@ -19,18 +19,25 @@
 
   </div>
 
+  <Table :resultingValues="resultingValues" :open-modal="showModal" v-if="selectedTopic" />
+
   </template>
   
   <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import WorryStatement from './worry_statement.json';
+import Table from './components/Table.vue'; // Adjust the import path as necessary
+import SorgenBSN from './sorgen_bsn.json'
+import PersonBSNVote from './person_bsn_vote.json'
+import BSNStatement from './bsn_summary_statement.json'
 
 const route = useRoute();
 const dynamicPersonId = computed(() => route.query.personId);
 const availableTopics = ref(['Loading topics...']);
 const selectedTopic = ref(null);
-const selectedStatement = ref('');
+// const selectedStatement = ref('');
+// const resultingValues = ref([]);
 
 const fetchAndSetAvailableTopics = (personId) => {
   if (WorryStatement[personId]) {
@@ -42,6 +49,30 @@ const fetchAndSetAvailableTopics = (personId) => {
   }
 };
 
+const selectedStatement = computed(() => {
+  if (selectedTopic.value && WorryStatement[dynamicPersonId.value] && WorryStatement[dynamicPersonId.value][0][selectedTopic.value]) {
+    return WorryStatement[dynamicPersonId.value][0][selectedTopic.value];
+  }
+  return null; // Return null if no statement is found
+});
+
+// const resultingValues = computed(() => {
+//   if (selectedTopic.value && dynamicPersonId.value) {
+//     // Process data for the table based on the selected person and topic
+//     // Similar to the logic you had in your watcher
+//     // Return the processed data
+//   }
+//   return []; // Return an empty array if no data
+// });
+
+const resultingValues = ref([
+  { behavior: 'Stimmte für', vote_statement: 'Example Statement 1' },
+  { behavior: 'Stimmte gegen', vote_statement: 'Example Statement 2' },
+  // Add more test items as needed
+]);
+
+
+
 // Watch for changes in dynamicPersonId
 watch(dynamicPersonId, (newPersonId) => {
   console.log("Person ID changed to:", newPersonId);
@@ -49,7 +80,7 @@ watch(dynamicPersonId, (newPersonId) => {
   selectedTopic.value = null; // Reset the selected topic
 });
 
-watch(selectedTopic, (newTopic) => {
+watch([dynamicPersonId, selectedTopic], ([newPersonId, newTopic]) => {
   if (newTopic && WorryStatement[dynamicPersonId.value] && WorryStatement[dynamicPersonId.value][0][newTopic]) {
     selectedStatement.value = WorryStatement[dynamicPersonId.value][0][newTopic];
   } else {
