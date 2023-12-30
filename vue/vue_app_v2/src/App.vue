@@ -98,17 +98,18 @@ export default {
       <!-- Left-aligned items -->
       <div>
         <a-select
-    v-model:value="selectedPerson"
-    show-search
-    placeholder="Wähle eine:n Parlamentarier:in aus"
-    style="width: 450px"
-    :options="options"
-    :filter-option="filterOption"
-    size="large"
-    @focus="handleFocus"
-    @blur="handleBlur"
-    @change="handleChange"
-  ></a-select>
+          class="custom-select-placeholder"
+          v-model:value="selectedPerson"
+          show-search
+          placeholder="Finde eine:n Nationalrät:in"
+          style="width: 450px"
+          :options="options"
+          :filter-option="filterOption"
+          size="large"
+          @focus="handleFocus"
+          @blur="handleBlur"
+          @change="handleChange"
+        ></a-select>
     
     </div>
       <a-button type="link" class="info-button" @click="toggleModal">Info</a-button>
@@ -117,7 +118,11 @@ export default {
     
     <a-layout-content style="padding: 0 50px">
 
-      <div v-if="showDiv">This div will disappear once a person is selected</div>
+      <div v-if="showDiv" class="centered-container">
+        <h1 style="font-size: 60px; font-weight: bold;">Check Your Rep</h1>
+        <h1 style="font-size: 32px; font-weight: bold;">Wie stimmen Nationalrät:innen ab?</h1>
+      </div>
+
 
       
     <div :style="{ background: '#F5F5F5', padding: '24px', minHeight: '280px' }">
@@ -142,6 +147,18 @@ export default {
 </template>
 
 <style scoped>
+
+.custom-select-placeholder /deep/ .ant-select-selection-placeholder {
+  color: #222 !important;
+  /* font-weight: bold !important; */
+}
+
+
+.centered-container {
+    text-align: center; /* Center-align the text */
+    padding-top: 60px; /* Adjust as needed for spacing from the top */
+}
+
 .nav-text {
   color: white;
   margin-right: 16px;
