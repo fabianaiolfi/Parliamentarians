@@ -22,13 +22,41 @@ const selectedTopic = ref(null); // New v-model for select component
 const route = useRoute();
 const selectedPerson = ref(null);
 
-watch(() => route.query.personId, (newPersonId) => {
-  if (newPersonId && NamesSearchSelect[newPersonId]) {
-    // Update application state based on newPersonId
-    selectedPersonId.value = newPersonId;  // Update the global state
-    // Other logic to update the component's state based on the new person
+const handleRouteChange = () => {
+  const personId = route.query.personId;
+  if (personId && NamesSearchSelect[personId]) {
+    selectedPersonId.value = personId;
+    // Additional logic to update the component based on the personId
+  } else {
+    // Logic for handling an invalid or missing personId
   }
-}, { immediate: true });
+};
+
+onMounted(handleRouteChange);
+
+watch(() => route.query.personId, handleRouteChange, { immediate: true });
+
+
+const updateComponentState = () => {
+  const personId = route.query.personId;
+  if (personId && NamesSearchSelect[personId]) {
+    selectedPersonId.value = personId;
+    // Additional logic to update component state based on personId
+  } else {
+    // Reset state or handle invalid personId
+  }
+};
+
+// watch(() => route.query.personId, (newPersonId) => {
+//   if (newPersonId && NamesSearchSelect[newPersonId]) {
+//     // Update application state based on newPersonId
+//     selectedPersonId.value = newPersonId;  // Update the global state
+//     updateComponentState();
+//   }
+// }, { immediate: true });
+
+// watch(() => route.query.personId, updateComponentState, { immediate: true });
+
 
 const updateSelectedPerson = () => {
       const personId = route.query.personId;
@@ -46,6 +74,11 @@ const updateSelectedPerson = () => {
 
     onMounted(updateSelectedPerson);
     watch(route, updateSelectedPerson);
+
+
+
+onMounted(updateComponentState);
+
 
 watch(selectedTopic, (newVal) => {
   if (newVal) {

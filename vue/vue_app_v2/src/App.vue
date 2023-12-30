@@ -73,14 +73,15 @@ export default {
     // Synchronize global state with local state
     watch(selectedPersonId, (newVal) => {
       console.log('Global selectedPersonId changed:', newVal);
-      if (newVal) {
-        const person = NamesSearchSelect[newVal]?.[0];
-        if (person) {
-          const fullName = `${person.FirstName} ${person.LastName} (${person.PartyAbbreviation}, ${person.CantonName})`;
-          selectedPerson.value = { label: fullName, value: newVal };
-        }
-      }
-    });
+      console.log("selectedPersonId changed to:", newVal);
+      if (newVal && NamesSearchSelect[newVal]) {
+    const person = NamesSearchSelect[newVal][0];
+    const fullName = `${person.FirstName} ${person.LastName} (${person.PartyAbbreviation}, ${person.CantonName})`;
+    selectedPerson.value = { label: fullName, value: newVal };
+  } else {
+    selectedPerson.value = null;
+  }
+}, { immediate: true });
 
     watch(() => router.currentRoute.value.query.personId, (newPersonId) => {
   if (newPersonId && NamesSearchSelect[newPersonId]) {
