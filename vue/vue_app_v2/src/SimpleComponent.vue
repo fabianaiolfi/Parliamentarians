@@ -17,6 +17,8 @@
       </a-card>
     </div>
 
+    <pre>{{ props.resultingValues }}</pre>
+
   </div>
 
   <Table :resultingValues="resultingValues" :open-modal="showModal" v-if="selectedTopic" />
@@ -24,7 +26,7 @@
   </template>
   
   <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed, watch, defineProps } from 'vue';
 import { useRoute } from 'vue-router';
 import WorryStatement from './worry_statement.json';
 import Table from './components/Table.vue'; // Adjust the import path as necessary
@@ -38,6 +40,12 @@ const availableTopics = ref(['Loading topics...']);
 const selectedTopic = ref(null);
 // const selectedStatement = ref('');
 // const resultingValues = ref([]);
+
+const props = defineProps({
+  resultingValues: Array
+});
+
+console.log("Received resultingValues in SimpleComponent:", props.resultingValues);
 
 const fetchAndSetAvailableTopics = (personId) => {
   if (WorryStatement[personId]) {
@@ -65,11 +73,42 @@ const selectedStatement = computed(() => {
 //   return []; // Return an empty array if no data
 // });
 
-const resultingValues = ref([
-  { behavior: 'Stimmte für', vote_statement: 'Example Statement 1' },
-  { behavior: 'Stimmte gegen', vote_statement: 'Example Statement 2' },
-  // Add more test items as needed
-]);
+// This static test works
+// const resultingValues = ref([
+//   { behavior: 'Stimmte für', vote_statement: 'Example Statement 1' },
+//   { behavior: 'Stimmte gegen', vote_statement: 'Example Statement 2' },
+//   // Add more test items as needed
+// ]);
+
+const resultingValues = ref([]);
+
+watch(dynamicPersonId, (newPersonId) => {
+  if (newPersonId && PersonBSNVote[newPersonId]) {
+    const personVotes = PersonBSNVote[newPersonId];
+    const tableData = [];
+
+    for (const [behavior, businessNumbers] of Object.entries(personVotes)) {
+      businessNumbers.forEach(businessNumber => {
+        const bsnData = BSNStatement[businessNumber];
+        if (bsnData && bsnData.length > 0) {
+          const { Title, summary, vote_statement } = bsnData[0];
+          tableData.push({
+            behavior,
+            title: Title,
+            summary,
+            vote_statement,
+            // Add other fields as necessary
+          });
+        }
+      });
+    }
+
+    resultingValues.value = tableData;
+  } else {
+    resultingValues.value = [];
+  }
+});
+
 
 
 
@@ -81,12 +120,27 @@ watch(dynamicPersonId, (newPersonId) => {
 });
 
 watch([dynamicPersonId, selectedTopic], ([newPersonId, newTopic]) => {
-  if (newTopic && WorryStatement[dynamicPersonId.value] && WorryStatement[dynamicPersonId.value][0][newTopic]) {
-    selectedStatement.value = WorryStatement[dynamicPersonId.value][0][newTopic];
+  if (newPersonId && newTopic && PersonBSNVote[newPersonId] && PersonBSNVote[newPersonId][newTopic]) {
+    const businessNumbers = PersonBSNVote[newPersonId][newTopic];
+    const tableData = businessNumbers.flatMap(businessNumber => {
+      const bsnData = BSNStatement[businessNumber];
+      return bsnData && bsnData.length > 0
+        ? bsnData.map(data => ({
+            behavior: newTopic,
+            title: data.Title,
+            summary: data.summary,
+            vote_statement: data.vote_statement,
+            // ... other fields as necessary
+          }))
+        : [];
+    });
+
+    resultingValues.value = tableData;
   } else {
-    selectedStatement.value = null;
+    resultingValues.value = [];
   }
 });
+
 
 onMounted(() => {
   fetchAndSetAvailableTopics(dynamicPersonId.value);
