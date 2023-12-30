@@ -1,11 +1,8 @@
 <script>
-import { ref, provide, onMounted, inject, watch, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { useRoute } from 'vue-router';
+import { ref, provide } from 'vue';
 import NamesSearchSelect from './names.json'
 import Modal from './components/Modal.vue';
 import Table from './components/Table.vue';
-import { selectedPersonId } from './store.js';
 
 const open = ref(false);
 
@@ -30,26 +27,18 @@ export default {
   },
 
   setup() {
-    const router = useRouter();
-    const route = useRoute();
     const selectedPerson = ref(null);
     const isModalVisible = ref(false);
-    // const selectedPersonId = inject('selectedPersonId');
-    const selectedPersonDisplay = computed(() => selectedPersonId.value);
-
-    const isLandingPage = computed(() => {
-      // Assuming the landing page has a specific path, e.g., '/'
-      return route.path === '/';
-    });
 
     const toggleModal = () => {
       isModalVisible.value = !isModalVisible.value;
     };
 
-    const handlePersonSelected = (personId) => {
-      provide('selectedPersonId', personId); // Provide the selected person's ID
-      router.push('/parliamentarian');
-    };
+    // Provide selectedPerson
+    provide(
+      'selectedPerson', selectedPerson,
+      'showModal', showModal
+    );
 
     // Populate options from NamesSearchSelect
     const options = ref([]);
@@ -62,42 +51,11 @@ export default {
       });
     }
 
-      // Method to handle change
-      const handleChange = (value) => {
+    // Method to handle change
+    const handleChange = (value) => {
       console.log('Person selected:', value);
       selectedPerson.value = value;
-      // Update the URL with the new personId
-      router.push({ path: '/parliamentarian', query: { personId: value } });
-      };
-
-    // Synchronize global state with local state
-    watch(selectedPersonId, (newVal) => {
-      console.log('Global selectedPersonId changed:', newVal);
-      console.log("selectedPersonId changed to:", newVal);
-      if (newVal && NamesSearchSelect[newVal]) {
-    const person = NamesSearchSelect[newVal][0];
-    const fullName = `${person.FirstName} ${person.LastName} (${person.PartyAbbreviation}, ${person.CantonName})`;
-    selectedPerson.value = { label: fullName, value: newVal };
-  } else {
-    selectedPerson.value = null;
-  }
-}, { immediate: true });
-
-    watch(() => router.currentRoute.value.query.personId, (newPersonId) => {
-  if (newPersonId && NamesSearchSelect[newPersonId]) {
-    const personData = NamesSearchSelect[newPersonId][0];
-    selectedPerson.value = { label: `${personData.FirstName} ${personData.LastName}`, value: newPersonId };
-  }
-}, { immediate: true });
-
-
-    // Provide selectedPerson
-    provide(
-      'selectedPerson', selectedPerson,
-      'showModal', showModal,
-      'options', options,
-      'handleChange', handleChange
-    );
+    };
 
     const filterOption = (input, option) => {
     return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
@@ -110,9 +68,6 @@ export default {
       filterOption,
       handleChange,
       selectedPerson,
-      handlePersonSelected,
-      selectedPersonDisplay,
-      isLandingPage
     };
   },
 };
@@ -124,8 +79,8 @@ export default {
     <a-layout-header>
     <div class="header-container" style="display: flex; justify-content: space-between; align-items: center;">
       <!-- Left-aligned items -->
-      <div v-if="!isLandingPage">
-        <!-- <router-link to="/parliamentarian" class="nav-text"></router-link> -->
+      <div>
+        <router-link to="/parlamentarier" class="nav-text"></router-link>
         <a-select
           v-model:value="selectedPerson"
           show-search
@@ -144,8 +99,6 @@ export default {
     </a-layout-header>
     
     <a-layout-content style="padding: 0 50px">
-
-      <LandingPage @person-selected="handlePersonSelected" />
       
     <div :style="{ background: '#F5F5F5', padding: '24px', minHeight: '280px' }">
       <router-view />
