@@ -41,7 +41,7 @@ for(i in 1:nrow(prompt_vote_statement_sorge_sample)) {
   print(i)
 
   # Pause
-  Sys.sleep(11)
+  Sys.sleep(1)
 }
  
 file_name <- paste0("chatgpt_output_df_", formatted_timestamp, ".RData")

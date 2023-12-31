@@ -20,18 +20,42 @@
 # Working Sample ---------------------------------------------------------------------
 # Create sample for working example and keeping API costs low
 
-set.seed(12)
-
-PersonNumber_list <- unique(prompt_vote_statement_sorge$PersonNumber)
-PersonNumber_list_sample <- sample(PersonNumber_list, 5)
-
-prompt_vote_statement_sorge_sample <- prompt_vote_statement_sorge %>%
-  dplyr::filter(PersonNumber %in% PersonNumber_list_sample) %>%
-  mutate(role = "user") %>%
-  mutate(id = row_number())
+# set.seed(12)
+# 
+# PersonNumber_list <- unique(prompt_vote_statement_sorge$PersonNumber)
+# PersonNumber_list_sample <- sample(PersonNumber_list, 5)
+# 
+# prompt_vote_statement_sorge_sample <- prompt_vote_statement_sorge %>%
+#   dplyr::filter(PersonNumber %in% PersonNumber_list_sample) %>%
+#   mutate(role = "user") %>%
+#   mutate(id = row_number())
 
 # Mini sample for testing API and ChatGPT output
 # prompt_vote_statement_sorge_sample <- sample_n(prompt_vote_statement_sorge_sample, size = 3)
 
 # Super mini sample
 # prompt_vote_statement_sorge_sample <- prompt_vote_statement_sorge_sample[63, ]
+
+
+
+# Parliamentarians from Nationalrat ---------------------------------------
+
+load(here("data", "member_council.RData"))
+
+national_councillors <- member_council %>% 
+  dplyr::filter(Active == T) %>% 
+  dplyr::filter(CouncilName == "Nationalrat")
+
+national_councillors_PersonNumber <- national_councillors$PersonNumber
+
+prompt_vote_statement_sorge_sample <- prompt_vote_statement_sorge %>%
+  dplyr::filter(PersonNumber %in% national_councillors_PersonNumber) %>%
+  mutate(role = "user") %>%
+  mutate(id = row_number())
+
+# Mini sample for testing API and ChatGPT output
+# set.seed(12)
+# prompt_vote_statement_sorge_sample <- sample_n(prompt_vote_statement_sorge_sample, size = 3)
+
+# remove first 716 rows as they have been done in first batch
+# prompt_vote_statement_sorge_sample <- prompt_vote_statement_sorge_sample[-(1:716), ]

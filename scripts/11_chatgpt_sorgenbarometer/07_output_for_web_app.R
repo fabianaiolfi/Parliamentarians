@@ -9,7 +9,6 @@ names <- output_merged %>%
   distinct(PersonNumber, .keep_all = T)
 
 # Add party name and portrait URL to each parliamentarian
-load(here("data", "member_council.RData"))
 names <- names %>% 
   left_join(select(member_council, PersonNumber, PersonIdCode, PartyAbbreviation), by = "PersonNumber") %>% 
   mutate(img_url = paste0("https://www.parlament.ch/sitecollectionimages/profil/portrait-260/", PersonIdCode, ".jpg")) %>%  # Get portrait URL
@@ -42,7 +41,7 @@ lst <- setNames(split(worry_statement[-1], worry_statement$PersonNumber), worry_
 json_output <- toJSON(lst, pretty = TRUE, auto_unbox = TRUE)
 
 # Output: Watch out when exporting here, something's off between personnumber and topic's statement!
-# write(json_output, here("scripts", "11_chatgpt_sorgenbarometer", "worry_statement.json"))
+write(json_output, here("scripts", "11_chatgpt_sorgenbarometer", "worry_statement.json"))
 
 
 ## Sorgen and BSNs ----------------------------

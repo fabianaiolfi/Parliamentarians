@@ -445,3 +445,34 @@ unique(all_businesses_eval$SubmittedBy)
 
 load("data/member_council.RData")
 
+
+##################
+
+
+swissparl::get_variables("Vote")
+
+swissparl::get_glimpse("Vote", rows = 10)
+head(all_businesses$BusinessStatusDate)
+
+
+
+######################
+
+
+prompt_vote_statement_sorge_sample$prompt[333]
+character_counts <- sapply(prompt_vote_statement_sorge_sample$prompt, nchar)
+total_characters <- sum(sapply(prompt_vote_statement_sorge_sample$prompt, nchar))
+
+# Rate Limits
+3838 / 1161
+5630120 / (3838 / 1161) # = 1'703'119
+1703119 / 4511 # = 377
+80000/500
+160/60 # 3 second sleep
+
+# Pricing
+1703119 / 1000 * 0.03 # about 60chf incl. output
+
+# Timing
+4511 * 4 / 60 / 60
+
