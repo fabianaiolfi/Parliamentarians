@@ -135,17 +135,14 @@ export default {
     </div>
 
     <!-- Info Modal -->
-    <a-modal v-model:visible="isModalVisible" title="Info" footer="">
+    <a-modal v-model:visible="isModalVisible" title="Check Your Rep: Info" footer="">
       <div>
-        <p>
-          «Check Your Rep» ist im Rahmen eines LUMACSS Capstone Projekts an der Universität Luzern entstanden. Der Inhalt dieser Website verwendet GPT-4, um das Abstimmungsverhalten Nationalrät:innen zusammen zu fassen. Daten zu den Abstimmungen kommen von SOURCE. Es werden ausschliesslich Schlussabstimmungen in die Analyse genommen. Themen werden vom aktuellen Sorgenbarometer entnommen. Aktuell werden nur Nationalrät:innen von der Legislaturperiode 2019–2023 umfasst.
-
-Letzte Aktualisierung: 31. Dezember 2023
-
-Fragen, Anregungen, Kontakt
-Fabian Aiolfi
-fabian.aiolfi@gmail.com
-        </p>
+        <p>Diese Website ist im Rahmen eines <a href="https://www.unilu.ch/en/study/study-programmes/masters-degrees/faculty-of-humanities-and-social-sciences/lucerne-master-in-computational-social-sciences-lumacss/#section=c113738" target="_blank">LUMACSS Capstone Projekts</a> an der Universität Luzern entstanden.</p>
+        <p>Daten zu den Abstimmungen werden von <a href="https://github.com/zumbov2/swissparl" target="_blank">swissparl</a> bereit gestellt. Es werden nur Schlussabstimmungen analysiert. Die Zusammenfassungen stammen von <a href="https://openai.com/gpt-4" target="_blank">GPT-4</a>. Es werden ausschliesslich Nationalrät:innen aus der Legislaturperiode 2019–2023 berücksichtigt. Die Themen werden dem aktuellen <a href="https://www.credit-suisse.com/about-us/de/research-berichte/studien-publikationen/sorgenbarometer/download-center.html" target="_blank">Sorgenbarometer</a> entnommen.</p>
+        <h3>Fragen, Anregungen, Kontakt</h3>
+        <p>Fabian Aiolfi<br>
+        fabian.aiolfi [at] gmail.com</p>
+        <small>Letzte Aktualisierung: 31. Dezember 2023</small>
       </div>
     </a-modal>
 
