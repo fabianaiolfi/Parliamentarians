@@ -4,7 +4,7 @@ import MyComponent from './MyComponent.vue';
 
 const routes = [
   { 
-    path: '/parliamentarian',
+    path: '/check-your-rep',
     component: MyComponent 
   },
   
