@@ -1,6 +1,7 @@
 # Parliamentarians
 
-LUMACSS Capstone Project: Web app displaying the voting records of parliamentarians
+LUMACSS Capstone Project: Web app displaying the voting records of parliamentarians  
+v1.0: http://142.93.168.218/check-your-rep
 
 ## Subproject: *Data Mining in R* Capstone Project
 
