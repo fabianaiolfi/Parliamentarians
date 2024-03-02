@@ -28,8 +28,8 @@ Hier ist ein Dokument mit einem Titel. Gib dem Dokument 5 bis 10 Kategorien. Jed
 [InitialSituation of item of business]
 ```
 
-### 4. [Link items of business to Sorgenbarometer](https://github.com/fabianaiolfi/Parliamentarians/tree/main/scripts/11_chatgpt_sorgenbarometer)
-- Manually retrieve all worries (“Sorgen”) from the last [Worry Barometer](https://www.credit-suisse.com/about-us/en/reports-research/studies-publications/worry-barometer/download-center.html)
+### 4. [Link items of business to Worry Barometer](https://github.com/fabianaiolfi/Parliamentarians/tree/main/scripts/11_chatgpt_sorgenbarometer)
+- Manually retrieve all worries (“Sorgen”) from the last [Worry Barometer](https://www.credit-suisse.com/about-us/en/reports-research/studies-publications/worry-barometer/download-center.html) (“Sorgenbarometer”)
 - Use the tags from step 3 to [assign items of business to all worries](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/11_chatgpt_sorgenbarometer/02_preprocessing.R#L9-L108)
 - Using ChatGPT, generate a summary of an MP’s voting behaviour *for each worry*. Here is an example prompt for a single MP and a single worry:
 ```
