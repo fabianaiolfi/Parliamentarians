@@ -33,9 +33,11 @@ Hier ist ein Dokument mit einem Titel. Gib dem Dokument 5 bis 10 Kategorien. Jed
 - Use the tags from step 3 to assign items of business to each worry
 - Using ChatGPT, generate an MP’s voting behaviour *for each worry*. Here an example prompt for a single MP and a single worry:
 ```
-Verwende 1 bis 2 Sätze und Einfache Sprache, um das Abstimmungsverhalten von Géraldine Savary zum Thema «Zusammenleben in der Schweiz / Toleranz» zusammen zu fassen. Alle Punkte habe einen Bezug zum Thema:
-- Stimmte für die Einführung einer eingetragenen Partnerschaft für gleichgeschlechtliche Paare.
-- Stimmte für die Änderung des Gleichstellungsgesetzes und die Einführung einer Schlichtungskommission.
+Verwende 1 bis 2 Sätze und Einfache Sprache, um das Abstimmungsverhalten von Ada Marra zum Thema «Neue Armut / Armut jüngerer Generationen» zusammen zu fassen. Alle Punkte habe einen Bezug zum Thema:
+- Stimmte gegen die Ablehnung der Mindestlohn-Initiative.
+- Stimmte für die Ratifikation des internationalen Arbeitsübereinkommens Nr. 189 zum Schutz von Hausangestellten.
+- Stimmte für die Weiterführung der internationalen Zusammenarbeit der Schweiz von 2017 bis 2020.
+- Stimmte gegen die stärkere Besteuerung von Kapitaleinkommen.
 ```
 
 ------------------------------------------------------------------------
