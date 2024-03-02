@@ -30,7 +30,7 @@ Hier ist ein Dokument mit einem Titel. Gib dem Dokument 5 bis 10 Kategorien. Jed
 
 4. [Sorgenbarometer](https://github.com/fabianaiolfi/Parliamentarians/tree/main/scripts/11_chatgpt_sorgenbarometer)
 - Manually retrieve all worries (“Sorgen”) from the last [Worry Barometer](https://www.credit-suisse.com/about-us/en/reports-research/studies-publications/worry-barometer/download-center.html)
-- Use the tags from step 3 to assign items of business to each worry
+- Use the tags from step 3 to [assign items of business to all worries](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/11_chatgpt_sorgenbarometer/02_preprocessing.R#L9-L108)
 - Using ChatGPT, generate an MP’s voting behaviour *for each worry*. Here an example prompt for a single MP and a single worry:
 ```
 Verwende 1 bis 2 Sätze und Einfache Sprache, um das Abstimmungsverhalten von Ada Marra zum Thema «Neue Armut / Armut jüngerer Generationen» zusammen zu fassen. Alle Punkte habe einen Bezug zum Thema:
