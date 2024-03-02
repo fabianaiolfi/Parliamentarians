@@ -3,18 +3,40 @@
 LUMACSS Capstone Project: Web app displaying the voting records of parliamentarians  
 v1.0: http://142.93.168.218/check-your-rep
 
-## Subproject: *Data Mining in R* Capstone Project
+## Pipeline: From Raw Parliamentary Data to Voting Behaviour Summary
 
-Aim of this sub-project is to lay a foundation for the LUMACSS Capstone Project. The scope of this sub-project are final votes cast by parliamentarians of the Swiss National Council in the 51st legislative period. Details of this sub-project are provided by the [report](https://github.com/fabianaiolfi/Parliamentarians/tree/main/report).
+1. [Download Parliamentary data](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/01_get_parl_data.R) through [swissparl](https://github.com/zumbov2/swissparl)
+- `Business`: Data on items of business, e.g., title, description, and unique identifier
+- `Voting`: MP voting behaviour on final votes (“Schlussabstimmungen”). How did every MP vote on each item of business?
+- `MemberCouncil`: Data on each MP, e.g., party and canton
 
-The output of this sub-project are two Shiny web apps: - [Abstimmungsverhalten Nationalrät:innen 2020--2023](https://a88fuu-fabian-aiolfi.shinyapps.io/abstimmungsverhalten/) - [ChatGPT Output Evaluation](https://a88fuu-fabian-aiolfi.shinyapps.io/ChatGPT_Output_Evaluation/)
+2. [Use ChatGPT to generate summaries and vote statements](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/02_chatgpt_summarisation) for each item of business
+- Query sent to ChatGPT:
+```
+Das ist ein Parlamentsgeschäft:
+[InitialSituation of item of business]
+Beantworte diese 2 Fragen. Verwende dabei Einfache Sprache, maximal 15 Wörter und maximal 1 Satz.
+1. Welche zentrale Aussage soll ein:e Wähler:in von diesem Text mitnehmen?
+2. Vervollständige diesen Satz, damit er zum Geschäft passt: '[Politiker X] stimmt für … '
+```
 
-## File Structure
+3. [Use ChatGPT to tag each item of business](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/05_chatgpt_tagging)
+- Query sent to ChatGPT:
+```
+Hier ist ein Dokument mit einem Titel. Gib dem Dokument 5 bis 10 Kategorien. Jede Kategorie muss 1 bis 3 Wörter umfassen. Gib nur die Kategorien zurück:
+[Title of item of business]
+[InitialSituation of item of business]
+```
 
--   [`documentation`](https://github.com/fabianaiolfi/Parliamentarians/tree/main/documentation): Documents ChatGPT conversations.
--   [`report`](https://github.com/fabianaiolfi/Parliamentarians/tree/main/report): Contains the Data Mining Captstone Project report.
--   [`scripts`](https://github.com/fabianaiolfi/Parliamentarians/tree/main/scripts): R scripts used to download, process and display the data in the final Shiny web app.\
--   [`scripts/query_optimisation`](https://github.com/fabianaiolfi/Parliamentarians/tree/main/scripts/query_optimisation): R scripts used to create the Shiny web app that helps evaluate different OpenAI API natural language queries.
+4. [Sorgenbarometer](https://github.com/fabianaiolfi/Parliamentarians/tree/main/scripts/11_chatgpt_sorgenbarometer)
+- Manually retrieve all worries (“Sorgen”) from the last [Worry Barometer](https://www.credit-suisse.com/about-us/en/reports-research/studies-publications/worry-barometer/download-center.html)
+- Use the tags from step 3 to assign items of business to each worry
+- Using ChatGPT, generate an MP’s voting behaviour *for each worry*. Here an example prompt for a single MP and a single worry:
+```
+Verwende 1 bis 2 Sätze und Einfache Sprache, um das Abstimmungsverhalten von Géraldine Savary zum Thema «Zusammenleben in der Schweiz / Toleranz» zusammen zu fassen. Alle Punkte habe einen Bezug zum Thema:
+- Stimmte für die Einführung einer eingetragenen Partnerschaft für gleichgeschlechtliche Paare.
+- Stimmte für die Änderung des Gleichstellungsgesetzes und die Einführung einer Schlichtungskommission.
+```
 
 ------------------------------------------------------------------------
 
@@ -48,16 +70,16 @@ The output of this sub-project are two Shiny web apps: - [Abstimmungsverhalten N
 ### UI
 #### Must
 - [x] Increase main dropdown size
-- [ ] Replace Collapse with Modal
+- [x] Replace Collapse with Modal
 - [ ] Find better way to display Worries Selector/Dropdown
 - [ ] Naming / Branding / Logo
-- [ ] About Page
+- [x] About Page
 
 #### Should
 - [ ] Add Table of Contents to top of profile page
 - [ ] Apply Swiss punctuation and spelling: `ß` > `ss`, `"` > `«`, etc.
 
-#### Want
+#### Could
 - [ ] Speed up switching between parliamentarians
 - [ ] Make site responsive
-- [ ] See also Issues tagged `enhancement`
+- [ ] See also Issues tagged `[enhancement](https://github.com/fabianaiolfi/Parliamentarians/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)`
