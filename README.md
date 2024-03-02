@@ -5,12 +5,12 @@ v1.0: http://142.93.168.218/check-your-rep
 
 ## Pipeline: From Raw Parliamentary Data to Voting Behaviour Summary
 
-1. [Download Parliamentary data](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/01_get_parl_data.R) through [swissparl](https://github.com/zumbov2/swissparl)
+### 1. [Download Parliamentary data](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/01_get_parl_data.R) through [swissparl](https://github.com/zumbov2/swissparl)
 - `Business`: Data on items of business, e.g., title, description, and unique identifier
 - `Voting`: MP voting behaviour on final votes (“Schlussabstimmungen”). How did every MP vote on each item of business?
 - `MemberCouncil`: Data on each MP, e.g., party and canton
 
-2. [Use ChatGPT to generate summaries and vote statements](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/02_chatgpt_summarisation) for each item of business
+### 2. [Use ChatGPT to generate summaries and vote statements](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/02_chatgpt_summarisation) for each item of business
 - Query sent to ChatGPT:
 ```
 Das ist ein Parlamentsgeschäft:
@@ -20,7 +20,7 @@ Beantworte diese 2 Fragen. Verwende dabei Einfache Sprache, maximal 15 Wörter u
 2. Vervollständige diesen Satz, damit er zum Geschäft passt: '[Politiker X] stimmt für … '
 ```
 
-3. [Use ChatGPT to tag each item of business](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/05_chatgpt_tagging)
+### 3. [Use ChatGPT to tag each item of business](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/05_chatgpt_tagging)
 - Query sent to ChatGPT:
 ```
 Hier ist ein Dokument mit einem Titel. Gib dem Dokument 5 bis 10 Kategorien. Jede Kategorie muss 1 bis 3 Wörter umfassen. Gib nur die Kategorien zurück:
@@ -28,9 +28,7 @@ Hier ist ein Dokument mit einem Titel. Gib dem Dokument 5 bis 10 Kategorien. Jed
 [InitialSituation of item of business]
 ```
 
--------
-
-4. [Link items of business to Sorgenbarometer](https://github.com/fabianaiolfi/Parliamentarians/tree/main/scripts/11_chatgpt_sorgenbarometer)
+### 4. [Link items of business to Sorgenbarometer](https://github.com/fabianaiolfi/Parliamentarians/tree/main/scripts/11_chatgpt_sorgenbarometer)
 - Manually retrieve all worries (“Sorgen”) from the last [Worry Barometer](https://www.credit-suisse.com/about-us/en/reports-research/studies-publications/worry-barometer/download-center.html)
 - Use the tags from step 3 to [assign items of business to all worries](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/11_chatgpt_sorgenbarometer/02_preprocessing.R#L9-L108)
 - Using ChatGPT, generate an MP’s voting behaviour *for each worry*. Here an example prompt for a single MP and a single worry:
