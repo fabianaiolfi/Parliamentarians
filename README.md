@@ -10,8 +10,8 @@ v1.0: http://142.93.168.218/check-your-rep
 - `Voting`: MP voting behaviour on final votes (“Schlussabstimmungen”). How did every MP vote on each item of business?
 - `MemberCouncil`: Data on each MP, e.g., party and canton
 
-### 2. [Use ChatGPT to generate summaries and vote statements](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/02_chatgpt_summarisation) for each item of business
-- Query sent to ChatGPT:
+### 2. [Use ChatGPT to generate summaries and vote statements for each item of business](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/02_chatgpt_summarisation)
+Query sent to ChatGPT:
 ```
 Das ist ein Parlamentsgeschäft:
 [InitialSituation of item of business]
@@ -21,7 +21,7 @@ Beantworte diese 2 Fragen. Verwende dabei Einfache Sprache, maximal 15 Wörter u
 ```
 
 ### 3. [Use ChatGPT to tag each item of business](https://github.com/fabianaiolfi/Parliamentarians/blob/main/scripts/05_chatgpt_tagging)
-- Query sent to ChatGPT:
+Query sent to ChatGPT:
 ```
 Hier ist ein Dokument mit einem Titel. Gib dem Dokument 5 bis 10 Kategorien. Jede Kategorie muss 1 bis 3 Wörter umfassen. Gib nur die Kategorien zurück:
 [Title of item of business]
